@@ -20,18 +20,11 @@
     min-height:100vh; display:flex; flex-direction:column; align-items:center; padding:20px 14px;
     direction:rtl; color:var(--ink);
   }
-  .topbar{ width:100%; max-width:420px; display:flex; justify-content:flex-end; margin-bottom:10px; }
-  .topbar button{
-    background:transparent; border:1px solid var(--navy); color:var(--navy); border-radius:100px;
-    padding:6px 14px; font-size:11.5px; cursor:pointer; font-weight:700; font-family:'Tajawal',sans-serif;
-  }
-
   .phone{
     width:100%; max-width:390px; background:var(--panel); border:1px solid var(--line);
     border-radius:24px; padding:26px 22px 22px; box-shadow:0 20px 50px rgba(0,0,0,0.1);
   }
 
-  /* ---- العنوان المتحرك ---- */
   .pv10-mark{ text-align:center; font-size:26px; margin-bottom:4px; }
   .title-main{
     font-family:'Tajawal',sans-serif; font-weight:900; text-align:center;
@@ -49,7 +42,6 @@
   }
   .title-flourish{ width:22px; height:1px; background:linear-gradient(90deg, transparent, #b8860b, transparent); }
 
-  /* ---- الميدالية الذهبية ---- */
   .promo-visual{ display:flex; justify-content:center; margin-bottom:14px; }
   .gold-medallion{
     width:150px; height:150px; border-radius:22px;
@@ -68,7 +60,6 @@
   .medallion-cap{ font-family:'Tajawal',sans-serif; font-weight:800; font-size:10.5px; color:#5c4213; margin-top:2px; }
   .medallion-sub{ font-size:9px; color:#6b4f1c; margin-top:1px; }
 
-  /* ---- النص التسويقي ---- */
   .pvm-copy{ text-align:center; margin-bottom:16px; }
   .pvm-badge{
     display:inline-block; font-family:'Tajawal',sans-serif; font-weight:800; font-size:11px;
@@ -76,16 +67,12 @@
   }
   .promo-title{ font-size:19px; color:#152840; margin:10px 0 8px; font-family:'Tajawal',sans-serif; font-weight:900; line-height:1.5; }
   .promo-sub{ font-size:13px; color:#5c6d80; line-height:1.8; margin:0 auto 14px; max-width:320px; }
-  .reveal-word{
-    display:inline-block; opacity:0; transform:translateY(6px);
-    animation: word-reveal .4s ease-out forwards;
-  }
+  .reveal-word{ display:inline-block; opacity:0; transform:translateY(6px); animation: word-reveal .4s ease-out forwards; }
   @keyframes word-reveal{ to{ opacity:1; transform:translateY(0); } }
 
   .pvm-benefits{ display:flex; flex-direction:column; align-items:center; gap:6px; }
   .pvm-benefit{ display:flex; align-items:center; gap:6px; font-family:'Tajawal',sans-serif; font-weight:700; font-size:11.5px; color:#1f3a5c; }
 
-  /* ---- بطاقة الدخول/التسجيل ---- */
   .auth-card{ background:#fff; border:1px solid var(--navy); border-radius:14px; padding:14px; margin-top:6px; }
   .auth-tabs{ display:flex; gap:8px; margin-bottom:12px; }
   .auth-tab{
@@ -108,16 +95,10 @@
   .btn-outline{ background:transparent; border:1px solid var(--navy); color:var(--navy); }
   .btn-danger{ background:transparent; border:1px solid var(--red); color:var(--red); }
   .pvm-cta-pulse{ animation: ctaPulse 1.8s ease-in-out infinite; }
-  @keyframes ctaPulse{
-    0%,100%{ box-shadow:0 0 0 0 rgba(184,134,11,0.35); }
-    50%{ box-shadow:0 0 0 10px rgba(184,134,11,0); }
-  }
+  @keyframes ctaPulse{ 0%,100%{ box-shadow:0 0 0 0 rgba(184,134,11,0.35); } 50%{ box-shadow:0 0 0 10px rgba(184,134,11,0); } }
 
   .pvm-microline{ font-size:10.5px; color:#5c6d80; text-align:center; margin-top:12px; }
-  .mini-wa-row{
-    display:flex; align-items:center; justify-content:center; gap:8px; margin-top:16px;
-    font-size:10.5px; color:var(--muted); flex-wrap:wrap;
-  }
+  .mini-wa-row{ display:flex; align-items:center; justify-content:center; gap:8px; margin-top:16px; font-size:10.5px; color:var(--muted); flex-wrap:wrap; }
   .mini-wa-row a{ color:#25D366; text-decoration:none; font-weight:700; }
 
   .msg{ margin-top:12px; padding:12px 14px; border-radius:10px; font-size:12px; line-height:1.8; display:none; }
@@ -125,190 +106,225 @@
   .msg.error{ background:#fdeaea; border:1px solid var(--red); color:#7a1a1a; display:block; }
   .msg.pending{ background:#fff8e6; border:1px solid var(--gold-deep); color:#5c4213; display:block; }
 
-  /* ---- بطاقة الحساب النشط ---- */
-  .wallet-card{
-    background:linear-gradient(160deg,#123,#0a1922 60%,#081319); border-radius:18px; padding:22px 20px;
-    text-align:center; margin-bottom:16px;
-  }
+  .wallet-card{ background:linear-gradient(160deg,#123,#0a1922 60%,#081319); border-radius:18px; padding:22px 20px; text-align:center; margin-bottom:16px; }
   .wallet-name{ font-size:12px; color:rgba(255,255,255,0.6); font-family:'Tajawal',sans-serif; font-weight:700; }
   .wallet-amount{ font-family:'Tajawal',sans-serif; font-weight:900; font-size:32px; margin:12px 0 2px; color:#fff; }
   .wallet-amount span{ font-size:14px; color:rgba(255,255,255,0.65); font-weight:700; }
   .wallet-account{ font-size:11px; color:rgba(255,255,255,0.55); margin-top:4px; }
 
-  .referral-box{
-    background:linear-gradient(135deg,#fffaf0,#fdf3dc); border:1px solid #d4af3755; border-radius:14px;
-    padding:14px 16px; text-align:center; margin-bottom:14px;
-  }
+  .referral-box{ background:linear-gradient(135deg,#fffaf0,#fdf3dc); border:1px solid #d4af3755; border-radius:14px; padding:14px 16px; text-align:center; margin-bottom:14px; }
   .referral-title{ font-family:'Tajawal',sans-serif; font-weight:800; font-size:13px; color:#8a6a1f; margin-bottom:6px; }
   .referral-sub{ font-size:11px; color:var(--muted); line-height:1.8; margin:0 0 10px; }
-  .referral-counter{
-    display:inline-block; background:rgba(30,158,87,0.12); color:var(--green); font-family:'Tajawal',sans-serif;
-    font-weight:800; font-size:11px; padding:6px 14px; border-radius:100px;
-  }
+  .referral-counter{ display:inline-block; background:rgba(30,158,87,0.12); color:var(--green); font-family:'Tajawal',sans-serif; font-weight:800; font-size:11px; padding:6px 14px; border-radius:100px; }
 
-  .dup-warning{
-    display:none; background:rgba(229,85,90,0.1); border:1px solid rgba(229,85,90,0.4); border-radius:10px;
-    padding:10px 14px; margin-top:10px; color:var(--red); font-size:11.5px; font-weight:700; line-height:1.8;
-  }
+  .dup-warning{ display:none; background:rgba(229,85,90,0.1); border:1px solid rgba(229,85,90,0.4); border-radius:10px; padding:10px 14px; margin-top:10px; color:var(--red); font-size:11.5px; font-weight:700; line-height:1.8; }
   .dup-warning.show{ display:block; }
 
-  /* ---- واجهة الموظف ---- */
-  .req-row{
-    display:flex; justify-content:space-between; align-items:center; padding:10px 12px;
-    border:1px solid #e5e8ec; border-radius:10px; margin-bottom:8px; font-size:12px;
+  /* ---- زر الإعدادات بالأسفل ---- */
+  .settings-toggle{
+    display:block; width:100%; text-align:center; margin-top:22px; padding-top:16px;
+    border-top:1px solid var(--line); background:transparent; border:none; border-top:1px solid var(--line);
+    color:var(--muted); font-size:11.5px; font-family:'Tajawal',sans-serif; font-weight:700; cursor:pointer;
   }
+
+  /* ---- لوحة الموظف ---- */
+  .staff-login-box{ margin-top:16px; }
+  .staff-tabs{ display:flex; gap:8px; margin-bottom:14px; }
+  .staff-tab{ flex:1; padding:9px; border-radius:10px; border:1px solid var(--navy); background:transparent; color:var(--navy); font-family:'Tajawal',sans-serif; font-weight:800; font-size:11.5px; cursor:pointer; position:relative; }
+  .staff-tab.on{ background:var(--navy); color:#fff; }
+  .staff-tab .badge{ background:var(--red); color:#fff; border-radius:100px; font-size:9px; padding:1px 6px; margin-right:4px; }
+
+  .search-box{ display:flex; gap:6px; margin-bottom:12px; }
+  .search-box input{ flex:1; padding:9px 10px; border-radius:9px; border:1px solid var(--line); font-size:12.5px; }
+  .search-box button{ background:var(--navy); color:#fff; border:none; border-radius:9px; padding:0 12px; font-size:12px; cursor:pointer; }
+  .qr-btn{ width:100%; padding:9px; border-radius:9px; border:1px solid var(--gold-deep); background:transparent; color:#8a6a1f; font-size:11.5px; font-weight:700; cursor:pointer; margin-bottom:12px; }
+
+  .req-row{ display:flex; justify-content:space-between; align-items:center; padding:10px 12px; border:1px solid #e5e8ec; border-radius:10px; margin-bottom:8px; font-size:12px; }
   .req-row .name{ font-weight:800; }
   .req-row .phone{ color:var(--muted); font-size:11px; }
-  .req-row button{
-    background:var(--green); color:#fff; border:none; border-radius:8px; padding:7px 12px; font-size:11px;
-    cursor:pointer; font-weight:700;
-  }
+  .req-row .balance{ color:var(--gold-deep); font-weight:800; font-size:11.5px; }
+  .req-row button{ background:var(--green); color:#fff; border:none; border-radius:8px; padding:7px 12px; font-size:11px; cursor:pointer; font-weight:700; flex-shrink:0; }
   .empty-note{ text-align:center; color:var(--muted); font-size:12px; padding:20px 0; }
+
+  .top-close{ text-align:left; margin-bottom:8px; }
+  .top-close button{ background:transparent; border:none; color:var(--muted); font-size:12px; cursor:pointer; }
 </style>
 </head>
 <body>
 
-<div class="topbar">
-  <button onclick="toggleView()" id="viewToggleBtn">👤 دخول الموظف</button>
-</div>
+<div class="phone">
 
-<!-- ============ واجهة العميل ============ -->
-<div class="phone" id="customerCard">
-
-  <div class="pv10-mark">🕌</div>
-  <div class="title-main">شركة زمزم لتجارة المصوغات الذهبية</div>
-  <div class="title-sub">
-    <span class="title-flourish"></span>
-    بطاقة الثقة الذهبية VIP
-    <span class="title-flourish"></span>
-  </div>
-
-  <div class="promo-visual">
-    <div class="gold-medallion"><div class="medallion-inner">
-      <div class="medallion-pct">1%</div>
-      <div class="medallion-cap">من كل فاتورة</div>
-      <div class="medallion-sub">رصيد نقدي دائم</div>
-    </div></div>
-  </div>
-
-  <div class="pvm-copy" id="marketingCopy">
-    <div class="pvm-badge">📍 سجّل معنا — حصرياً وانت داخل المحل</div>
-    <h2 class="promo-title" id="revealTitle"></h2>
-    <p class="promo-sub" id="revealSub"></p>
-    <div class="pvm-benefits">
-      <div class="pvm-benefit"><span>✓</span>حصري داخل المحل</div>
-      <div class="pvm-benefit"><span>✓</span>يُحفظ بكارتك</div>
-      <div class="pvm-benefit"><span>✓</span>استخدام حتى ٧٥٪ من رصيدك</div>
-    </div>
-  </div>
-
-  <div class="auth-card" id="authCard">
-    <div class="auth-tabs">
-      <button class="auth-tab on" id="authTabNew" onclick="switchAuthTab('new')">🆕 لا أملك حساب</button>
-      <button class="auth-tab" id="authTabExisting" onclick="switchAuthTab('existing')">🔑 أملك حساب</button>
+  <!-- ============ واجهة العميل (الافتراضية) ============ -->
+  <div id="customerView">
+    <div class="pv10-mark">🕌</div>
+    <div class="title-main">شركة زمزم لتجارة المصوغات الذهبية</div>
+    <div class="title-sub">
+      <span class="title-flourish"></span>
+      بطاقة الثقة الذهبية VIP
+      <span class="title-flourish"></span>
     </div>
 
-    <!-- نموذج التسجيل -->
-    <div id="registerForm">
-      <div class="field">
-        <label>الاسم الثلاثي</label>
-        <input type="text" id="regName" placeholder="مثال: أحمد كريم عبدالله">
-      </div>
-      <div class="field">
-        <label>رقم الهاتف (١١ رقم)</label>
-        <input type="text" id="regPhone" placeholder="07xxxxxxxxx" maxlength="11">
-      </div>
-      <div class="field">
-        <label>كلمة المرور (٦ أحرف فأكثر)</label>
-        <input type="password" id="regPassword" placeholder="أنشئ كلمة مرور خاصة بك">
-      </div>
-      <div class="field">
-        <label>رقم هاتف من دعاك؟ <span style="color:var(--muted); font-weight:600;">(اختياري)</span></label>
-        <input type="text" id="regReferral" placeholder="07xxxxxxxxx" maxlength="11">
-        <div class="hint">تاخذ أنت وصديقك ٥,٠٠٠ دينار لكل وحد عند أول فاتورة حقيقية.</div>
-      </div>
-      <button class="btn btn-gold pvm-cta-pulse" onclick="doRegister()">🏁 سجّل الآن - بطاقة الثقة الذهبية VIP</button>
+    <div class="promo-visual">
+      <div class="gold-medallion"><div class="medallion-inner">
+        <div class="medallion-pct" id="medallionPct">1%</div>
+        <div class="medallion-cap">من كل فاتورة</div>
+        <div class="medallion-sub">رصيد نقدي دائم</div>
+      </div></div>
     </div>
 
-    <!-- نموذج الدخول -->
-    <div id="loginForm" style="display:none;">
+    <div class="pvm-copy" id="marketingCopy">
+      <div class="pvm-badge">📍 سجّل معنا — حصرياً وانت داخل المحل</div>
+      <h2 class="promo-title" id="revealTitle"></h2>
+      <p class="promo-sub" id="revealSub"></p>
+      <div class="pvm-benefits">
+        <div class="pvm-benefit"><span>✓</span>حصري داخل المحل</div>
+        <div class="pvm-benefit"><span>✓</span>يُحفظ بكارتك</div>
+        <div class="pvm-benefit"><span>✓</span>استخدام حتى ٧٥٪ من رصيدك</div>
+      </div>
+    </div>
+
+    <div class="auth-card" id="authCard">
+      <div class="auth-tabs">
+        <button class="auth-tab on" id="authTabNew" onclick="switchAuthTab('new')">🆕 لا أملك حساب</button>
+        <button class="auth-tab" id="authTabExisting" onclick="switchAuthTab('existing')">🔑 أملك حساب</button>
+      </div>
+
+      <div id="registerForm">
+        <div class="field">
+          <label>الاسم الثلاثي</label>
+          <input type="text" id="regName" placeholder="مثال: أحمد كريم عبدالله">
+        </div>
+        <div class="field">
+          <label>رقم الهاتف (١١ رقم)</label>
+          <input type="text" id="regPhone" placeholder="07xxxxxxxxx" maxlength="11">
+        </div>
+        <div class="field">
+          <label>كلمة المرور (٦ أحرف فأكثر)</label>
+          <input type="password" id="regPassword" placeholder="أنشئ كلمة مرور خاصة بك">
+        </div>
+        <div class="field">
+          <label style="color:var(--red);">رقم هاتف من دعاك؟ <span style="color:var(--red); font-weight:600;">(اختياري)</span></label>
+          <input type="text" id="regReferral" placeholder="07xxxxxxxxx" maxlength="11">
+          <div class="hint">تاخذ أنت وصديقك <span id="referralAmountHint1">٥,٠٠٠</span> دينار لكل وحد عند أول فاتورة حقيقية.</div>
+        </div>
+        <button class="btn btn-gold pvm-cta-pulse" onclick="doRegister()">🏁 سجّل الآن - بطاقة الثقة الذهبية VIP</button>
+      </div>
+
+      <div id="loginForm" style="display:none;">
+        <div class="field">
+          <label>رقم الهاتف</label>
+          <input type="text" id="loginPhone" placeholder="07xxxxxxxxx" maxlength="11">
+        </div>
+        <div class="field">
+          <label>كلمة المرور</label>
+          <input type="password" id="loginPassword" placeholder="كلمة المرور">
+        </div>
+        <label style="display:flex; align-items:flex-start; gap:8px; margin-bottom:14px; cursor:pointer; font-size:11.5px; color:var(--muted); line-height:1.6;">
+          <input type="checkbox" id="rememberMe" checked style="width:16px; height:16px; margin-top:1px; accent-color:var(--gold-deep); flex-shrink:0;">
+          <span>✔️ تسجيل دائم — يبقيني مسجّل دخولي حتى لو خرجت من التطبيق. (بدون علامة، يسجّل خروجي تلقائياً)</span>
+        </label>
+        <button class="btn btn-gold" onclick="doLogin()">🔑 تسجيل الدخول</button>
+      </div>
+
+      <div class="dup-warning" id="dupWarning"></div>
+    </div>
+
+    <div class="pvm-microline">⏰ التسجيل حصري وانت داخل المحل — استخدم رصيدك بعملية الشراء الجاية!</div>
+
+    <div class="mini-wa-row">
+      <span>طلبك متأخر أو ما انتبهنا لك؟</span>
+      <a href="https://wa.me/9647901196926" target="_blank" rel="noopener">💬 سيف</a>
+      <a href="https://wa.me/9647805747247" target="_blank" rel="noopener">💬 حسام</a>
+    </div>
+
+    <div class="msg" id="customerMsg"></div>
+
+    <div id="accountView" style="display:none;">
+      <div class="wallet-card">
+        <div class="wallet-name">الرصيد المتوفر</div>
+        <div class="wallet-amount"><span id="accBalance">0</span> <span>دينار</span></div>
+        <div class="wallet-account" id="accId">—</div>
+      </div>
+      <div class="referral-box">
+        <div class="referral-title">💰 اكسب <span id="referralAmountTitle">٥,٠٠٠</span> دينار عن كل صديق تجيبه</div>
+        <p class="referral-sub">شارك رقم هاتفك، وأي صديق يفتح حساب بيه ويشتري، تاخذ <span id="referralAmountSub">٥,٠٠٠</span> دينار فوراً — وهو ياخذ <span id="referralAmountSub2">٥,٠٠٠</span> دينار كمان.</p>
+        <div class="referral-counter" id="accReferralInfo">جبت ٠ من أصدقائك = ربحت ٠ دينار لحد الآن</div>
+      </div>
+      <button class="btn btn-outline" onclick="logout()">تسجيل خروج</button>
+    </div>
+
+    <!-- زر الإعدادات بأسفل النافذة -->
+    <button class="settings-toggle" onclick="showStaffLogin()">⚙️ إعدادات (دخول الموظف)</button>
+  </div>
+
+  <!-- ============ واجهة الموظف ============ -->
+  <div id="staffView" style="display:none;">
+    <div class="top-close"><button onclick="backToCustomer()">‹ رجوع لواجهة العميل</button></div>
+
+    <div class="pv10-mark">🔒</div>
+    <div class="title-main" style="font-size:15px;">دخول الموظف</div>
+    <div class="title-sub">
+      <span class="title-flourish"></span>
+      بطاقة الثقة الذهبية VIP — الإعدادات
+      <span class="title-flourish"></span>
+    </div>
+
+    <div id="staffLoginForm" class="staff-login-box">
       <div class="field">
-        <label>رقم الهاتف</label>
-        <input type="text" id="loginPhone" placeholder="07xxxxxxxxx" maxlength="11">
+        <label>البريد الإلكتروني</label>
+        <input type="email" id="staffEmail" placeholder="zamzamcompany03@gmail.com">
       </div>
       <div class="field">
         <label>كلمة المرور</label>
-        <input type="password" id="loginPassword" placeholder="كلمة المرور">
+        <input type="password" id="staffPassword" placeholder="كلمة المرور">
       </div>
-      <button class="btn btn-gold" onclick="doLogin()">🔑 تسجيل الدخول</button>
+      <button class="btn btn-gold" onclick="staffLogin()">دخول</button>
+      <div class="msg" id="staffLoginMsg"></div>
     </div>
 
-    <div class="dup-warning" id="dupWarning"></div>
-  </div>
+    <div id="staffPanel" style="display:none; margin-top:14px;">
+      <div style="display:flex; justify-content:flex-end; margin-bottom:10px;">
+        <button class="btn-danger" style="width:auto; padding:6px 12px; font-size:11px; border-radius:8px;" onclick="staffLogout()">خروج</button>
+      </div>
 
-  <div class="pvm-microline">⏰ التسجيل حصري وانت داخل المحل — استخدم رصيدك بعملية الشراء الجاية!</div>
+      <div class="staff-tabs">
+        <button class="staff-tab on" id="staffTabPending" onclick="switchStaffTab('pending')">طلبات التسجيل <span class="badge" id="pendingBadge">0</span></button>
+        <button class="staff-tab" id="staffTabCustomers" onclick="switchStaffTab('customers')">كل الزبائن</button>
+        <button class="staff-tab" id="staffTabConfig" onclick="switchStaffTab('config')">⚙️ الإعدادات</button>
+      </div>
 
-  <div class="mini-wa-row">
-    <span>طلبك متأخر أو ما انتبهنا لك؟</span>
-    <a href="https://wa.me/9647901196926" target="_blank" rel="noopener">💬 سيف</a>
-    <a href="https://wa.me/9647805747247" target="_blank" rel="noopener">💬 حسام</a>
-  </div>
+      <div class="search-box" id="searchBoxWrap">
+        <input type="text" id="staffSearch" placeholder="بحث بالاسم أو الهاتف أو رقم الحساب" oninput="filterStaffList()">
+      </div>
+      <button class="qr-btn" id="qrBtnWrap" onclick="document.getElementById('qrInput').click()">📷 امسح بطاقة QR للعميل</button>
+      <input type="file" id="qrInput" accept="image/*" capture="environment" style="display:none;" onchange="scanQr(event)">
 
-  <div class="msg" id="customerMsg"></div>
+      <div id="pendingListWrap"><div id="pendingList"></div></div>
+      <div id="customersListWrap" style="display:none;"><div id="customersList"></div></div>
 
-  <!-- عرض حساب نشط بعد الدخول -->
-  <div id="accountView" style="display:none;">
-    <div class="wallet-card">
-      <div class="wallet-name">الرصيد المتوفر</div>
-      <div class="wallet-amount"><span id="accBalance">0</span> <span>دينار</span></div>
-      <div class="wallet-account" id="accId">—</div>
+      <div id="configWrap" style="display:none;">
+        <div class="field">
+          <label>نسبة الخصم (٪) — تُطبّق على كل فاتورة</label>
+          <input type="number" id="configDiscountPercent" step="0.1" min="0.1" max="100">
+        </div>
+        <div class="field">
+          <label>مبلغ مكافأة الإحالة (دينار) — لكل طرف</label>
+          <input type="number" id="configReferralBonus" step="500" min="0">
+          <div class="hint">هذا المبلغ يُضاف لكل من الجالب والمُحال عند أول فاتورة حقيقية.</div>
+        </div>
+        <button class="btn btn-gold" onclick="saveConfig()">💾 حفظ الإعدادات</button>
+        <div class="msg" id="configMsg"></div>
+      </div>
+
+      <button class="btn btn-outline" style="margin-top:10px;" id="refreshBtnWrap" onclick="refreshStaffData()">🔄 تحديث</button>
     </div>
-
-    <div class="referral-box">
-      <div class="referral-title">💰 اكسب ٥,٠٠٠ دينار عن كل صديق تجيبه</div>
-      <p class="referral-sub">شارك رقم هاتفك، وأي صديق يفتح حساب بيه ويشتري، تاخذ ٥,٠٠٠ دينار فوراً — وهو ياخذ ٥,٠٠٠ دينار كمان.</p>
-      <div class="referral-counter" id="accReferralInfo">جبت ٠ من أصدقائك = ربحت ٠ دينار لحد الآن</div>
-    </div>
-
-    <button class="btn btn-outline" onclick="logout()">تسجيل خروج</button>
-  </div>
-</div>
-
-<!-- ============ واجهة الموظف ============ -->
-<div class="phone" id="staffCard" style="display:none;">
-  <div class="pv10-mark">🔒</div>
-  <div class="title-main" style="font-size:15px;">دخول الموظف</div>
-  <div class="title-sub">
-    <span class="title-flourish"></span>
-    بطاقة الثقة الذهبية VIP — الإعدادات
-    <span class="title-flourish"></span>
   </div>
 
-  <div id="staffLoginForm" style="margin-top:16px;">
-    <div class="field">
-      <label>البريد الإلكتروني</label>
-      <input type="email" id="staffEmail" placeholder="zamzamcompany03@gmail.com">
-    </div>
-    <div class="field">
-      <label>كلمة المرور</label>
-      <input type="password" id="staffPassword" placeholder="كلمة المرور">
-    </div>
-    <button class="btn btn-gold" onclick="staffLogin()">دخول</button>
-    <div class="msg" id="staffLoginMsg"></div>
-  </div>
-
-  <div id="staffPanel" style="display:none; margin-top:16px;">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
-      <span style="font-family:'Tajawal',sans-serif; font-weight:800; font-size:13px; color:var(--navy);">طلبات التسجيل المعلّقة</span>
-      <button class="btn-danger" style="width:auto; padding:6px 12px; font-size:11px; border-radius:8px;" onclick="staffLogout()">خروج</button>
-    </div>
-    <div id="pendingList"></div>
-    <button class="btn btn-outline" onclick="loadPending()">🔄 تحديث القائمة</button>
-  </div>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.js"></script>
 
 <script>
   const WORKER_URL = 'https://zamzam-vip-card.saadzamzamcompany.workers.dev';
@@ -322,10 +338,11 @@
   firebase.initializeApp(firebaseConfig);
   const auth = firebase.auth();
 
-  // ===================== نص "خذ رصيدك النقدي..." يظهر كلمة كلمة =====================
-  const titleWords = ['خذ','رصيدك','النقدي','<br>','وانت','واقف','قدامنا'];
-  const subWords = '١٪ من قيمة فاتورتك يبقى محفوظاً بكارتك الخاص — رصيد حقيقي، مو نقاط وهمية.'.split(' ');
+  let allPending = [];
+  let allCustomers = [];
 
+  // ===================== نص يظهر كلمة كلمة =====================
+  const titleWords = ['خذ','رصيدك','النقدي','<br>','وانت','واقف','قدامنا'];
   function renderRevealWords(containerId, words, startDelay, step){
     const el = document.getElementById(containerId);
     let delay = startDelay;
@@ -337,17 +354,54 @@
     }).join(' ');
   }
   renderRevealWords('revealTitle', titleWords, 0.1, 0.18);
-  renderRevealWords('revealSub', subWords, 1.4, 0.15);
 
-  // ===================== التبديل بين واجهة العميل والموظف =====================
-  function toggleView(){
-    const customerCard = document.getElementById('customerCard');
-    const staffCard = document.getElementById('staffCard');
-    const btn = document.getElementById('viewToggleBtn');
-    const showingStaff = staffCard.style.display !== 'none';
-    staffCard.style.display = showingStaff ? 'none' : 'block';
-    customerCard.style.display = showingStaff ? 'block' : 'none';
-    btn.textContent = showingStaff ? '👤 دخول الموظف' : '🧑‍🤝‍🧑 واجهة العميل';
+  // تحويل رقم عادي لأرقام عربية مع فاصلة آلاف (٥٠٠٠ ← ٥٬٠٠٠)
+  function numberToArabic(num){
+    const withCommas = Math.round(num).toLocaleString('en-US');
+    const map = {'0':'٠','1':'١','2':'٢','3':'٣','4':'٤','5':'٥','6':'٦','7':'٧','8':'٨','9':'٩',',':'٬'};
+    return withCommas.replace(/[0-9,]/g, d => map[d]);
+  }
+  function toArabicDigits(num){
+    const map = {'0':'٠','1':'١','2':'٢','3':'٣','4':'٤','5':'٥','6':'٦','7':'٧','8':'٨','9':'٩','.':'.'};
+    return String(num).replace(/[0-9.]/g, d => map[d]);
+  }
+
+  // ===================== تحميل الإعدادات الحالية (نسبة الخصم + مبلغ الإحالة) =====================
+  // تُقرأ من مكان واحد بالخادم، وتنعكس بكل مكان تلقائياً — الميدالية، نص التسويق، صندوق الإحالة
+  async function loadPublicConfig(){
+    try {
+      const res = await fetch(WORKER_URL + '/get-config', { method: 'POST' });
+      const data = await res.json();
+      if (!data.success) throw new Error(data.error);
+
+      const pct = data.discountPercent;
+      const bonus = data.referralBonus;
+
+      document.getElementById('medallionPct').textContent = pct + '%';
+
+      const subWords = (toArabicDigits(pct) + '٪ من قيمة فاتورتك يبقى محفوظاً بكارتك الخاص — رصيد حقيقي، مو نقاط وهمية.').split(' ');
+      renderRevealWords('revealSub', subWords, 1.4, 0.15);
+
+      const bonusAr = numberToArabic(bonus);
+      ['referralAmountHint1','referralAmountTitle','referralAmountSub','referralAmountSub2'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = bonusAr;
+      });
+    } catch (err) {
+      // لو فشلت القراءة (مثلاً مشكلة اتصال مؤقتة)، تبقى القيم الافتراضية بالصفحة كما هي — بدون ما نكسر الواجهة
+      console.warn('تعذّر تحميل الإعدادات، استُخدمت القيم الافتراضية:', err.message);
+    }
+  }
+  loadPublicConfig();
+
+  // ===================== التنقّل بين العميل والموظف (نافذة وحدة) =====================
+  function showStaffLogin(){
+    document.getElementById('customerView').style.display = 'none';
+    document.getElementById('staffView').style.display = 'block';
+  }
+  function backToCustomer(){
+    document.getElementById('staffView').style.display = 'none';
+    document.getElementById('customerView').style.display = 'block';
   }
 
   // ===================== واجهة العميل =====================
@@ -379,11 +433,7 @@
         body: JSON.stringify({ name, phone, password, referredByPhone }),
       });
       const data = await res.json();
-      if (data.success) {
-        showCustomerMsg('✓ ' + data.message, 'success');
-      } else {
-        showCustomerMsg('⚠ ' + data.error, 'error');
-      }
+      showCustomerMsg(data.success ? '✓ ' + data.message : '⚠ ' + data.error, data.success ? 'success' : 'error');
     } catch (err) {
       showCustomerMsg('⚠ خطأ بالاتصال: ' + err.message, 'error');
     }
@@ -392,30 +442,27 @@
   async function doLogin(){
     const phone = document.getElementById('loginPhone').value.trim();
     const password = document.getElementById('loginPassword').value;
+    const rememberMe = document.getElementById('rememberMe').checked;
+
+    if (!phone || !password) {
+      showCustomerMsg('⚠ لازم تكتب رقم الهاتف وكلمة المرور.', 'error');
+      return;
+    }
 
     showCustomerMsg('جارٍ التحقق...', 'pending');
     try {
-      const res = await fetch(WORKER_URL + '/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone, password }),
-      });
-      const data = await res.json();
+      // نحدد نوع الجلسة قبل الدخول: دائمة (تبقى حتى بعد إغلاق التطبيق)
+      // أو مؤقتة (تنتهي تلقائياً بمجرد ما يخرج من الصفحة)
+      const persistence = rememberMe
+        ? firebase.auth.Auth.Persistence.LOCAL
+        : firebase.auth.Auth.Persistence.SESSION;
+      await auth.setPersistence(persistence);
 
-      if (!data.success) {
-        showCustomerMsg('⚠ ' + data.error, 'error');
-        return;
-      }
-
-      if (data.status === 'active') {
-        renderAccountView(data.account);
-      } else if (data.status === 'pending') {
-        showCustomerMsg('⏳ طلبك لسا قيد المراجعة — بانتظار موافقة الموظف.', 'pending');
-      } else if (data.status === 'rejected') {
-        showCustomerMsg('❌ تم رفض طلبك. السبب: ' + (data.reason || 'غير محدد'), 'error');
-      }
+      const syntheticEmail = phone + '@zamzam-vip.customer';
+      await auth.signInWithEmailAndPassword(syntheticEmail, password);
+      // onAuthStateChanged بالأسفل يتكفّل تلقائياً بجلب بيانات الحساب وعرضها
     } catch (err) {
-      showCustomerMsg('⚠ خطأ بالاتصال: ' + err.message, 'error');
+      showCustomerMsg('⚠ رقم الهاتف أو كلمة المرور غير صحيحة.', 'error');
     }
   }
 
@@ -433,7 +480,7 @@
       'جبت ' + (account.referralCount || 0) + ' من أصدقائك = ربحت ' + (account.referralEarnings || 0) + ' دينار لحد الآن';
   }
 
-  function logout(){
+  function resetCustomerLoginView(){
     document.getElementById('accountView').style.display = 'none';
     document.getElementById('marketingCopy').style.display = 'block';
     document.getElementById('authCard').style.display = 'block';
@@ -441,18 +488,53 @@
     document.querySelector('.mini-wa-row').style.display = 'flex';
     document.getElementById('loginPhone').value = '';
     document.getElementById('loginPassword').value = '';
+    document.getElementById('customerMsg').className = 'msg';
     switchAuthTab('existing');
   }
 
-  // ===================== واجهة الموظف =====================
-  auth.onAuthStateChanged(function(user){
-    if (user) {
-      document.getElementById('staffLoginForm').style.display = 'none';
-      document.getElementById('staffPanel').style.display = 'block';
-      loadPending();
-    } else {
+  function logout(){
+    // يسجّل خروج من نفس الجلسة (عميل أو موظف) — الاثنين يستخدمون نفس نظام الدخول
+    auth.signOut();
+  }
+
+  // ===================== نظام دخول موحّد — يميّز تلقائياً بين العميل والموظف =====================
+  // كلا الطرفين يشتركون بنفس نظام Firebase Authentication، فنفحص نوع الحساب
+  // من صيغة بريده (بريد العميل مبني من رقمه + @zamzam-vip.customer)
+  auth.onAuthStateChanged(async function(user){
+    if (!user) {
+      resetCustomerLoginView();
       document.getElementById('staffLoginForm').style.display = 'block';
       document.getElementById('staffPanel').style.display = 'none';
+      return;
+    }
+
+    const isCustomer = user.email && user.email.endsWith('@zamzam-vip.customer');
+
+    if (isCustomer) {
+      showCustomerMsg('جارٍ التحقق...', 'pending');
+      try {
+        const idToken = await user.getIdToken();
+        const res = await fetch(WORKER_URL + '/get-profile', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + idToken },
+        });
+        const data = await res.json();
+        if (!data.success) { showCustomerMsg('⚠ ' + data.error, 'error'); return; }
+
+        if (data.status === 'active') {
+          renderAccountView(data.account);
+        } else if (data.status === 'pending') {
+          showCustomerMsg('⏳ طلبك لسا قيد المراجعة — بانتظار موافقة الموظف.', 'pending');
+        } else if (data.status === 'rejected') {
+          showCustomerMsg('❌ تم رفض طلبك. السبب: ' + (data.reason || 'غير محدد'), 'error');
+        }
+      } catch (err) {
+        showCustomerMsg('⚠ خطأ بالاتصال: ' + err.message, 'error');
+      }
+    } else {
+      document.getElementById('staffLoginForm').style.display = 'none';
+      document.getElementById('staffPanel').style.display = 'block';
+      refreshStaffData();
     }
   });
 
@@ -466,17 +548,82 @@
     const email = document.getElementById('staffEmail').value.trim();
     const password = document.getElementById('staffPassword').value;
     showStaffMsg('جارٍ الدخول...', 'pending');
-
     auth.signInWithEmailAndPassword(email, password)
       .catch(function(err){ showStaffMsg('⚠ فشل الدخول: ' + err.message, 'error'); });
   }
-
   function staffLogout(){ auth.signOut(); }
 
-  async function loadPending(){
-    const listEl = document.getElementById('pendingList');
-    listEl.innerHTML = '<div class="empty-note">جارٍ التحميل...</div>';
+  function switchStaffTab(tab){
+    document.getElementById('staffTabPending').classList.toggle('on', tab === 'pending');
+    document.getElementById('staffTabCustomers').classList.toggle('on', tab === 'customers');
+    document.getElementById('staffTabConfig').classList.toggle('on', tab === 'config');
+    document.getElementById('pendingListWrap').style.display = tab === 'pending' ? 'block' : 'none';
+    document.getElementById('customersListWrap').style.display = tab === 'customers' ? 'block' : 'none';
+    document.getElementById('configWrap').style.display = tab === 'config' ? 'block' : 'none';
 
+    // صندوق البحث وزر QR وزر التحديث ملهم معنى بس بتبويبي الطلبات والزبائن
+    const showListTools = (tab === 'pending' || tab === 'customers');
+    document.getElementById('searchBoxWrap').style.display = showListTools ? 'flex' : 'none';
+    document.getElementById('qrBtnWrap').style.display = showListTools ? 'block' : 'none';
+    document.getElementById('refreshBtnWrap').style.display = showListTools ? 'block' : 'none';
+
+    if (tab === 'config') {
+      loadConfigForm();
+    } else {
+      document.getElementById('staffSearch').value = '';
+      filterStaffList();
+    }
+  }
+
+  async function loadConfigForm(){
+    document.getElementById('configMsg').className = 'msg';
+    try {
+      const res = await fetch(WORKER_URL + '/get-config', { method: 'POST' });
+      const data = await res.json();
+      if (data.success) {
+        document.getElementById('configDiscountPercent').value = data.discountPercent;
+        document.getElementById('configReferralBonus').value = data.referralBonus;
+      }
+    } catch (err) {
+      document.getElementById('configMsg').textContent = '⚠ تعذّر تحميل الإعدادات الحالية: ' + err.message;
+      document.getElementById('configMsg').className = 'msg error';
+    }
+  }
+
+  async function saveConfig(){
+    const discountPercent = document.getElementById('configDiscountPercent').value;
+    const referralBonus = document.getElementById('configReferralBonus').value;
+    const msgEl = document.getElementById('configMsg');
+    msgEl.textContent = 'جارٍ الحفظ...';
+    msgEl.className = 'msg pending';
+
+    try {
+      const idToken = await auth.currentUser.getIdToken();
+      const res = await fetch(WORKER_URL + '/update-config', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + idToken },
+        body: JSON.stringify({ discountPercent, referralBonus }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        msgEl.textContent = '✓ تم الحفظ بنجاح — الآن تنعكس بكل مكان بالتطبيق.';
+        msgEl.className = 'msg success';
+        loadPublicConfig(); // نحدّث نفس الصفحة الحالية فوراً كمان
+      } else {
+        msgEl.textContent = '⚠ ' + data.error;
+        msgEl.className = 'msg error';
+      }
+    } catch (err) {
+      msgEl.textContent = '⚠ خطأ: ' + err.message;
+      msgEl.className = 'msg error';
+    }
+  }
+
+  async function refreshStaffData(){
+    await Promise.all([loadPending(), loadCustomers()]);
+  }
+
+  async function loadPending(){
     try {
       const idToken = await auth.currentUser.getIdToken();
       const res = await fetch(WORKER_URL + '/list-pending', {
@@ -484,23 +631,62 @@
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + idToken },
       });
       const data = await res.json();
-
-      if (!data.success) {
-        listEl.innerHTML = '<div class="empty-note">⚠ ' + data.error + '</div>';
-        return;
-      }
-      if (data.requests.length === 0) {
-        listEl.innerHTML = '<div class="empty-note">ما فيه طلبات معلّقة حالياً.</div>';
-        return;
-      }
-      listEl.innerHTML = data.requests.map(r => `
-        <div class="req-row">
-          <div><div class="name">${escapeHtml(r.name)}</div><div class="phone">${escapeHtml(r.phone)}</div></div>
-          <button onclick="approveRequest('${r.uid}')">✓ موافقة</button>
-        </div>
-      `).join('');
+      allPending = data.success ? data.requests : [];
+      document.getElementById('pendingBadge').textContent = allPending.length;
+      renderPendingList(allPending);
     } catch (err) {
-      listEl.innerHTML = '<div class="empty-note">⚠ خطأ: ' + err.message + '</div>';
+      document.getElementById('pendingList').innerHTML = '<div class="empty-note">⚠ خطأ: ' + err.message + '</div>';
+    }
+  }
+
+  async function loadCustomers(){
+    try {
+      const idToken = await auth.currentUser.getIdToken();
+      const res = await fetch(WORKER_URL + '/list-customers', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + idToken },
+      });
+      const data = await res.json();
+      allCustomers = data.success ? data.customers : [];
+      renderCustomersList(allCustomers);
+    } catch (err) {
+      document.getElementById('customersList').innerHTML = '<div class="empty-note">⚠ خطأ: ' + err.message + '</div>';
+    }
+  }
+
+  function renderPendingList(list){
+    const el = document.getElementById('pendingList');
+    if (list.length === 0) { el.innerHTML = '<div class="empty-note">ما فيه طلبات معلّقة حالياً.</div>'; return; }
+    el.innerHTML = list.map(r => `
+      <div class="req-row">
+        <div><div class="name">${escapeHtml(r.name)}</div><div class="phone">${escapeHtml(r.phone)}</div></div>
+        <button onclick="approveRequest('${r.uid}')">✓ موافقة</button>
+      </div>
+    `).join('');
+  }
+
+  function renderCustomersList(list){
+    const el = document.getElementById('customersList');
+    if (list.length === 0) { el.innerHTML = '<div class="empty-note">ما فيه زبائن نشطين بعد.</div>'; return; }
+    el.innerHTML = list.map(c => `
+      <div class="req-row">
+        <div><div class="name">${escapeHtml(c.name)}</div><div class="phone">${escapeHtml(c.accountId)} • ${escapeHtml(c.phone)}</div></div>
+        <div class="balance">${c.balanceNum.toLocaleString('en-US')} د.ع</div>
+      </div>
+    `).join('');
+  }
+
+  function filterStaffList(){
+    const q = document.getElementById('staffSearch').value.trim().toLowerCase();
+    const isPending = document.getElementById('pendingListWrap').style.display !== 'none';
+    if (isPending) {
+      const filtered = q ? allPending.filter(r => r.name.toLowerCase().includes(q) || r.phone.includes(q)) : allPending;
+      renderPendingList(filtered);
+    } else {
+      const filtered = q ? allCustomers.filter(c =>
+        c.name.toLowerCase().includes(q) || c.phone.includes(q) || c.accountId.toLowerCase().includes(q)
+      ) : allCustomers;
+      renderCustomersList(filtered);
     }
   }
 
@@ -515,13 +701,35 @@
       const data = await res.json();
       if (data.success) {
         alert('✓ تم تفعيل الحساب: ' + data.accountId + ' — ' + data.name);
-        loadPending();
+        refreshStaffData();
       } else {
         alert('⚠ ' + data.error);
       }
     } catch (err) {
       alert('⚠ خطأ: ' + err.message);
     }
+  }
+
+  // ===================== مسح QR للبحث السريع =====================
+  function scanQr(event){
+    const file = event.target.files[0];
+    if (!file) return;
+    const img = new Image();
+    img.onload = function(){
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width; canvas.height = img.height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0);
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const code = jsQR(imageData.data, imageData.width, imageData.height);
+      if (code && code.data) {
+        document.getElementById('staffSearch').value = code.data.trim();
+        switchStaffTab('customers');
+      } else {
+        alert('⚠ ما قدرنا نقرأ الكود بوضوح — جرّب مرة ثانية.');
+      }
+    };
+    img.src = URL.createObjectURL(file);
   }
 
   function escapeHtml(s){
