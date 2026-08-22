@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -250,7 +249,27 @@
         <p class="referral-sub">شارك رقم هاتفك، وأي صديق يفتح حساب بيه ويشتري، تاخذ <span id="referralAmountSub">٥,٠٠٠</span> دينار فوراً — وهو ياخذ <span id="referralAmountSub2">٥,٠٠٠</span> دينار كمان.</p>
         <div class="referral-counter" id="accReferralInfo">جبت ٠ من أصدقائك = ربحت ٠ دينار لحد الآن</div>
       </div>
-      <button class="btn btn-outline" onclick="logout()">تسجيل خروج</button>
+
+      <button class="btn btn-outline" onclick="togglePasswordChange()" id="pwChangeToggleBtn">🔒 تغيير كلمة المرور</button>
+
+      <div id="passwordChangeForm" style="display:none; margin-top:12px;">
+        <div class="field">
+          <label>كلمة المرور الحالية</label>
+          <input type="password" id="pwCurrent" placeholder="كلمة المرور الحالية">
+        </div>
+        <div class="field">
+          <label>كلمة المرور الجديدة (٦ أحرف فأكثر)</label>
+          <input type="password" id="pwNew" placeholder="كلمة المرور الجديدة">
+        </div>
+        <div class="field">
+          <label>تأكيد كلمة المرور الجديدة</label>
+          <input type="password" id="pwConfirm" placeholder="أعد كتابة كلمة المرور الجديدة">
+        </div>
+        <button class="btn btn-gold" onclick="doChangePassword()">💾 حفظ كلمة المرور الجديدة</button>
+        <div class="msg" id="pwChangeMsg"></div>
+      </div>
+
+      <button class="btn btn-outline" style="margin-top:10px;" onclick="logout()">تسجيل خروج</button>
     </div>
 
     <!-- زر الإعدادات بأسفل النافذة -->
@@ -287,6 +306,19 @@
         <button class="btn-danger" style="width:auto; padding:6px 12px; font-size:11px; border-radius:8px;" onclick="staffLogout()">خروج</button>
       </div>
 
+      <!-- صندوق كلمة المرور المؤقتة الجديدة + إرسال واتساب -->
+      <div id="resetResultBox" style="display:none; background:#fffaf0; border:1px solid #d4af3755; border-radius:12px; padding:14px; margin-bottom:14px; text-align:center;">
+        <div style="font-family:'Tajawal',sans-serif; font-weight:800; font-size:12.5px; color:#8a6a1f; margin-bottom:6px;">
+          🔑 كلمة المرور المؤقتة لـ<span id="resetCustomerName"></span>
+        </div>
+        <div style="font-family:'Tajawal',sans-serif; font-weight:900; font-size:20px; color:#3d2a06; letter-spacing:2px; margin-bottom:10px;" id="resetTempPassword"></div>
+        <div style="display:flex; gap:8px;">
+          <button style="flex:1; background:#25D366; color:#fff; border:none; border-radius:9px; padding:9px; font-size:11.5px; font-weight:700; cursor:pointer;" onclick="sendResetViaWhatsapp('سيف')">📤 إرسال (سيف)</button>
+          <button style="flex:1; background:#25D366; color:#fff; border:none; border-radius:9px; padding:9px; font-size:11.5px; font-weight:700; cursor:pointer;" onclick="sendResetViaWhatsapp('حسام')">📤 إرسال (حسام)</button>
+        </div>
+        <button style="margin-top:8px; background:transparent; border:none; color:var(--muted); font-size:11px; cursor:pointer;" onclick="document.getElementById('resetResultBox').style.display='none'">إغلاق</button>
+      </div>
+
       <div class="staff-tabs">
         <button class="staff-tab on" id="staffTabPending" onclick="switchStaffTab('pending')">طلبات التسجيل <span class="badge" id="pendingBadge">0</span></button>
         <button class="staff-tab" id="staffTabCustomers" onclick="switchStaffTab('customers')">كل الزبائن</button>
@@ -300,7 +332,10 @@
       <input type="file" id="qrInput" accept="image/*" capture="environment" style="display:none;" onchange="scanQr(event)">
 
       <div id="pendingListWrap"><div id="pendingList"></div></div>
-      <div id="customersListWrap" style="display:none;"><div id="customersList"></div></div>
+      <div id="customersListWrap" style="display:none;">
+        <div style="font-size:10.5px; color:var(--muted); text-align:center; margin-bottom:8px;">💡 اضغط على اسم أي عميل لإرسال كلمة مرور جديدة له</div>
+        <div id="customersList"></div>
+      </div>
 
       <div id="configWrap" style="display:none;">
         <div class="field">
@@ -489,12 +524,72 @@
     document.getElementById('loginPhone').value = '';
     document.getElementById('loginPassword').value = '';
     document.getElementById('customerMsg').className = 'msg';
+    document.getElementById('passwordChangeForm').style.display = 'none';
+    document.getElementById('pwChangeToggleBtn').textContent = '🔒 تغيير كلمة المرور';
     switchAuthTab('existing');
   }
 
   function logout(){
     // يسجّل خروج من نفس الجلسة (عميل أو موظف) — الاثنين يستخدمون نفس نظام الدخول
     auth.signOut();
+  }
+
+  // ===================== تغيير كلمة المرور — العميل بنفسه، بدون وسيط =====================
+  // هذا كله يصير مباشرة بين العميل ونظام Firebase — العميل مسجّل دخوله أصلاً،
+  // فقط يثبت هويته بكلمة مروره الحالية قبل ما يقدر يغيّرها (طلب أمان قياسي من Firebase)
+  function togglePasswordChange(){
+    const form = document.getElementById('passwordChangeForm');
+    const showing = form.style.display !== 'none';
+    form.style.display = showing ? 'none' : 'block';
+    document.getElementById('pwChangeToggleBtn').textContent = showing ? '🔒 تغيير كلمة المرور' : '✕ إلغاء';
+    document.getElementById('pwChangeMsg').className = 'msg';
+    document.getElementById('pwCurrent').value = '';
+    document.getElementById('pwNew').value = '';
+    document.getElementById('pwConfirm').value = '';
+  }
+
+  async function doChangePassword(){
+    const currentPassword = document.getElementById('pwCurrent').value;
+    const newPassword = document.getElementById('pwNew').value;
+    const confirmPassword = document.getElementById('pwConfirm').value;
+    const msgEl = document.getElementById('pwChangeMsg');
+
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      msgEl.textContent = '⚠ لازم تعبّي كل الحقول.';
+      msgEl.className = 'msg error';
+      return;
+    }
+    if (newPassword.length < 6) {
+      msgEl.textContent = '⚠ كلمة المرور الجديدة لازم تكون ٦ أحرف أو أكثر.';
+      msgEl.className = 'msg error';
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      msgEl.textContent = '⚠ كلمة المرور الجديدة وتأكيدها مو متطابقين.';
+      msgEl.className = 'msg error';
+      return;
+    }
+
+    msgEl.textContent = 'جارٍ التحقق...';
+    msgEl.className = 'msg pending';
+
+    try {
+      const user = auth.currentUser;
+      const credential = firebase.auth.EmailAuthProvider.credential(user.email, currentPassword);
+      await user.reauthenticateWithCredential(credential); // يتأكد إن كلمة المرور الحالية صحيحة فعلاً
+      await user.updatePassword(newPassword); // يحدّثها بأمان — بدون ما تمر على أي خادم ثاني
+
+      msgEl.textContent = '✓ تم تغيير كلمة المرور بنجاح.';
+      msgEl.className = 'msg success';
+      setTimeout(() => togglePasswordChange(), 1800);
+    } catch (err) {
+      if (err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {
+        msgEl.textContent = '⚠ كلمة المرور الحالية غير صحيحة.';
+      } else {
+        msgEl.textContent = '⚠ خطأ: ' + err.message;
+      }
+      msgEl.className = 'msg error';
+    }
   }
 
   // ===================== نظام دخول موحّد — يميّز تلقائياً بين العميل والموظف =====================
@@ -670,10 +765,53 @@
     if (list.length === 0) { el.innerHTML = '<div class="empty-note">ما فيه زبائن نشطين بعد.</div>'; return; }
     el.innerHTML = list.map(c => `
       <div class="req-row">
-        <div><div class="name">${escapeHtml(c.name)}</div><div class="phone">${escapeHtml(c.accountId)} • ${escapeHtml(c.phone)}</div></div>
+        <div style="cursor:pointer;" onclick="resetCustomerPassword('${escapeHtml(c.phone)}')" title="اضغط لإرسال كلمة مرور جديدة لهذا العميل">
+          <div class="name">🔑 ${escapeHtml(c.name)}</div>
+          <div class="phone">${escapeHtml(c.accountId)} • ${escapeHtml(c.phone)}</div>
+        </div>
         <div class="balance">${c.balanceNum.toLocaleString('en-US')} د.ع</div>
       </div>
     `).join('');
+  }
+
+  let lastResetPhone = null;
+
+  async function resetCustomerPassword(phone){
+    if (!confirm('متأكد تبي تولّد كلمة مرور مؤقتة جديدة لهذا العميل؟ كلمة مروره الحالية تتوقف عن الشغل فوراً.')) return;
+
+    try {
+      const idToken = await auth.currentUser.getIdToken();
+      const res = await fetch(WORKER_URL + '/reset-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + idToken },
+        body: JSON.stringify({ phone }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        lastResetPhone = phone;
+        document.getElementById('resetCustomerName').textContent = data.name;
+        document.getElementById('resetTempPassword').textContent = data.tempPassword;
+        document.getElementById('resetResultBox').style.display = 'block';
+        document.getElementById('resetResultBox').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        alert('⚠ ' + data.error);
+      }
+    } catch (err) {
+      alert('⚠ خطأ: ' + err.message);
+    }
+  }
+
+  function sendResetViaWhatsapp(staffName){
+    const customerName = document.getElementById('resetCustomerName').textContent;
+    const tempPassword = document.getElementById('resetTempPassword').textContent;
+    const text = 'مرحباً ' + customerName + '، هذي كلمة مرور مؤقتة جديدة لبطاقة الثقة الذهبية VIP:\n\n' +
+      tempPassword + '\n\nادخل فيها الآن، ونفضّل تغيّرها بعدين من داخل التطبيق.\n\n— ' + staffName + '، شركة زمزم';
+
+    // نحوّل رقم الهاتف العراقي المحلي (07...) لصيغة دولية (964...) لرابط واتساب
+    let intlPhone = lastResetPhone;
+    if (intlPhone.startsWith('0')) intlPhone = '964' + intlPhone.slice(1);
+
+    window.open('https://wa.me/' + intlPhone + '?text=' + encodeURIComponent(text), '_blank');
   }
 
   function filterStaffList(){
