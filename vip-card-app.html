@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>بطاقة الثقة الذهبية VIP — شركة زمزم</title>
+
+<style>
+  :root{
+    --navy: #1f3a5c;
+    --navy-deep: #152840;
+    --gold: #d4af37;
+    --gold-deep: #b8860b;
+    --bg: #f4f6f8;
+    --ink: #232323;
+    --muted: #6b7685;
+    --green: #1e9e57;
+    --red: #c0392b;
+  }
+  *{ box-sizing:border-box; }
+  body{
+    font-family:'Tahoma', 'Segoe UI', Arial, sans-serif; background:var(--bg); margin:0;
+    min-height:100vh; display:flex; flex-direction:column; align-items:center; padding:20px 14px;
+    direction:rtl; color:var(--ink);
+  }
+  .topbar{ width:100%; max-width:420px; display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
+  .topbar .brand{ font-weight:900; color:var(--navy); font-size:15px; }
+  .topbar button{
+    background:transparent; border:1px solid var(--navy); color:var(--navy); border-radius:100px;
+    padding:6px 14px; font-size:12px; cursor:pointer; font-weight:700;
+  }
+
+  .card{
+    width:100%; max-width:420px; background:#fff; border-radius:18px; padding:26px 22px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.08);
+  }
+  .mark{ text-align:center; font-size:30px; margin-bottom:6px; }
+  h1{ text-align:center; font-size:17px; color:var(--navy); margin:0 0 2px; }
+  .sub{ text-align:center; font-size:11.5px; color:var(--gold-deep); font-weight:700; margin-bottom:20px; }
+
+  .medallion{
+    width:110px; height:110px; margin:0 auto 18px; border-radius:22px;
+    background:conic-gradient(from 0deg,#b8860b,#f5d78e,#d4af37,#f6e6b8,#b8860b);
+    display:flex; align-items:center; justify-content:center; position:relative;
+    clip-path: polygon(29% 0%, 71% 0%, 100% 29%, 100% 71%, 71% 100%, 29% 100%, 0% 71%, 0% 29%);
+  }
+  .medallion-inner{
+    width:88%; height:88%; border-radius:18px;
+    background:radial-gradient(circle at 35% 28%, #fff3d0, #e8c76a 45%, #b8860b 100%);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    clip-path: polygon(29% 0%, 71% 0%, 100% 29%, 100% 71%, 71% 100%, 29% 100%, 0% 71%, 0% 29%);
+  }
+  .medallion-pct{ font-weight:900; font-size:24px; color:#3d2a06; }
+  .medallion-cap{ font-size:9px; color:#5c4213; font-weight:800; }
+
+  .tabs{ display:flex; gap:8px; margin-bottom:16px; }
+  .tab{
+    flex:1; padding:9px; border-radius:10px; border:1px solid var(--navy); background:transparent;
+    color:var(--navy); font-weight:800; font-size:12.5px; cursor:pointer;
+  }
+  .tab.on{ background:var(--navy); color:#fff; }
+
+  .field{ margin-bottom:12px; }
+  .field label{ display:block; font-size:11.5px; font-weight:700; margin-bottom:5px; color:var(--ink); }
+  .field input{
+    width:100%; padding:10px 12px; border:1px solid #d8dde3; border-radius:9px; font-size:13.5px;
+  }
+  .field .hint{ font-size:10px; color:var(--muted); margin-top:3px; }
+
+  .btn{
+    width:100%; padding:12px; border:none; border-radius:11px; font-weight:800; font-size:14px; cursor:pointer;
+    margin-top:6px;
+  }
+  .btn-primary{ background:linear-gradient(180deg,#d4af37,#b8860b); color:#3d2a06; }
+  .btn-outline{ background:transparent; border:1px solid var(--navy); color:var(--navy); }
+  .btn-danger{ background:transparent; border:1px solid var(--red); color:var(--red); }
+
+  .switch-link{
+    text-align:center; margin-top:14px; font-size:11.5px; color:var(--navy); text-decoration:underline;
+    cursor:pointer;
+  }
+
+  .msg{ margin-top:14px; padding:12px 14px; border-radius:10px; font-size:12.5px; line-height:1.8; display:none; }
+  .msg.success{ background:#e6f7ee; border:1px solid var(--green); color:#0d5c31; display:block; }
+  .msg.error{ background:#fdeaea; border:1px solid var(--red); color:#7a1a1a; display:block; }
+  .msg.pending{ background:#fff8e6; border:1px solid var(--gold-deep); color:#5c4213; display:block; }
+
+  .account-view{ text-align:center; }
+  .balance{ font-size:30px; font-weight:900; color:var(--navy); margin:10px 0 2px; }
+  .balance small{ font-size:13px; color:var(--muted); }
+  .account-id{ font-size:12px; color:var(--muted); margin-bottom:16px; }
+  .referral-box{
+    background:#fffaf0; border:1px solid #e8d7a0; border-radius:12px; padding:12px; margin-top:14px; text-align:center;
+  }
+  .referral-box .t{ font-weight:800; color:var(--gold-deep); font-size:12.5px; margin-bottom:4px; }
+  .referral-box .n{ font-size:11px; color:var(--muted); }
+
+  .req-list{ margin-top:10px; }
+  .req-row{
+    display:flex; justify-content:space-between; align-items:center; padding:10px 12px;
+    border:1px solid #e5e8ec; border-radius:10px; margin-bottom:8px; font-size:12px;
+  }
+  .req-row .info{ text-align:right; }
+  .req-row .name{ font-weight:800; }
+  .req-row .phone{ color:var(--muted); font-size:11px; }
+  .req-row button{
+    background:var(--green); color:#fff; border:none; border-radius:8px; padding:7px 12px; font-size:11.5px;
+    cursor:pointer; font-weight:700;
+  }
+  .empty-note{ text-align:center; color:var(--muted); font-size:12px; padding:20px 0; }
+  .loading{ text-align:center; color:var(--muted); font-size:12px; padding:14px 0; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">🕌 شركة زمزم — بطاقة الثقة الذهبية VIP</div>
+  <button onclick="toggleView()" id="viewToggleBtn">👤 دخول الموظف</button>
+</div>
+
+<!-- ============ واجهة العميل ============ -->
+<div class="card" id="customerCard">
+  <div class="medallion"><div class="medallion-inner">
+    <div class="medallion-pct">1%</div>
+    <div class="medallion-cap">من كل فاتورة</div>
+  </div></div>
+  <h1>بطاقة الثقة الذهبية VIP</h1>
+  <div class="sub">حساب الخصومات — شركة زمزم</div>
+
+  <div class="tabs">
+    <button class="tab on" id="tabLogin" onclick="switchCustomerTab('login')">تسجيل الدخول</button>
+    <button class="tab" id="tabRegister" onclick="switchCustomerTab('register')">حساب جديد</button>
+  </div>
+
+  <!-- نموذج الدخول -->
+  <div id="loginForm">
+    <div class="field">
+      <label>رقم الهاتف</label>
+      <input type="text" id="loginPhone" placeholder="07xxxxxxxxx" maxlength="11">
+    </div>
+    <div class="field">
+      <label>كلمة المرور</label>
+      <input type="password" id="loginPassword" placeholder="كلمة المرور">
+    </div>
+    <button class="btn btn-primary" onclick="doLogin()">🔑 تسجيل الدخول</button>
+  </div>
+
+  <!-- نموذج التسجيل -->
+  <div id="registerForm" style="display:none;">
+    <div class="field">
+      <label>الاسم الثلاثي</label>
+      <input type="text" id="regName" placeholder="مثال: أحمد كريم عبدالله">
+    </div>
+    <div class="field">
+      <label>رقم الهاتف (١١ رقم)</label>
+      <input type="text" id="regPhone" placeholder="07xxxxxxxxx" maxlength="11">
+    </div>
+    <div class="field">
+      <label>كلمة المرور (٦ أحرف فأكثر)</label>
+      <input type="password" id="regPassword" placeholder="كلمة المرور">
+    </div>
+    <div class="field">
+      <label>رقم هاتف من دعاك؟ (اختياري)</label>
+      <input type="text" id="regReferral" placeholder="07xxxxxxxxx" maxlength="11">
+      <div class="hint">تاخذ أنت وصديقك ٥,٠٠٠ دينار لكل وحد عند أول فاتورة حقيقية.</div>
+    </div>
+    <button class="btn btn-primary" onclick="doRegister()">🏁 سجّل الآن</button>
+  </div>
+
+  <!-- عرض حساب نشط بعد الدخول -->
+  <div id="accountView" class="account-view" style="display:none;">
+    <div class="balance"><span id="accBalance">0</span> <small>دينار</small></div>
+    <div class="account-id" id="accId">—</div>
+    <div class="referral-box">
+      <div class="t">💰 اكسب ٥,٠٠٠ دينار عن كل صديق تجيبه</div>
+      <div class="n" id="accReferralInfo">جبت ٠ من أصدقائك = ربحت ٠ دينار</div>
+    </div>
+    <button class="btn btn-outline" style="margin-top:16px;" onclick="logout()">تسجيل خروج</button>
+  </div>
+
+  <div class="msg" id="customerMsg"></div>
+</div>
+
+<!-- ============ واجهة الموظف ============ -->
+<div class="card" id="staffCard" style="display:none;">
+  <h1>🔒 دخول الموظف</h1>
+  <div class="sub">بطاقة الثقة الذهبية VIP — الإعدادات</div>
+
+  <div id="staffLoginForm">
+    <div class="field">
+      <label>البريد الإلكتروني</label>
+      <input type="email" id="staffEmail" placeholder="zamzamcompany03@gmail.com">
+    </div>
+    <div class="field">
+      <label>كلمة المرور</label>
+      <input type="password" id="staffPassword" placeholder="كلمة المرور">
+    </div>
+    <button class="btn btn-primary" onclick="staffLogin()">دخول</button>
+    <div class="msg" id="staffLoginMsg"></div>
+  </div>
+
+  <div id="staffPanel" style="display:none;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+      <span style="font-weight:800; font-size:13px; color:var(--navy);">طلبات التسجيل المعلّقة</span>
+      <button class="btn-danger" style="width:auto; padding:6px 12px; font-size:11px; border-radius:8px;" onclick="staffLogout()">خروج</button>
+    </div>
+    <div id="pendingList"></div>
+    <button class="btn btn-outline" onclick="loadPending()">🔄 تحديث القائمة</button>
+  </div>
+</div>
+
+<!-- Firebase SDK (للموظف فقط — تسجيل دخول حقيقي) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+
+<script>
+  // ===================== الإعدادات =====================
+  const WORKER_URL = 'https://zamzam-vip-card.saadzamzamcompany.workers.dev';
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDaoYP--jTj3V3eNhI4jU6roMB1XQ_4490",
+    authDomain: "zamzam-company.firebaseapp.com",
+    databaseURL: "https://zamzam-company-default-rtdb.firebaseio.com",
+    projectId: "zamzam-company",
+  };
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+
+  let currentAccount = null; // بيانات العميل المسجّل دخوله حالياً (بالذاكرة فقط، مو مخزّنة)
+
+  // ===================== التبديل بين واجهة العميل والموظف =====================
+  function toggleView(){
+    const customerCard = document.getElementById('customerCard');
+    const staffCard = document.getElementById('staffCard');
+    const btn = document.getElementById('viewToggleBtn');
+    const showingStaff = staffCard.style.display !== 'none';
+
+    if (showingStaff) {
+      staffCard.style.display = 'none';
+      customerCard.style.display = 'block';
+      btn.textContent = '👤 دخول الموظف';
+    } else {
+      customerCard.style.display = 'none';
+      staffCard.style.display = 'block';
+      btn.textContent = '🧑‍🤝‍🧑 واجهة العميل';
+    }
+  }
+
+  // ===================== واجهة العميل =====================
+  function switchCustomerTab(tab){
+    document.getElementById('tabLogin').classList.toggle('on', tab === 'login');
+    document.getElementById('tabRegister').classList.toggle('on', tab === 'register');
+    document.getElementById('loginForm').style.display = tab === 'login' ? 'block' : 'none';
+    document.getElementById('registerForm').style.display = tab === 'register' ? 'block' : 'none';
+    document.getElementById('customerMsg').className = 'msg';
+  }
+
+  function showCustomerMsg(text, type){
+    const el = document.getElementById('customerMsg');
+    el.textContent = text;
+    el.className = 'msg ' + type;
+  }
+
+  async function doRegister(){
+    const name = document.getElementById('regName').value.trim();
+    const phone = document.getElementById('regPhone').value.trim();
+    const password = document.getElementById('regPassword').value;
+    const referredByPhone = document.getElementById('regReferral').value.trim();
+
+    showCustomerMsg('جارٍ الإرسال...', 'pending');
+    try {
+      const res = await fetch(WORKER_URL + '/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, phone, password, referredByPhone }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        showCustomerMsg('✓ ' + data.message, 'success');
+      } else {
+        showCustomerMsg('⚠ ' + data.error, 'error');
+      }
+    } catch (err) {
+      showCustomerMsg('⚠ خطأ بالاتصال: ' + err.message, 'error');
+    }
+  }
+
+  async function doLogin(){
+    const phone = document.getElementById('loginPhone').value.trim();
+    const password = document.getElementById('loginPassword').value;
+
+    showCustomerMsg('جارٍ التحقق...', 'pending');
+    try {
+      const res = await fetch(WORKER_URL + '/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone, password }),
+      });
+      const data = await res.json();
+
+      if (!data.success) {
+        showCustomerMsg('⚠ ' + data.error, 'error');
+        return;
+      }
+
+      if (data.status === 'active') {
+        currentAccount = data.account;
+        renderAccountView(data.account);
+      } else if (data.status === 'pending') {
+        showCustomerMsg('⏳ طلبك لسا قيد المراجعة — بانتظار موافقة الموظف.', 'pending');
+      } else if (data.status === 'rejected') {
+        showCustomerMsg('❌ تم رفض طلبك. السبب: ' + (data.reason || 'غير محدد'), 'error');
+      }
+    } catch (err) {
+      showCustomerMsg('⚠ خطأ بالاتصال: ' + err.message, 'error');
+    }
+  }
+
+  function renderAccountView(account){
+    document.getElementById('loginForm').style.display = 'none';
+    document.getElementById('registerForm').style.display = 'none';
+    document.querySelector('.tabs').style.display = 'none';
+    document.getElementById('accountView').style.display = 'block';
+    document.getElementById('customerMsg').className = 'msg';
+
+    document.getElementById('accBalance').textContent = account.balanceNum.toLocaleString('en-US');
+    document.getElementById('accId').textContent = account.accountId + ' • ' + account.phone;
+    document.getElementById('accReferralInfo').textContent =
+      'جبت ' + (account.referralCount || 0) + ' من أصدقائك = ربحت ' + (account.referralEarnings || 0) + ' دينار';
+  }
+
+  function logout(){
+    currentAccount = null;
+    document.getElementById('accountView').style.display = 'none';
+    document.querySelector('.tabs').style.display = 'flex';
+    document.getElementById('loginPhone').value = '';
+    document.getElementById('loginPassword').value = '';
+    switchCustomerTab('login');
+  }
+
+  // ===================== واجهة الموظف =====================
+  auth.onAuthStateChanged(function(user){
+    if (user) {
+      document.getElementById('staffLoginForm').style.display = 'none';
+      document.getElementById('staffPanel').style.display = 'block';
+      loadPending();
+    } else {
+      document.getElementById('staffLoginForm').style.display = 'block';
+      document.getElementById('staffPanel').style.display = 'none';
+    }
+  });
+
+  function showStaffMsg(text, type){
+    const el = document.getElementById('staffLoginMsg');
+    el.textContent = text;
+    el.className = 'msg ' + type;
+  }
+
+  function staffLogin(){
+    const email = document.getElementById('staffEmail').value.trim();
+    const password = document.getElementById('staffPassword').value;
+    showStaffMsg('جارٍ الدخول...', 'pending');
+
+    auth.signInWithEmailAndPassword(email, password)
+      .catch(function(err){
+        showStaffMsg('⚠ فشل الدخول: ' + err.message, 'error');
+      });
+  }
+
+  function staffLogout(){
+    auth.signOut();
+  }
+
+  async function loadPending(){
+    const listEl = document.getElementById('pendingList');
+    listEl.innerHTML = '<div class="loading">جارٍ التحميل...</div>';
+
+    try {
+      const idToken = await auth.currentUser.getIdToken();
+      const res = await fetch(WORKER_URL + '/list-pending', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + idToken,
+        },
+      });
+      const data = await res.json();
+
+      if (!data.success) {
+        listEl.innerHTML = '<div class="empty-note">⚠ ' + data.error + '</div>';
+        return;
+      }
+
+      if (data.requests.length === 0) {
+        listEl.innerHTML = '<div class="empty-note">ما فيه طلبات معلّقة حالياً.</div>';
+        return;
+      }
+
+      listEl.innerHTML = data.requests.map(r => `
+        <div class="req-row">
+          <div class="info">
+            <div class="name">${escapeHtml(r.name)}</div>
+            <div class="phone">${escapeHtml(r.phone)}</div>
+          </div>
+          <button onclick="approveRequest('${r.uid}')">✓ موافقة</button>
+        </div>
+      `).join('');
+    } catch (err) {
+      listEl.innerHTML = '<div class="empty-note">⚠ خطأ: ' + err.message + '</div>';
+    }
+  }
+
+  async function approveRequest(uid){
+    try {
+      const idToken = await auth.currentUser.getIdToken();
+      const res = await fetch(WORKER_URL + '/approve', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + idToken,
+        },
+        body: JSON.stringify({ uid }),
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        alert('✓ تم تفعيل الحساب: ' + data.accountId + ' — ' + data.name);
+        loadPending();
+      } else {
+        alert('⚠ ' + data.error);
+      }
+    } catch (err) {
+      alert('⚠ خطأ: ' + err.message);
+    }
+  }
+
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+  }
+</script>
+
+</body>
+</html>
