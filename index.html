@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -5,188 +6,285 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>بطاقة الثقة الذهبية VIP — شركة زمزم</title>
 
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@700;800;900&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+
 <style>
   :root{
-    --navy: #1f3a5c;
-    --navy-deep: #152840;
-    --gold: #d4af37;
-    --gold-deep: #b8860b;
-    --bg: #f4f6f8;
-    --ink: #232323;
-    --muted: #6b7685;
-    --green: #1e9e57;
-    --red: #c0392b;
+    --navy:#1f3a5c; --navy-deep:#152840; --gold:#e8c76a; --gold-deep:#c79a3a;
+    --bg:#eef0ef; --panel:#ffffff; --ink:#232323; --muted:#6b7685; --line:rgba(0,0,0,0.14);
+    --green:#1e9e57; --red:#c0392b;
   }
   *{ box-sizing:border-box; }
   body{
-    font-family:'Tahoma', 'Segoe UI', Arial, sans-serif; background:var(--bg); margin:0;
+    font-family:'Cairo', Tahoma, Arial, sans-serif; background:var(--bg); margin:0;
     min-height:100vh; display:flex; flex-direction:column; align-items:center; padding:20px 14px;
     direction:rtl; color:var(--ink);
   }
-  .topbar{ width:100%; max-width:420px; display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
-  .topbar .brand{ font-weight:900; color:var(--navy); font-size:15px; }
+  .topbar{ width:100%; max-width:420px; display:flex; justify-content:flex-end; margin-bottom:10px; }
   .topbar button{
     background:transparent; border:1px solid var(--navy); color:var(--navy); border-radius:100px;
-    padding:6px 14px; font-size:12px; cursor:pointer; font-weight:700;
+    padding:6px 14px; font-size:11.5px; cursor:pointer; font-weight:700; font-family:'Tajawal',sans-serif;
   }
 
-  .card{
-    width:100%; max-width:420px; background:#fff; border-radius:18px; padding:26px 22px;
-    box-shadow:0 10px 30px rgba(0,0,0,0.08);
+  .phone{
+    width:100%; max-width:390px; background:var(--panel); border:1px solid var(--line);
+    border-radius:24px; padding:26px 22px 22px; box-shadow:0 20px 50px rgba(0,0,0,0.1);
   }
-  .mark{ text-align:center; font-size:30px; margin-bottom:6px; }
-  h1{ text-align:center; font-size:17px; color:var(--navy); margin:0 0 2px; }
-  .sub{ text-align:center; font-size:11.5px; color:var(--gold-deep); font-weight:700; margin-bottom:20px; }
 
-  .medallion{
-    width:110px; height:110px; margin:0 auto 18px; border-radius:22px;
-    background:conic-gradient(from 0deg,#b8860b,#f5d78e,#d4af37,#f6e6b8,#b8860b);
-    display:flex; align-items:center; justify-content:center; position:relative;
+  /* ---- العنوان المتحرك ---- */
+  .pv10-mark{ text-align:center; font-size:26px; margin-bottom:4px; }
+  .title-main{
+    font-family:'Tajawal',sans-serif; font-weight:900; text-align:center;
+    background: linear-gradient(90deg, #7a1a1a 0%, #7a1a1a 40%, #f0cf6e 50%, #7a1a1a 60%, #7a1a1a 100%);
+    background-size:250% 100%;
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    letter-spacing:.4px; line-height:1.3; font-size:15px;
+    animation: title-shimmer 3.2s linear infinite;
+  }
+  @keyframes title-shimmer{ from{ background-position:200% 0; } to{ background-position:-50% 0; } }
+  .title-sub{
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    font-family:'Tajawal',sans-serif; font-weight:700; font-size:10.5px; letter-spacing:1px;
+    color:#b8860b; margin-top:3px; margin-bottom:14px;
+  }
+  .title-flourish{ width:22px; height:1px; background:linear-gradient(90deg, transparent, #b8860b, transparent); }
+
+  /* ---- الميدالية الذهبية ---- */
+  .promo-visual{ display:flex; justify-content:center; margin-bottom:14px; }
+  .gold-medallion{
+    width:150px; height:150px; border-radius:22px;
+    background: conic-gradient(from 0deg,#b8860b,#f5d78e,#d4af37,#f6e6b8,#b8860b);
+    display:flex; align-items:center; justify-content:center; padding:9px;
     clip-path: polygon(29% 0%, 71% 0%, 100% 29%, 100% 71%, 71% 100%, 29% 100%, 0% 71%, 0% 29%);
+    box-shadow:0 18px 40px rgba(180,140,50,0.3);
   }
   .medallion-inner{
-    width:88%; height:88%; border-radius:18px;
-    background:radial-gradient(circle at 35% 28%, #fff3d0, #e8c76a 45%, #b8860b 100%);
+    width:100%; height:100%; border-radius:16px;
+    background: radial-gradient(circle at 35% 28%, #fff3d0, #e8c76a 45%, #b8860b 100%);
     display:flex; flex-direction:column; align-items:center; justify-content:center;
     clip-path: polygon(29% 0%, 71% 0%, 100% 29%, 100% 71%, 71% 100%, 29% 100%, 0% 71%, 0% 29%);
   }
-  .medallion-pct{ font-weight:900; font-size:24px; color:#3d2a06; }
-  .medallion-cap{ font-size:9px; color:#5c4213; font-weight:800; }
+  .medallion-pct{ font-family:'Tajawal',sans-serif; font-weight:900; font-size:30px; color:#3d2a06; }
+  .medallion-cap{ font-family:'Tajawal',sans-serif; font-weight:800; font-size:10.5px; color:#5c4213; margin-top:2px; }
+  .medallion-sub{ font-size:9px; color:#6b4f1c; margin-top:1px; }
 
-  .tabs{ display:flex; gap:8px; margin-bottom:16px; }
-  .tab{
-    flex:1; padding:9px; border-radius:10px; border:1px solid var(--navy); background:transparent;
-    color:var(--navy); font-weight:800; font-size:12.5px; cursor:pointer;
+  /* ---- النص التسويقي ---- */
+  .pvm-copy{ text-align:center; margin-bottom:16px; }
+  .pvm-badge{
+    display:inline-block; font-family:'Tajawal',sans-serif; font-weight:800; font-size:11px;
+    color:#1f3a5c; padding:0 0 6px; border-bottom:2px solid #1f3a5c;
   }
-  .tab.on{ background:var(--navy); color:#fff; }
+  .promo-title{ font-size:19px; color:#152840; margin:10px 0 8px; font-family:'Tajawal',sans-serif; font-weight:900; line-height:1.5; }
+  .promo-sub{ font-size:13px; color:#5c6d80; line-height:1.8; margin:0 auto 14px; max-width:320px; }
+  .reveal-word{
+    display:inline-block; opacity:0; transform:translateY(6px);
+    animation: word-reveal .4s ease-out forwards;
+  }
+  @keyframes word-reveal{ to{ opacity:1; transform:translateY(0); } }
+
+  .pvm-benefits{ display:flex; flex-direction:column; align-items:center; gap:6px; }
+  .pvm-benefit{ display:flex; align-items:center; gap:6px; font-family:'Tajawal',sans-serif; font-weight:700; font-size:11.5px; color:#1f3a5c; }
+
+  /* ---- بطاقة الدخول/التسجيل ---- */
+  .auth-card{ background:#fff; border:1px solid var(--navy); border-radius:14px; padding:14px; margin-top:6px; }
+  .auth-tabs{ display:flex; gap:8px; margin-bottom:12px; }
+  .auth-tab{
+    flex:1; padding:9px 6px; border-radius:10px; border:1px solid var(--navy); background:transparent;
+    color:var(--navy); font-family:'Tajawal',sans-serif; font-weight:800; font-size:12px; cursor:pointer;
+  }
+  .auth-tab.on{ background:linear-gradient(180deg,#d4af37,#b8860b); color:#3d2a06; border-color:#b8860b; }
 
   .field{ margin-bottom:12px; }
-  .field label{ display:block; font-size:11.5px; font-weight:700; margin-bottom:5px; color:var(--ink); }
+  .field label{ display:block; font-size:11.5px; color:var(--muted); margin-bottom:6px; font-weight:600; }
   .field input{
-    width:100%; padding:10px 12px; border:1px solid #d8dde3; border-radius:9px; font-size:13.5px;
+    width:100%; padding:10px 12px; border-radius:9px; border:1px solid var(--line); background:#fff;
+    font-size:13.5px; font-family:'Cairo',sans-serif;
   }
-  .field .hint{ font-size:10px; color:var(--muted); margin-top:3px; }
+  .field input:focus{ outline:none; border-color:var(--navy); }
+  .field .hint{ font-size:10px; color:var(--muted); margin-top:4px; line-height:1.6; }
 
-  .btn{
-    width:100%; padding:12px; border:none; border-radius:11px; font-weight:800; font-size:14px; cursor:pointer;
-    margin-top:6px;
-  }
-  .btn-primary{ background:linear-gradient(180deg,#d4af37,#b8860b); color:#3d2a06; }
+  .btn{ width:100%; padding:13px; border:none; border-radius:12px; font-family:'Tajawal',sans-serif; font-weight:800; font-size:14px; cursor:pointer; }
+  .btn-gold{ background:linear-gradient(180deg,#f0d27e,var(--gold-deep)); color:#1a1305; }
   .btn-outline{ background:transparent; border:1px solid var(--navy); color:var(--navy); }
   .btn-danger{ background:transparent; border:1px solid var(--red); color:var(--red); }
-
-  .switch-link{
-    text-align:center; margin-top:14px; font-size:11.5px; color:var(--navy); text-decoration:underline;
-    cursor:pointer;
+  .pvm-cta-pulse{ animation: ctaPulse 1.8s ease-in-out infinite; }
+  @keyframes ctaPulse{
+    0%,100%{ box-shadow:0 0 0 0 rgba(184,134,11,0.35); }
+    50%{ box-shadow:0 0 0 10px rgba(184,134,11,0); }
   }
 
-  .msg{ margin-top:14px; padding:12px 14px; border-radius:10px; font-size:12.5px; line-height:1.8; display:none; }
+  .pvm-microline{ font-size:10.5px; color:#5c6d80; text-align:center; margin-top:12px; }
+  .mini-wa-row{
+    display:flex; align-items:center; justify-content:center; gap:8px; margin-top:16px;
+    font-size:10.5px; color:var(--muted); flex-wrap:wrap;
+  }
+  .mini-wa-row a{ color:#25D366; text-decoration:none; font-weight:700; }
+
+  .msg{ margin-top:12px; padding:12px 14px; border-radius:10px; font-size:12px; line-height:1.8; display:none; }
   .msg.success{ background:#e6f7ee; border:1px solid var(--green); color:#0d5c31; display:block; }
   .msg.error{ background:#fdeaea; border:1px solid var(--red); color:#7a1a1a; display:block; }
   .msg.pending{ background:#fff8e6; border:1px solid var(--gold-deep); color:#5c4213; display:block; }
 
-  .account-view{ text-align:center; }
-  .balance{ font-size:30px; font-weight:900; color:var(--navy); margin:10px 0 2px; }
-  .balance small{ font-size:13px; color:var(--muted); }
-  .account-id{ font-size:12px; color:var(--muted); margin-bottom:16px; }
-  .referral-box{
-    background:#fffaf0; border:1px solid #e8d7a0; border-radius:12px; padding:12px; margin-top:14px; text-align:center;
+  /* ---- بطاقة الحساب النشط ---- */
+  .wallet-card{
+    background:linear-gradient(160deg,#123,#0a1922 60%,#081319); border-radius:18px; padding:22px 20px;
+    text-align:center; margin-bottom:16px;
   }
-  .referral-box .t{ font-weight:800; color:var(--gold-deep); font-size:12.5px; margin-bottom:4px; }
-  .referral-box .n{ font-size:11px; color:var(--muted); }
+  .wallet-name{ font-size:12px; color:rgba(255,255,255,0.6); font-family:'Tajawal',sans-serif; font-weight:700; }
+  .wallet-amount{ font-family:'Tajawal',sans-serif; font-weight:900; font-size:32px; margin:12px 0 2px; color:#fff; }
+  .wallet-amount span{ font-size:14px; color:rgba(255,255,255,0.65); font-weight:700; }
+  .wallet-account{ font-size:11px; color:rgba(255,255,255,0.55); margin-top:4px; }
 
-  .req-list{ margin-top:10px; }
+  .referral-box{
+    background:linear-gradient(135deg,#fffaf0,#fdf3dc); border:1px solid #d4af3755; border-radius:14px;
+    padding:14px 16px; text-align:center; margin-bottom:14px;
+  }
+  .referral-title{ font-family:'Tajawal',sans-serif; font-weight:800; font-size:13px; color:#8a6a1f; margin-bottom:6px; }
+  .referral-sub{ font-size:11px; color:var(--muted); line-height:1.8; margin:0 0 10px; }
+  .referral-counter{
+    display:inline-block; background:rgba(30,158,87,0.12); color:var(--green); font-family:'Tajawal',sans-serif;
+    font-weight:800; font-size:11px; padding:6px 14px; border-radius:100px;
+  }
+
+  .dup-warning{
+    display:none; background:rgba(229,85,90,0.1); border:1px solid rgba(229,85,90,0.4); border-radius:10px;
+    padding:10px 14px; margin-top:10px; color:var(--red); font-size:11.5px; font-weight:700; line-height:1.8;
+  }
+  .dup-warning.show{ display:block; }
+
+  /* ---- واجهة الموظف ---- */
   .req-row{
     display:flex; justify-content:space-between; align-items:center; padding:10px 12px;
     border:1px solid #e5e8ec; border-radius:10px; margin-bottom:8px; font-size:12px;
   }
-  .req-row .info{ text-align:right; }
   .req-row .name{ font-weight:800; }
   .req-row .phone{ color:var(--muted); font-size:11px; }
   .req-row button{
-    background:var(--green); color:#fff; border:none; border-radius:8px; padding:7px 12px; font-size:11.5px;
+    background:var(--green); color:#fff; border:none; border-radius:8px; padding:7px 12px; font-size:11px;
     cursor:pointer; font-weight:700;
   }
   .empty-note{ text-align:center; color:var(--muted); font-size:12px; padding:20px 0; }
-  .loading{ text-align:center; color:var(--muted); font-size:12px; padding:14px 0; }
 </style>
 </head>
 <body>
 
 <div class="topbar">
-  <div class="brand">🕌 شركة زمزم — بطاقة الثقة الذهبية VIP</div>
   <button onclick="toggleView()" id="viewToggleBtn">👤 دخول الموظف</button>
 </div>
 
 <!-- ============ واجهة العميل ============ -->
-<div class="card" id="customerCard">
-  <div class="medallion"><div class="medallion-inner">
-    <div class="medallion-pct">1%</div>
-    <div class="medallion-cap">من كل فاتورة</div>
-  </div></div>
-  <h1>بطاقة الثقة الذهبية VIP</h1>
-  <div class="sub">حساب الخصومات — شركة زمزم</div>
+<div class="phone" id="customerCard">
 
-  <div class="tabs">
-    <button class="tab on" id="tabLogin" onclick="switchCustomerTab('login')">تسجيل الدخول</button>
-    <button class="tab" id="tabRegister" onclick="switchCustomerTab('register')">حساب جديد</button>
+  <div class="pv10-mark">🕌</div>
+  <div class="title-main">شركة زمزم لتجارة المصوغات الذهبية</div>
+  <div class="title-sub">
+    <span class="title-flourish"></span>
+    بطاقة الثقة الذهبية VIP
+    <span class="title-flourish"></span>
   </div>
 
-  <!-- نموذج الدخول -->
-  <div id="loginForm">
-    <div class="field">
-      <label>رقم الهاتف</label>
-      <input type="text" id="loginPhone" placeholder="07xxxxxxxxx" maxlength="11">
-    </div>
-    <div class="field">
-      <label>كلمة المرور</label>
-      <input type="password" id="loginPassword" placeholder="كلمة المرور">
-    </div>
-    <button class="btn btn-primary" onclick="doLogin()">🔑 تسجيل الدخول</button>
+  <div class="promo-visual">
+    <div class="gold-medallion"><div class="medallion-inner">
+      <div class="medallion-pct">1%</div>
+      <div class="medallion-cap">من كل فاتورة</div>
+      <div class="medallion-sub">رصيد نقدي دائم</div>
+    </div></div>
   </div>
 
-  <!-- نموذج التسجيل -->
-  <div id="registerForm" style="display:none;">
-    <div class="field">
-      <label>الاسم الثلاثي</label>
-      <input type="text" id="regName" placeholder="مثال: أحمد كريم عبدالله">
+  <div class="pvm-copy" id="marketingCopy">
+    <div class="pvm-badge">📍 سجّل معنا — حصرياً وانت داخل المحل</div>
+    <h2 class="promo-title" id="revealTitle"></h2>
+    <p class="promo-sub" id="revealSub"></p>
+    <div class="pvm-benefits">
+      <div class="pvm-benefit"><span>✓</span>حصري داخل المحل</div>
+      <div class="pvm-benefit"><span>✓</span>يُحفظ بكارتك</div>
+      <div class="pvm-benefit"><span>✓</span>استخدام حتى ٧٥٪ من رصيدك</div>
     </div>
-    <div class="field">
-      <label>رقم الهاتف (١١ رقم)</label>
-      <input type="text" id="regPhone" placeholder="07xxxxxxxxx" maxlength="11">
-    </div>
-    <div class="field">
-      <label>كلمة المرور (٦ أحرف فأكثر)</label>
-      <input type="password" id="regPassword" placeholder="كلمة المرور">
-    </div>
-    <div class="field">
-      <label>رقم هاتف من دعاك؟ (اختياري)</label>
-      <input type="text" id="regReferral" placeholder="07xxxxxxxxx" maxlength="11">
-      <div class="hint">تاخذ أنت وصديقك ٥,٠٠٠ دينار لكل وحد عند أول فاتورة حقيقية.</div>
-    </div>
-    <button class="btn btn-primary" onclick="doRegister()">🏁 سجّل الآن</button>
   </div>
 
-  <!-- عرض حساب نشط بعد الدخول -->
-  <div id="accountView" class="account-view" style="display:none;">
-    <div class="balance"><span id="accBalance">0</span> <small>دينار</small></div>
-    <div class="account-id" id="accId">—</div>
-    <div class="referral-box">
-      <div class="t">💰 اكسب ٥,٠٠٠ دينار عن كل صديق تجيبه</div>
-      <div class="n" id="accReferralInfo">جبت ٠ من أصدقائك = ربحت ٠ دينار</div>
+  <div class="auth-card" id="authCard">
+    <div class="auth-tabs">
+      <button class="auth-tab on" id="authTabNew" onclick="switchAuthTab('new')">🆕 لا أملك حساب</button>
+      <button class="auth-tab" id="authTabExisting" onclick="switchAuthTab('existing')">🔑 أملك حساب</button>
     </div>
-    <button class="btn btn-outline" style="margin-top:16px;" onclick="logout()">تسجيل خروج</button>
+
+    <!-- نموذج التسجيل -->
+    <div id="registerForm">
+      <div class="field">
+        <label>الاسم الثلاثي</label>
+        <input type="text" id="regName" placeholder="مثال: أحمد كريم عبدالله">
+      </div>
+      <div class="field">
+        <label>رقم الهاتف (١١ رقم)</label>
+        <input type="text" id="regPhone" placeholder="07xxxxxxxxx" maxlength="11">
+      </div>
+      <div class="field">
+        <label>كلمة المرور (٦ أحرف فأكثر)</label>
+        <input type="password" id="regPassword" placeholder="أنشئ كلمة مرور خاصة بك">
+      </div>
+      <div class="field">
+        <label>رقم هاتف من دعاك؟ <span style="color:var(--muted); font-weight:600;">(اختياري)</span></label>
+        <input type="text" id="regReferral" placeholder="07xxxxxxxxx" maxlength="11">
+        <div class="hint">تاخذ أنت وصديقك ٥,٠٠٠ دينار لكل وحد عند أول فاتورة حقيقية.</div>
+      </div>
+      <button class="btn btn-gold pvm-cta-pulse" onclick="doRegister()">🏁 سجّل الآن - بطاقة الثقة الذهبية VIP</button>
+    </div>
+
+    <!-- نموذج الدخول -->
+    <div id="loginForm" style="display:none;">
+      <div class="field">
+        <label>رقم الهاتف</label>
+        <input type="text" id="loginPhone" placeholder="07xxxxxxxxx" maxlength="11">
+      </div>
+      <div class="field">
+        <label>كلمة المرور</label>
+        <input type="password" id="loginPassword" placeholder="كلمة المرور">
+      </div>
+      <button class="btn btn-gold" onclick="doLogin()">🔑 تسجيل الدخول</button>
+    </div>
+
+    <div class="dup-warning" id="dupWarning"></div>
+  </div>
+
+  <div class="pvm-microline">⏰ التسجيل حصري وانت داخل المحل — استخدم رصيدك بعملية الشراء الجاية!</div>
+
+  <div class="mini-wa-row">
+    <span>طلبك متأخر أو ما انتبهنا لك؟</span>
+    <a href="https://wa.me/9647901196926" target="_blank" rel="noopener">💬 سيف</a>
+    <a href="https://wa.me/9647805747247" target="_blank" rel="noopener">💬 حسام</a>
   </div>
 
   <div class="msg" id="customerMsg"></div>
+
+  <!-- عرض حساب نشط بعد الدخول -->
+  <div id="accountView" style="display:none;">
+    <div class="wallet-card">
+      <div class="wallet-name">الرصيد المتوفر</div>
+      <div class="wallet-amount"><span id="accBalance">0</span> <span>دينار</span></div>
+      <div class="wallet-account" id="accId">—</div>
+    </div>
+
+    <div class="referral-box">
+      <div class="referral-title">💰 اكسب ٥,٠٠٠ دينار عن كل صديق تجيبه</div>
+      <p class="referral-sub">شارك رقم هاتفك، وأي صديق يفتح حساب بيه ويشتري، تاخذ ٥,٠٠٠ دينار فوراً — وهو ياخذ ٥,٠٠٠ دينار كمان.</p>
+      <div class="referral-counter" id="accReferralInfo">جبت ٠ من أصدقائك = ربحت ٠ دينار لحد الآن</div>
+    </div>
+
+    <button class="btn btn-outline" onclick="logout()">تسجيل خروج</button>
+  </div>
 </div>
 
 <!-- ============ واجهة الموظف ============ -->
-<div class="card" id="staffCard" style="display:none;">
-  <h1>🔒 دخول الموظف</h1>
-  <div class="sub">بطاقة الثقة الذهبية VIP — الإعدادات</div>
+<div class="phone" id="staffCard" style="display:none;">
+  <div class="pv10-mark">🔒</div>
+  <div class="title-main" style="font-size:15px;">دخول الموظف</div>
+  <div class="title-sub">
+    <span class="title-flourish"></span>
+    بطاقة الثقة الذهبية VIP — الإعدادات
+    <span class="title-flourish"></span>
+  </div>
 
-  <div id="staffLoginForm">
+  <div id="staffLoginForm" style="margin-top:16px;">
     <div class="field">
       <label>البريد الإلكتروني</label>
       <input type="email" id="staffEmail" placeholder="zamzamcompany03@gmail.com">
@@ -195,13 +293,13 @@
       <label>كلمة المرور</label>
       <input type="password" id="staffPassword" placeholder="كلمة المرور">
     </div>
-    <button class="btn btn-primary" onclick="staffLogin()">دخول</button>
+    <button class="btn btn-gold" onclick="staffLogin()">دخول</button>
     <div class="msg" id="staffLoginMsg"></div>
   </div>
 
-  <div id="staffPanel" style="display:none;">
+  <div id="staffPanel" style="display:none; margin-top:16px;">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
-      <span style="font-weight:800; font-size:13px; color:var(--navy);">طلبات التسجيل المعلّقة</span>
+      <span style="font-family:'Tajawal',sans-serif; font-weight:800; font-size:13px; color:var(--navy);">طلبات التسجيل المعلّقة</span>
       <button class="btn-danger" style="width:auto; padding:6px 12px; font-size:11px; border-radius:8px;" onclick="staffLogout()">خروج</button>
     </div>
     <div id="pendingList"></div>
@@ -209,12 +307,10 @@
   </div>
 </div>
 
-<!-- Firebase SDK (للموظف فقط — تسجيل دخول حقيقي) -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 
 <script>
-  // ===================== الإعدادات =====================
   const WORKER_URL = 'https://zamzam-vip-card.saadzamzamcompany.workers.dev';
 
   const firebaseConfig = {
@@ -226,7 +322,22 @@
   firebase.initializeApp(firebaseConfig);
   const auth = firebase.auth();
 
-  let currentAccount = null; // بيانات العميل المسجّل دخوله حالياً (بالذاكرة فقط، مو مخزّنة)
+  // ===================== نص "خذ رصيدك النقدي..." يظهر كلمة كلمة =====================
+  const titleWords = ['خذ','رصيدك','النقدي','<br>','وانت','واقف','قدامنا'];
+  const subWords = '١٪ من قيمة فاتورتك يبقى محفوظاً بكارتك الخاص — رصيد حقيقي، مو نقاط وهمية.'.split(' ');
+
+  function renderRevealWords(containerId, words, startDelay, step){
+    const el = document.getElementById(containerId);
+    let delay = startDelay;
+    el.innerHTML = words.map(w => {
+      if (w === '<br>') return '<br>';
+      const span = `<span class="reveal-word" style="animation-delay:${delay}s;">${w}</span>`;
+      delay += step;
+      return span;
+    }).join(' ');
+  }
+  renderRevealWords('revealTitle', titleWords, 0.1, 0.18);
+  renderRevealWords('revealSub', subWords, 1.4, 0.15);
 
   // ===================== التبديل بين واجهة العميل والموظف =====================
   function toggleView(){
@@ -234,25 +345,18 @@
     const staffCard = document.getElementById('staffCard');
     const btn = document.getElementById('viewToggleBtn');
     const showingStaff = staffCard.style.display !== 'none';
-
-    if (showingStaff) {
-      staffCard.style.display = 'none';
-      customerCard.style.display = 'block';
-      btn.textContent = '👤 دخول الموظف';
-    } else {
-      customerCard.style.display = 'none';
-      staffCard.style.display = 'block';
-      btn.textContent = '🧑‍🤝‍🧑 واجهة العميل';
-    }
+    staffCard.style.display = showingStaff ? 'none' : 'block';
+    customerCard.style.display = showingStaff ? 'block' : 'none';
+    btn.textContent = showingStaff ? '👤 دخول الموظف' : '🧑‍🤝‍🧑 واجهة العميل';
   }
 
   // ===================== واجهة العميل =====================
-  function switchCustomerTab(tab){
-    document.getElementById('tabLogin').classList.toggle('on', tab === 'login');
-    document.getElementById('tabRegister').classList.toggle('on', tab === 'register');
-    document.getElementById('loginForm').style.display = tab === 'login' ? 'block' : 'none';
-    document.getElementById('registerForm').style.display = tab === 'register' ? 'block' : 'none';
-    document.getElementById('customerMsg').className = 'msg';
+  function switchAuthTab(mode){
+    document.getElementById('authTabNew').classList.toggle('on', mode === 'new');
+    document.getElementById('authTabExisting').classList.toggle('on', mode === 'existing');
+    document.getElementById('registerForm').style.display = mode === 'new' ? 'block' : 'none';
+    document.getElementById('loginForm').style.display = mode === 'existing' ? 'block' : 'none';
+    document.getElementById('dupWarning').classList.remove('show');
   }
 
   function showCustomerMsg(text, type){
@@ -304,7 +408,6 @@
       }
 
       if (data.status === 'active') {
-        currentAccount = data.account;
         renderAccountView(data.account);
       } else if (data.status === 'pending') {
         showCustomerMsg('⏳ طلبك لسا قيد المراجعة — بانتظار موافقة الموظف.', 'pending');
@@ -317,25 +420,28 @@
   }
 
   function renderAccountView(account){
-    document.getElementById('loginForm').style.display = 'none';
-    document.getElementById('registerForm').style.display = 'none';
-    document.querySelector('.tabs').style.display = 'none';
-    document.getElementById('accountView').style.display = 'block';
+    document.getElementById('marketingCopy').style.display = 'none';
+    document.getElementById('authCard').style.display = 'none';
+    document.querySelector('.pvm-microline').style.display = 'none';
+    document.querySelector('.mini-wa-row').style.display = 'none';
     document.getElementById('customerMsg').className = 'msg';
+    document.getElementById('accountView').style.display = 'block';
 
     document.getElementById('accBalance').textContent = account.balanceNum.toLocaleString('en-US');
     document.getElementById('accId').textContent = account.accountId + ' • ' + account.phone;
     document.getElementById('accReferralInfo').textContent =
-      'جبت ' + (account.referralCount || 0) + ' من أصدقائك = ربحت ' + (account.referralEarnings || 0) + ' دينار';
+      'جبت ' + (account.referralCount || 0) + ' من أصدقائك = ربحت ' + (account.referralEarnings || 0) + ' دينار لحد الآن';
   }
 
   function logout(){
-    currentAccount = null;
     document.getElementById('accountView').style.display = 'none';
-    document.querySelector('.tabs').style.display = 'flex';
+    document.getElementById('marketingCopy').style.display = 'block';
+    document.getElementById('authCard').style.display = 'block';
+    document.querySelector('.pvm-microline').style.display = 'block';
+    document.querySelector('.mini-wa-row').style.display = 'flex';
     document.getElementById('loginPhone').value = '';
     document.getElementById('loginPassword').value = '';
-    switchCustomerTab('login');
+    switchAuthTab('existing');
   }
 
   // ===================== واجهة الموظف =====================
@@ -362,27 +468,20 @@
     showStaffMsg('جارٍ الدخول...', 'pending');
 
     auth.signInWithEmailAndPassword(email, password)
-      .catch(function(err){
-        showStaffMsg('⚠ فشل الدخول: ' + err.message, 'error');
-      });
+      .catch(function(err){ showStaffMsg('⚠ فشل الدخول: ' + err.message, 'error'); });
   }
 
-  function staffLogout(){
-    auth.signOut();
-  }
+  function staffLogout(){ auth.signOut(); }
 
   async function loadPending(){
     const listEl = document.getElementById('pendingList');
-    listEl.innerHTML = '<div class="loading">جارٍ التحميل...</div>';
+    listEl.innerHTML = '<div class="empty-note">جارٍ التحميل...</div>';
 
     try {
       const idToken = await auth.currentUser.getIdToken();
       const res = await fetch(WORKER_URL + '/list-pending', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + idToken,
-        },
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + idToken },
       });
       const data = await res.json();
 
@@ -390,18 +489,13 @@
         listEl.innerHTML = '<div class="empty-note">⚠ ' + data.error + '</div>';
         return;
       }
-
       if (data.requests.length === 0) {
         listEl.innerHTML = '<div class="empty-note">ما فيه طلبات معلّقة حالياً.</div>';
         return;
       }
-
       listEl.innerHTML = data.requests.map(r => `
         <div class="req-row">
-          <div class="info">
-            <div class="name">${escapeHtml(r.name)}</div>
-            <div class="phone">${escapeHtml(r.phone)}</div>
-          </div>
+          <div><div class="name">${escapeHtml(r.name)}</div><div class="phone">${escapeHtml(r.phone)}</div></div>
           <button onclick="approveRequest('${r.uid}')">✓ موافقة</button>
         </div>
       `).join('');
@@ -415,14 +509,10 @@
       const idToken = await auth.currentUser.getIdToken();
       const res = await fetch(WORKER_URL + '/approve', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + idToken,
-        },
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + idToken },
         body: JSON.stringify({ uid }),
       });
       const data = await res.json();
-
       if (data.success) {
         alert('✓ تم تفعيل الحساب: ' + data.accountId + ' — ' + data.name);
         loadPending();
