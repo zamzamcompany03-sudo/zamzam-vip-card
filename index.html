@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>بطاقة الثقة الذهبية VIP — شركة زمزم</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="بطاقة الثقة">
+<meta name="mobile-web-app-capable" content="yes">
 
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@700;800;900&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
 
@@ -605,6 +608,7 @@
       });
 
       updateAnnouncementNumbers(); // نحدّث كل الأرقام بشاشة "الشرح والعروض" كمان بنفس اللحظة
+      generateAppIcon(); // نولّد أيقونة التطبيق بنفس النسبة الحية — لأي حد يضيف التطبيق لشاشته من الآن
     } catch (err) {
       // لو فشلت القراءة (مثلاً مشكلة اتصال مؤقتة)، تبقى القيم الافتراضية بالصفحة كما هي — بدون ما نكسر الواجهة
       console.warn('تعذّر تحميل الإعدادات، استُخدمت القيم الافتراضية:', err.message);
@@ -631,6 +635,81 @@
     setText('annReferralBonus3', numberToArabic(bonus));
     setText('annReferralTotal', numberToArabic(bonus * 2));
   }
+
+  // ===================== أيقونة التطبيق — تتولّد بالنسبة الحية (نموذج ١٣ المعتمد) =====================
+  // ملاحظة مهمة: هذي الأيقونة تنعكس فوراً بتبويب المتصفح، وتكون صحيحة لأي حد يضيف
+  // التطبيق لشاشة جواله الرئيسية "من الآن". أيقونات مُضافة أصلاً على أجهزة عملاء
+  // قدامى ما تتحدث تلقائياً — هذا قيد بنظام آيفون وأندرويد نفسه، مو بالكود.
+  function generateAppIcon(){
+    const size = 192;
+    const canvas = document.createElement('canvas');
+    canvas.width = size; canvas.height = size;
+    const ctx = canvas.getContext('2d');
+
+    function roundRect(x, y, w, h, r){
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.arcTo(x + w, y, x + w, y + h, r);
+      ctx.arcTo(x + w, y + h, x, y + h, r);
+      ctx.arcTo(x, y + h, x, y, r);
+      ctx.arcTo(x, y, x + w, y, r);
+      ctx.closePath();
+    }
+
+    // خلفية بيضاء بزوايا دائرية
+    ctx.fillStyle = '#ffffff';
+    roundRect(0, 0, size, size, size * 0.22);
+    ctx.fill();
+
+    // الشريط العلوي الأحمر — "خصومات"
+    ctx.save();
+    roundRect(0, 0, size, size, size * 0.22);
+    ctx.clip();
+    ctx.fillStyle = '#c0392b';
+    ctx.fillRect(0, 0, size, size * 0.22);
+    ctx.restore();
+
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '500 ' + Math.round(size * 0.11) + 'px Tahoma, Arial';
+    ctx.fillText('خصومات', size / 2, size * 0.11);
+
+    // النسبة الحية بالمنتصف — من نفس إعدادات الموظف
+    ctx.fillStyle = '#152840';
+    ctx.font = '900 ' + Math.round(size * 0.26) + 'px Tahoma, Arial';
+    ctx.fillText(appConfig.discountPercent + '%', size / 2, size * 0.52);
+
+    // اسم البطاقة بالأسفل
+    ctx.fillStyle = '#152840';
+    ctx.font = '500 ' + Math.round(size * 0.085) + 'px Tahoma, Arial';
+    ctx.fillText('بطاقة الثقة', size / 2, size * 0.8);
+
+    ctx.fillStyle = '#8a6a1f';
+    ctx.font = '400 ' + Math.round(size * 0.075) + 'px Tahoma, Arial';
+    ctx.fillText('zamzam', size / 2, size * 0.905);
+
+    const dataUrl = canvas.toDataURL('image/png');
+
+    // نحدّث رابط أيقونة الشاشة الرئيسية (iOS) ورابط أيقونة التبويب معاً
+    let appleIcon = document.querySelector('link[rel="apple-touch-icon"]');
+    if (!appleIcon) {
+      appleIcon = document.createElement('link');
+      appleIcon.rel = 'apple-touch-icon';
+      document.head.appendChild(appleIcon);
+    }
+    appleIcon.href = dataUrl;
+
+    let favicon = document.querySelector('link[rel="icon"]');
+    if (!favicon) {
+      favicon = document.createElement('link');
+      favicon.rel = 'icon';
+      document.head.appendChild(favicon);
+    }
+    favicon.href = dataUrl;
+  }
+
 
   // ===================== التنقّل بين العميل والموظف (نافذة وحدة) =====================
   function showStaffLogin(){
