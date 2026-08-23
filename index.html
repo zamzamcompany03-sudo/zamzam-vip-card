@@ -147,6 +147,41 @@
 
   .top-close{ text-align:left; margin-bottom:8px; }
   .top-close button{ background:transparent; border:none; color:var(--muted); font-size:12px; cursor:pointer; }
+
+  /* ---- بطاقة "بطاقتي" ---- */
+  .member-card{
+    background:#152840; border-radius:18px; padding:20px 18px; text-align:center; margin-top:4px;
+  }
+  .mc-mark{ font-size:20px; margin-bottom:4px; }
+  .mc-brand{ font-family:'Tajawal',sans-serif; font-weight:800; font-size:12.5px; color:#fff; margin-bottom:14px; }
+  .mc-brand span{ display:block; font-size:10px; color:#d4af37; font-weight:700; margin-top:2px; }
+  .mc-qr{ background:#fff; border-radius:12px; padding:10px; display:inline-flex; margin-bottom:12px; }
+  .mc-name{ font-family:'Tajawal',sans-serif; font-weight:800; font-size:14px; color:#fff; }
+  .mc-account{ font-size:11px; color:#a9bbd0; margin-top:3px; }
+  .mc-phone{ font-size:10px; color:#8496ad; margin-top:2px; direction:ltr; display:inline-block; }
+  .mc-status{
+    display:inline-flex; align-items:center; gap:6px; background:rgba(30,158,87,0.18); color:#4ade80;
+    font-family:'Tajawal',sans-serif; font-weight:800; font-size:10.5px; padding:5px 12px; border-radius:100px;
+    margin-bottom:12px;
+  }
+  .mc-hint{ font-size:10px; color:#8496ad; margin-top:12px; line-height:1.7; }
+
+  /* ---- كشف الحساب ---- */
+  .stmt-row{ display:flex; justify-content:space-between; align-items:center; padding:10px 4px; border-bottom:1px solid var(--line); font-size:12px; }
+  .stmt-row:last-child{ border-bottom:none; }
+  .stmt-label{ font-weight:700; }
+  .stmt-date{ font-size:10px; color:var(--muted); margin-top:2px; }
+  .stmt-amount.earn{ color:var(--green); font-weight:800; }
+  .stmt-amount.redeem{ color:var(--red); font-weight:800; }
+
+  /* ---- فورم إضافة فاتورة (لوحة الموظف) ---- */
+  .invoice-panel{ background:#f7f9fa; border:1px solid var(--line); border-radius:12px; padding:14px; margin-top:8px; margin-bottom:10px; }
+  .invoice-panel .cust-info{ text-align:center; margin-bottom:12px; padding-bottom:10px; border-bottom:1px dashed var(--line); }
+  .invoice-panel .cust-info .name{ font-family:'Tajawal',sans-serif; font-weight:800; font-size:13px; }
+  .invoice-panel .cust-info .meta{ font-size:11px; color:var(--muted); margin-top:2px; }
+  .breakdown-box{ background:#fff; border:1px solid var(--line); border-radius:10px; padding:10px 12px; margin-top:10px; }
+  .breakdown-row{ display:flex; justify-content:space-between; padding:5px 0; font-size:11.5px; }
+  .breakdown-row.total{ border-top:1px solid var(--line); margin-top:4px; padding-top:8px; font-weight:800; font-size:13px; }
 </style>
 </head>
 <body>
@@ -239,37 +274,66 @@
     <div class="msg" id="customerMsg"></div>
 
     <div id="accountView" style="display:none;">
-      <div class="wallet-card">
-        <div class="wallet-name">الرصيد المتوفر</div>
-        <div class="wallet-amount"><span id="accBalance">0</span> <span>دينار</span></div>
-        <div class="wallet-account" id="accId">—</div>
-      </div>
-      <div class="referral-box">
-        <div class="referral-title">💰 اكسب <span id="referralAmountTitle">٥,٠٠٠</span> دينار عن كل صديق تجيبه</div>
-        <p class="referral-sub">شارك رقم هاتفك، وأي صديق يفتح حساب بيه ويشتري، تاخذ <span id="referralAmountSub">٥,٠٠٠</span> دينار فوراً — وهو ياخذ <span id="referralAmountSub2">٥,٠٠٠</span> دينار كمان.</p>
-        <div class="referral-counter" id="accReferralInfo">جبت ٠ من أصدقائك = ربحت ٠ دينار لحد الآن</div>
+      <div id="accountMainView">
+        <div class="wallet-card">
+          <div class="wallet-name">الرصيد المتوفر</div>
+          <div class="wallet-amount"><span id="accBalance">0</span> <span>دينار</span></div>
+          <div class="wallet-account" id="accId">—</div>
+        </div>
+        <div class="referral-box">
+          <div class="referral-title">💰 اكسب <span id="referralAmountTitle">٥,٠٠٠</span> دينار عن كل صديق تجيبه</div>
+          <p class="referral-sub">شارك رقم هاتفك، وأي صديق يفتح حساب بيه ويشتري، تاخذ <span id="referralAmountSub">٥,٠٠٠</span> دينار فوراً — وهو ياخذ <span id="referralAmountSub2">٥,٠٠٠</span> دينار كمان.</p>
+          <div class="referral-counter" id="accReferralInfo">جبت ٠ من أصدقائك = ربحت ٠ دينار لحد الآن</div>
+        </div>
+
+        <div style="display:flex; gap:8px; margin-bottom:10px;">
+          <button class="btn btn-outline" style="flex:1;" onclick="showMyCard()">🪪 بطاقتي</button>
+          <button class="btn btn-outline" style="flex:1;" onclick="showStatement()">📄 كشف الحساب</button>
+        </div>
+
+        <button class="btn btn-outline" onclick="togglePasswordChange()" id="pwChangeToggleBtn">🔒 تغيير كلمة المرور</button>
+
+        <div id="passwordChangeForm" style="display:none; margin-top:12px;">
+          <div class="field">
+            <label>كلمة المرور الحالية</label>
+            <input type="password" id="pwCurrent" placeholder="كلمة المرور الحالية">
+          </div>
+          <div class="field">
+            <label>كلمة المرور الجديدة (٦ أحرف فأكثر)</label>
+            <input type="password" id="pwNew" placeholder="كلمة المرور الجديدة">
+          </div>
+          <div class="field">
+            <label>تأكيد كلمة المرور الجديدة</label>
+            <input type="password" id="pwConfirm" placeholder="أعد كتابة كلمة المرور الجديدة">
+          </div>
+          <button class="btn btn-gold" onclick="doChangePassword()">💾 حفظ كلمة المرور الجديدة</button>
+          <div class="msg" id="pwChangeMsg"></div>
+        </div>
+
+        <button class="btn btn-outline" style="margin-top:10px;" onclick="logout()">تسجيل خروج</button>
       </div>
 
-      <button class="btn btn-outline" onclick="togglePasswordChange()" id="pwChangeToggleBtn">🔒 تغيير كلمة المرور</button>
-
-      <div id="passwordChangeForm" style="display:none; margin-top:12px;">
-        <div class="field">
-          <label>كلمة المرور الحالية</label>
-          <input type="password" id="pwCurrent" placeholder="كلمة المرور الحالية">
+      <!-- بطاقتي -->
+      <div id="myCardView" style="display:none;">
+        <div class="top-close"><button onclick="backToAccountMain()">‹ رجوع للحساب</button></div>
+        <div class="member-card">
+          <div class="mc-mark">🕌</div>
+          <div class="mc-brand">شركة زمزم<br><span>بطاقة الثقة الذهبية VIP</span></div>
+          <div class="mc-status">✓ الحساب مفعّل ونشط</div>
+          <div class="mc-qr" id="memberQrBox"></div>
+          <div class="mc-name" id="mcName">—</div>
+          <div class="mc-account" id="mcAccount">—</div>
+          <div class="mc-phone" id="mcPhone">—</div>
+          <div class="mc-hint">أعطِ الموظف هذا الكود عند كل عملية شراء</div>
         </div>
-        <div class="field">
-          <label>كلمة المرور الجديدة (٦ أحرف فأكثر)</label>
-          <input type="password" id="pwNew" placeholder="كلمة المرور الجديدة">
-        </div>
-        <div class="field">
-          <label>تأكيد كلمة المرور الجديدة</label>
-          <input type="password" id="pwConfirm" placeholder="أعد كتابة كلمة المرور الجديدة">
-        </div>
-        <button class="btn btn-gold" onclick="doChangePassword()">💾 حفظ كلمة المرور الجديدة</button>
-        <div class="msg" id="pwChangeMsg"></div>
       </div>
 
-      <button class="btn btn-outline" style="margin-top:10px;" onclick="logout()">تسجيل خروج</button>
+      <!-- كشف الحساب -->
+      <div id="statementView" style="display:none;">
+        <div class="top-close"><button onclick="backToAccountMain()">‹ رجوع للحساب</button></div>
+        <h3 style="font-family:'Tajawal',sans-serif; font-weight:800; font-size:14px; color:var(--navy); text-align:center; margin-bottom:10px;">📄 كشف الحساب</h3>
+        <div id="statementList"></div>
+      </div>
     </div>
 
     <!-- زر الإعدادات بأسفل النافذة -->
@@ -319,21 +383,78 @@
         <button style="margin-top:8px; background:transparent; border:none; color:var(--muted); font-size:11px; cursor:pointer;" onclick="document.getElementById('resetResultBox').style.display='none'">إغلاق</button>
       </div>
 
+      <!-- نافذة تأكيد حذف حساب — تتطلب كلمة مرور الموظف نفسه -->
+      <div id="deleteConfirmBox" style="display:none; background:#fdeaea; border:1px solid var(--red); border-radius:12px; padding:14px; margin-bottom:14px;">
+        <div style="font-family:'Tajawal',sans-serif; font-weight:800; font-size:12.5px; color:#7a1a1a; margin-bottom:8px; text-align:center;">
+          ⚠ حذف حساب <span id="deleteCustomerName"></span> نهائياً
+        </div>
+        <p style="font-size:11px; color:#7a1a1a; text-align:center; line-height:1.8; margin-bottom:10px;">
+          هذا الإجراء لا رجعة فيه. لتأكيد هويتك، أدخل كلمة مرورك (كموظف) أدناه.
+        </p>
+        <div class="field">
+          <label>كلمة مرورك (الموظف)</label>
+          <input type="password" id="deleteStaffPassword" placeholder="كلمة مرورك الخاصة">
+        </div>
+        <div style="display:flex; gap:8px;">
+          <button class="btn-danger" style="flex:1;" onclick="confirmDeleteCustomer()">🗑 تأكيد الحذف نهائياً</button>
+          <button class="btn-outline" style="flex:1;" onclick="cancelDeleteCustomer()">إلغاء</button>
+        </div>
+        <div class="msg" id="deleteConfirmMsg"></div>
+      </div>
+
+      <!-- فورم إضافة فاتورة (وإمكانية استخدام رصيد بنفس العملية) -->
+      <div id="invoicePanel" class="invoice-panel" style="display:none;">
+        <div class="cust-info">
+          <div class="name" id="invCustName">—</div>
+          <div class="meta" id="invCustMeta">—</div>
+        </div>
+
+        <div class="field">
+          <label>رقم الفاتورة</label>
+          <input type="text" id="invNumber" placeholder="مثال: 4835">
+        </div>
+        <div class="field">
+          <label>مبلغ الفاتورة (دينار)</label>
+          <input type="text" id="invAmount" placeholder="0" oninput="formatInvoiceAmount(this); calcInvoicePreview();">
+        </div>
+        <div class="field">
+          <label>التاريخ والوقت</label>
+          <input type="text" id="invDateTime" readonly style="background:#f2f4f6; color:var(--muted);">
+        </div>
+        <div class="field">
+          <label>مبلغ يريد العميل استخدامه من رصيده الآن <span style="color:var(--muted); font-weight:600;">(اختياري)</span></label>
+          <input type="text" id="invRedeem" placeholder="0" oninput="formatInvoiceAmount(this); calcInvoicePreview();">
+          <div class="hint" id="invRedeemHint">الحد الأقصى: ٧٥٪ من الرصيد المتاح بعد إضافة هذي الفاتورة.</div>
+        </div>
+
+        <div class="breakdown-box" id="invBreakdown" style="display:none;">
+          <div class="breakdown-row"><span>الرصيد السابق</span><span id="bdPrevious">0</span></div>
+          <div class="breakdown-row"><span>نسبة الخصم (<span id="bdPercent">1</span>٪) — مبلغ الخصم</span><span id="bdDiscount" style="color:var(--green);">+0</span></div>
+          <div class="breakdown-row"><span>مبلغ الاسترداد المطلوب</span><span id="bdRedeem" style="color:var(--red);">-0</span></div>
+          <div class="breakdown-row total"><span>الرصيد النهائي</span><span id="bdFinal">0</span></div>
+        </div>
+
+        <button class="btn btn-gold" style="margin-top:12px;" onclick="submitInvoice()">✓ تنفيذ العملية</button>
+        <button class="btn btn-outline" style="margin-top:8px;" onclick="closeInvoicePanel()">إلغاء</button>
+        <div class="msg" id="invoiceMsg"></div>
+      </div>
+
       <div class="staff-tabs">
         <button class="staff-tab on" id="staffTabPending" onclick="switchStaffTab('pending')">طلبات التسجيل <span class="badge" id="pendingBadge">0</span></button>
         <button class="staff-tab" id="staffTabCustomers" onclick="switchStaffTab('customers')">كل الزبائن</button>
         <button class="staff-tab" id="staffTabConfig" onclick="switchStaffTab('config')">⚙️ الإعدادات</button>
       </div>
 
-      <div class="search-box" id="searchBoxWrap">
+      <!-- صندوق البحث والـQR خاصين بتبويب "كل الزبائن" بس -->
+      <div class="search-box" id="searchBoxWrap" style="display:none;">
         <input type="text" id="staffSearch" placeholder="بحث بالاسم أو الهاتف أو رقم الحساب" oninput="filterStaffList()">
       </div>
-      <button class="qr-btn" id="qrBtnWrap" onclick="document.getElementById('qrInput').click()">📷 امسح بطاقة QR للعميل</button>
+      <button class="qr-btn" id="qrBtnWrap" style="display:none;" onclick="document.getElementById('qrInput').click()">📷 امسح بطاقة QR للعميل</button>
       <input type="file" id="qrInput" accept="image/*" capture="environment" style="display:none;" onchange="scanQr(event)">
 
       <div id="pendingListWrap"><div id="pendingList"></div></div>
       <div id="customersListWrap" style="display:none;">
-        <div style="font-size:10.5px; color:var(--muted); text-align:center; margin-bottom:8px;">💡 اضغط على اسم أي عميل لإرسال كلمة مرور جديدة له</div>
+        <div style="font-size:10.5px; color:var(--muted); text-align:center; margin-bottom:8px;">💡 اضغط على اسم أي عميل لإرسال كلمة مرور جديدة له، أو "🧾 فاتورة" لإدخال عملية بيع</div>
         <div id="customersList"></div>
       </div>
 
@@ -350,8 +471,6 @@
         <button class="btn btn-gold" onclick="saveConfig()">💾 حفظ الإعدادات</button>
         <div class="msg" id="configMsg"></div>
       </div>
-
-      <button class="btn btn-outline" style="margin-top:10px;" id="refreshBtnWrap" onclick="refreshStaffData()">🔄 تحديث</button>
     </div>
   </div>
 
@@ -360,6 +479,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 <script>
   const WORKER_URL = 'https://zamzam-vip-card.saadzamzamcompany.workers.dev';
@@ -401,6 +521,8 @@
     return String(num).replace(/[0-9.]/g, d => map[d]);
   }
 
+  let appConfig = { discountPercent: 1, referralBonus: 5000 }; // تُحدَّث فوراً من الخادم بمجرد ما تحمّل الصفحة
+
   // ===================== تحميل الإعدادات الحالية (نسبة الخصم + مبلغ الإحالة) =====================
   // تُقرأ من مكان واحد بالخادم، وتنعكس بكل مكان تلقائياً — الميدالية، نص التسويق، صندوق الإحالة
   async function loadPublicConfig(){
@@ -409,15 +531,15 @@
       const data = await res.json();
       if (!data.success) throw new Error(data.error);
 
-      const pct = data.discountPercent;
-      const bonus = data.referralBonus;
+      appConfig.discountPercent = data.discountPercent;
+      appConfig.referralBonus = data.referralBonus;
 
-      document.getElementById('medallionPct').textContent = pct + '%';
+      document.getElementById('medallionPct').textContent = data.discountPercent + '%';
 
-      const subWords = (toArabicDigits(pct) + '٪ من قيمة فاتورتك يبقى محفوظاً بكارتك الخاص — رصيد حقيقي، مو نقاط وهمية.').split(' ');
+      const subWords = (toArabicDigits(data.discountPercent) + '٪ من قيمة فاتورتك يبقى محفوظاً بكارتك الخاص — رصيد حقيقي، مو نقاط وهمية.').split(' ');
       renderRevealWords('revealSub', subWords, 1.4, 0.15);
 
-      const bonusAr = numberToArabic(bonus);
+      const bonusAr = numberToArabic(data.referralBonus);
       ['referralAmountHint1','referralAmountTitle','referralAmountSub','referralAmountSub2'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.textContent = bonusAr;
@@ -501,7 +623,11 @@
     }
   }
 
+  let currentAccount = null; // بيانات العميل المسجّل دخوله حالياً — نحتاجها لعرض البطاقة وكشف الحساب
+
   function renderAccountView(account){
+    currentAccount = account;
+
     document.getElementById('marketingCopy').style.display = 'none';
     document.getElementById('authCard').style.display = 'none';
     document.querySelector('.pvm-microline').style.display = 'none';
@@ -515,6 +641,68 @@
       'جبت ' + (account.referralCount || 0) + ' من أصدقائك = ربحت ' + (account.referralEarnings || 0) + ' دينار لحد الآن';
   }
 
+  // ===================== بطاقتي (QR) =====================
+  function showMyCard(){
+    document.getElementById('accountMainView').style.display = 'none';
+    document.getElementById('statementView').style.display = 'none';
+    document.getElementById('myCardView').style.display = 'block';
+
+    document.getElementById('mcName').textContent = currentAccount.name;
+    document.getElementById('mcAccount').textContent = currentAccount.accountId;
+    document.getElementById('mcPhone').textContent = currentAccount.phone;
+    safeGenerateQr(document.getElementById('memberQrBox'), currentAccount.accountId);
+  }
+
+  // توليد آمن لكود QR — لو مكتبة QRCode.js ما تحمّلت (مشكلة شبكة)، نعرض رقم الحساب كبديل واضح
+  function safeGenerateQr(container, text){
+    container.innerHTML = '';
+    try {
+      if (typeof QRCode === 'undefined') throw new Error('QRCode library not loaded');
+      new QRCode(container, {
+        text: text, width: 150, height: 150,
+        colorDark: '#232323', colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.M,
+      });
+      if (container.children.length === 0) throw new Error('empty render');
+    } catch (err) {
+      container.innerHTML =
+        '<div style="width:150px; padding:16px 8px; text-align:center; border:1.5px dashed #b8860b; border-radius:10px;">' +
+          '<div style="font-size:11px; color:#8a6a1f; margin-bottom:6px;">⚠ تعذّر توليد الكود</div>' +
+          '<div style="font-family:\'Tajawal\',sans-serif; font-weight:900; font-size:18px; color:#3d2a06;">' + text + '</div>' +
+          '<div style="font-size:10px; color:#8a6a1f; margin-top:6px;">استخدم هذا الرقم يدوياً</div>' +
+        '</div>';
+    }
+  }
+
+  // ===================== كشف الحساب =====================
+  function showStatement(){
+    document.getElementById('accountMainView').style.display = 'none';
+    document.getElementById('myCardView').style.display = 'none';
+    document.getElementById('statementView').style.display = 'block';
+
+    const list = document.getElementById('statementList');
+    const txs = currentAccount.transactions || [];
+    if (txs.length === 0) {
+      list.innerHTML = '<div class="empty-note">ما فيه عمليات مسجّلة بعد.</div>';
+      return;
+    }
+    list.innerHTML = txs.map(tx => `
+      <div class="stmt-row">
+        <div>
+          <div class="stmt-label">${escapeHtml(tx.label)}</div>
+          <div class="stmt-date">${escapeHtml(tx.dateStr)} · ${escapeHtml(tx.timeStr)}</div>
+        </div>
+        <div class="stmt-amount ${tx.type}">${tx.type === 'earn' ? '+' : '-'}${tx.amount.toLocaleString('en-US')}</div>
+      </div>
+    `).join('');
+  }
+
+  function backToAccountMain(){
+    document.getElementById('myCardView').style.display = 'none';
+    document.getElementById('statementView').style.display = 'none';
+    document.getElementById('accountMainView').style.display = 'block';
+  }
+
   function resetCustomerLoginView(){
     document.getElementById('accountView').style.display = 'none';
     document.getElementById('marketingCopy').style.display = 'block';
@@ -526,6 +714,10 @@
     document.getElementById('customerMsg').className = 'msg';
     document.getElementById('passwordChangeForm').style.display = 'none';
     document.getElementById('pwChangeToggleBtn').textContent = '🔒 تغيير كلمة المرور';
+    document.getElementById('accountMainView').style.display = 'block';
+    document.getElementById('myCardView').style.display = 'none';
+    document.getElementById('statementView').style.display = 'none';
+    currentAccount = null;
     switchAuthTab('existing');
   }
 
@@ -655,18 +847,22 @@
     document.getElementById('pendingListWrap').style.display = tab === 'pending' ? 'block' : 'none';
     document.getElementById('customersListWrap').style.display = tab === 'customers' ? 'block' : 'none';
     document.getElementById('configWrap').style.display = tab === 'config' ? 'block' : 'none';
+    document.getElementById('invoicePanel').style.display = 'none';
 
-    // صندوق البحث وزر QR وزر التحديث ملهم معنى بس بتبويبي الطلبات والزبائن
-    const showListTools = (tab === 'pending' || tab === 'customers');
+    // صندوق البحث وزر QR خاصين بتبويب "كل الزبائن" بس
+    const showListTools = (tab === 'customers');
     document.getElementById('searchBoxWrap').style.display = showListTools ? 'flex' : 'none';
     document.getElementById('qrBtnWrap').style.display = showListTools ? 'block' : 'none';
-    document.getElementById('refreshBtnWrap').style.display = showListTools ? 'block' : 'none';
 
-    if (tab === 'config') {
+    document.getElementById('staffSearch').value = '';
+
+    // كل تبويب يحمّل بياناته مباشرة عند الفتح — بدون أي زر تحديث يدوي
+    if (tab === 'pending') {
+      loadPending();
+    } else if (tab === 'customers') {
+      loadCustomers();
+    } else if (tab === 'config') {
       loadConfigForm();
-    } else {
-      document.getElementById('staffSearch').value = '';
-      filterStaffList();
     }
   }
 
@@ -760,6 +956,124 @@
     `).join('');
   }
 
+  // ===================== إضافة فاتورة / استخدام رصيد (فورم موحّد) =====================
+  let invoiceContext = null; // بيانات العميل الحالي اللي فاتحين له الفورم
+
+  function openInvoicePanel(phone, name, accountId, balanceNum){
+    invoiceContext = { phone, name, accountId, balanceNum };
+
+    document.getElementById('invCustName').textContent = name;
+    document.getElementById('invCustMeta').textContent = accountId + ' • ' + phone + ' • الرصيد الحالي: ' + balanceNum.toLocaleString('en-US') + ' د.ع';
+
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('ar-IQ', { day: 'numeric', month: 'long', year: 'numeric' });
+    const timeStr = now.toLocaleTimeString('ar-IQ', { hour: '2-digit', minute: '2-digit' });
+    document.getElementById('invDateTime').value = dateStr + ' · ' + timeStr;
+
+    document.getElementById('invNumber').value = '';
+    document.getElementById('invAmount').value = '';
+    document.getElementById('invRedeem').value = '';
+    document.getElementById('invBreakdown').style.display = 'none';
+    document.getElementById('invoiceMsg').className = 'msg';
+
+    document.getElementById('invoicePanel').style.display = 'block';
+    document.getElementById('invoicePanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function closeInvoicePanel(){
+    document.getElementById('invoicePanel').style.display = 'none';
+    invoiceContext = null;
+  }
+
+  // فاصلة آلاف تلقائية أثناء الكتابة بحقول المبالغ
+  function formatInvoiceAmount(el){
+    const raw = el.value.replace(/[^\d]/g, '');
+    el.value = raw ? Number(raw).toLocaleString('en-US') : '';
+  }
+
+  function calcInvoicePreview(){
+    if (!invoiceContext) return;
+    const amount = Number(document.getElementById('invAmount').value.replace(/,/g, '')) || 0;
+    const redeem = Number(document.getElementById('invRedeem').value.replace(/,/g, '')) || 0;
+
+    if (amount <= 0) {
+      document.getElementById('invBreakdown').style.display = 'none';
+      return;
+    }
+
+    const discountPercent = appConfig.discountPercent;
+    const discountAmount = Math.round(amount * discountPercent / 100);
+    const previousBalance = invoiceContext.balanceNum;
+    const availableBalance = previousBalance + discountAmount;
+    const maxRedeem = Math.round(availableBalance * 0.75);
+    const finalBalance = availableBalance - redeem;
+
+    document.getElementById('bdPercent').textContent = discountPercent;
+    document.getElementById('bdPrevious').textContent = previousBalance.toLocaleString('en-US');
+    document.getElementById('bdDiscount').textContent = '+' + discountAmount.toLocaleString('en-US');
+    document.getElementById('bdRedeem').textContent = '-' + redeem.toLocaleString('en-US');
+    document.getElementById('bdFinal').textContent = finalBalance.toLocaleString('en-US');
+    document.getElementById('invRedeemHint').textContent =
+      'الحد الأقصى: ٧٥٪ من الرصيد المتاح (' + availableBalance.toLocaleString('en-US') + ') = ' + maxRedeem.toLocaleString('en-US') + ' دينار.';
+
+    document.getElementById('invBreakdown').style.display = 'block';
+  }
+
+  async function submitInvoice(){
+    if (!invoiceContext) return;
+    const invoiceNumber = document.getElementById('invNumber').value.trim();
+    const amount = Number(document.getElementById('invAmount').value.replace(/,/g, '')) || 0;
+    const redeem = Number(document.getElementById('invRedeem').value.replace(/,/g, '')) || 0;
+    const msgEl = document.getElementById('invoiceMsg');
+
+    if (!invoiceNumber) {
+      msgEl.textContent = '⚠ لازم تدخل رقم الفاتورة.';
+      msgEl.className = 'msg error';
+      return;
+    }
+    if (amount <= 0) {
+      msgEl.textContent = '⚠ لازم تدخل مبلغ فاتورة صحيح.';
+      msgEl.className = 'msg error';
+      return;
+    }
+
+    msgEl.textContent = 'جارٍ التنفيذ...';
+    msgEl.className = 'msg pending';
+
+    try {
+      const idToken = await auth.currentUser.getIdToken();
+      const res = await fetch(WORKER_URL + '/add-invoice', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + idToken },
+        body: JSON.stringify({
+          phone: invoiceContext.phone,
+          invoiceNumber,
+          invoiceAmount: amount,
+          redeemAmount: redeem,
+        }),
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        const b = data.breakdown;
+        msgEl.innerHTML = '✓ تمت العملية بنجاح:<br>' +
+          'الرصيد السابق: ' + b.previousBalance.toLocaleString('en-US') + ' — ' +
+          'الخصم (' + b.discountPercent + '٪): +' + b.discountAmount.toLocaleString('en-US') + ' — ' +
+          'الاسترداد: -' + b.redeemAmount.toLocaleString('en-US') + ' — ' +
+          '<b>الرصيد النهائي: ' + b.finalBalance.toLocaleString('en-US') + '</b>';
+        msgEl.className = 'msg success';
+        loadCustomers(); // تحديث مباشر للقائمة بدون أي زر يدوي
+        setTimeout(() => closeInvoicePanel(), 3500);
+      } else {
+        msgEl.textContent = '⚠ ' + data.error;
+        msgEl.className = 'msg error';
+      }
+    } catch (err) {
+      msgEl.textContent = '⚠ خطأ: ' + err.message;
+      msgEl.className = 'msg error';
+    }
+  }
+
   function renderCustomersList(list){
     const el = document.getElementById('customersList');
     if (list.length === 0) { el.innerHTML = '<div class="empty-note">ما فيه زبائن نشطين بعد.</div>'; return; }
@@ -769,7 +1083,11 @@
           <div class="name">🔑 ${escapeHtml(c.name)}</div>
           <div class="phone">${escapeHtml(c.accountId)} • ${escapeHtml(c.phone)}</div>
         </div>
-        <div class="balance">${c.balanceNum.toLocaleString('en-US')} د.ع</div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <div class="balance">${c.balanceNum.toLocaleString('en-US')} د.ع</div>
+          <button style="background:var(--navy);" onclick="openInvoicePanel('${escapeHtml(c.phone)}', '${escapeHtml(c.name)}', '${escapeHtml(c.accountId)}', ${c.balanceNum})" title="إضافة فاتورة / استخدام رصيد">🧾</button>
+          <button style="background:var(--red); color:#fff;" onclick="startDeleteCustomer('${escapeHtml(c.phone)}', '${escapeHtml(c.name)}')" title="حذف الحساب نهائياً">🗑</button>
+        </div>
       </div>
     `).join('');
   }
@@ -812,6 +1130,74 @@
     if (intlPhone.startsWith('0')) intlPhone = '964' + intlPhone.slice(1);
 
     window.open('https://wa.me/' + intlPhone + '?text=' + encodeURIComponent(text), '_blank');
+  }
+
+  // ===================== حذف حساب عميل — يتطلب إعادة إدخال كلمة مرور الموظف نفسه =====================
+  let pendingDeletePhone = null;
+
+  function startDeleteCustomer(phone, name){
+    pendingDeletePhone = phone;
+    document.getElementById('deleteCustomerName').textContent = name;
+    document.getElementById('deleteStaffPassword').value = '';
+    document.getElementById('deleteConfirmMsg').className = 'msg';
+    document.getElementById('deleteConfirmBox').style.display = 'block';
+    document.getElementById('deleteConfirmBox').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function cancelDeleteCustomer(){
+    pendingDeletePhone = null;
+    document.getElementById('deleteConfirmBox').style.display = 'none';
+  }
+
+  async function confirmDeleteCustomer(){
+    const staffPassword = document.getElementById('deleteStaffPassword').value;
+    const msgEl = document.getElementById('deleteConfirmMsg');
+
+    if (!staffPassword) {
+      msgEl.textContent = '⚠ لازم تدخل كلمة مرورك لتأكيد الحذف.';
+      msgEl.className = 'msg error';
+      return;
+    }
+
+    msgEl.textContent = 'جارٍ التحقق من هويتك...';
+    msgEl.className = 'msg pending';
+
+    try {
+      // الخطوة ١: نتأكد إن كلمة مرور الموظف نفسه صحيحة فعلاً — نفس مبدأ
+      // "إعادة التوثيق" المستخدم بتغيير كلمة مرور العميل، بس هنا للموظف
+      const user = auth.currentUser;
+      const credential = firebase.auth.EmailAuthProvider.credential(user.email, staffPassword);
+      await user.reauthenticateWithCredential(credential);
+
+      // الخطوة ٢: بعد ما تأكدنا من هويته، ننفّذ الحذف الفعلي بالخادم
+      msgEl.textContent = 'جارٍ الحذف...';
+      const idToken = await user.getIdToken();
+      const res = await fetch(WORKER_URL + '/delete-customer', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + idToken },
+        body: JSON.stringify({ phone: pendingDeletePhone }),
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        msgEl.textContent = '✓ ' + data.message;
+        msgEl.className = 'msg success';
+        setTimeout(() => {
+          document.getElementById('deleteConfirmBox').style.display = 'none';
+          loadCustomers();
+        }, 1500);
+      } else {
+        msgEl.textContent = '⚠ ' + data.error;
+        msgEl.className = 'msg error';
+      }
+    } catch (err) {
+      if (err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {
+        msgEl.textContent = '⚠ كلمة مرورك غير صحيحة.';
+      } else {
+        msgEl.textContent = '⚠ خطأ: ' + err.message;
+      }
+      msgEl.className = 'msg error';
+    }
   }
 
   function filterStaffList(){
