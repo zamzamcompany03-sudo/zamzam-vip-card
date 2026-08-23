@@ -461,11 +461,11 @@
       <div id="configWrap" style="display:none;">
         <div class="field">
           <label>نسبة الخصم (٪) — تُطبّق على كل فاتورة</label>
-          <input type="number" id="configDiscountPercent" step="0.1" min="0.1" max="100">
+          <input type="text" inputmode="decimal" id="configDiscountPercent" oninput="this.value = normalizeDigits(this.value)">
         </div>
         <div class="field">
           <label>مبلغ مكافأة الإحالة (دينار) — لكل طرف</label>
-          <input type="number" id="configReferralBonus" step="500" min="0">
+          <input type="text" inputmode="numeric" id="configReferralBonus" oninput="this.value = normalizeDigits(this.value)">
           <div class="hint">هذا المبلغ يُضاف لكل من الجالب والمُحال عند أول فاتورة حقيقية.</div>
         </div>
         <button class="btn btn-gold" onclick="saveConfig()">💾 حفظ الإعدادات</button>
@@ -519,6 +519,13 @@
   function toArabicDigits(num){
     const map = {'0':'٠','1':'١','2':'٢','3':'٣','4':'٤','5':'٥','6':'٦','7':'٧','8':'٨','9':'٩','.':'.'};
     return String(num).replace(/[0-9.]/g, d => map[d]);
+  }
+
+  // يحوّل أي أرقام عربية (٠-٩) مكتوبة بأي حقل لأرقام إنجليزية عادية —
+  // يخلي كل حقول الإدخال تدعم الكتابة بالعربي أو الإنجليزي بلا فرق
+  function normalizeDigits(str){
+    const map = {'٠':'0','١':'1','٢':'2','٣':'3','٤':'4','٥':'5','٦':'6','٧':'7','٨':'8','٩':'9'};
+    return String(str).replace(/[٠-٩]/g, d => map[d]);
   }
 
   let appConfig = { discountPercent: 1, referralBonus: 5000 }; // تُحدَّث فوراً من الخادم بمجرد ما تحمّل الصفحة
@@ -578,9 +585,9 @@
 
   async function doRegister(){
     const name = document.getElementById('regName').value.trim();
-    const phone = document.getElementById('regPhone').value.trim();
+    const phone = normalizeDigits(document.getElementById('regPhone').value.trim());
     const password = document.getElementById('regPassword').value;
-    const referredByPhone = document.getElementById('regReferral').value.trim();
+    const referredByPhone = normalizeDigits(document.getElementById('regReferral').value.trim());
 
     showCustomerMsg('جارٍ الإرسال...', 'pending');
     try {
@@ -597,7 +604,7 @@
   }
 
   async function doLogin(){
-    const phone = document.getElementById('loginPhone').value.trim();
+    const phone = normalizeDigits(document.getElementById('loginPhone').value.trim());
     const password = document.getElementById('loginPassword').value;
     const rememberMe = document.getElementById('rememberMe').checked;
 
@@ -882,8 +889,8 @@
   }
 
   async function saveConfig(){
-    const discountPercent = document.getElementById('configDiscountPercent').value;
-    const referralBonus = document.getElementById('configReferralBonus').value;
+    const discountPercent = normalizeDigits(document.getElementById('configDiscountPercent').value);
+    const referralBonus = normalizeDigits(document.getElementById('configReferralBonus').value);
     const msgEl = document.getElementById('configMsg');
     msgEl.textContent = 'جارٍ الحفظ...';
     msgEl.className = 'msg pending';
@@ -985,9 +992,10 @@
     invoiceContext = null;
   }
 
-  // فاصلة آلاف تلقائية أثناء الكتابة بحقول المبالغ
+  // فاصلة آلاف تلقائية أثناء الكتابة بحقول المبالغ — يدعم الأرقام العربية والإنجليزية معاً
   function formatInvoiceAmount(el){
-    const raw = el.value.replace(/[^\d]/g, '');
+    const normalized = normalizeDigits(el.value);
+    const raw = normalized.replace(/[^\d]/g, '');
     el.value = raw ? Number(raw).toLocaleString('en-US') : '';
   }
 
@@ -1021,9 +1029,9 @@
 
   async function submitInvoice(){
     if (!invoiceContext) return;
-    const invoiceNumber = document.getElementById('invNumber').value.trim();
-    const amount = Number(document.getElementById('invAmount').value.replace(/,/g, '')) || 0;
-    const redeem = Number(document.getElementById('invRedeem').value.replace(/,/g, '')) || 0;
+    const invoiceNumber = normalizeDigits(document.getElementById('invNumber').value.trim());
+    const amount = Number(normalizeDigits(document.getElementById('invAmount').value).replace(/,/g, '')) || 0;
+    const redeem = Number(normalizeDigits(document.getElementById('invRedeem').value).replace(/,/g, '')) || 0;
     const msgEl = document.getElementById('invoiceMsg');
 
     if (!invoiceNumber) {
@@ -1201,7 +1209,7 @@
   }
 
   function filterStaffList(){
-    const q = document.getElementById('staffSearch').value.trim().toLowerCase();
+    const q = normalizeDigits(document.getElementById('staffSearch').value.trim()).toLowerCase();
     const isPending = document.getElementById('pendingListWrap').style.display !== 'none';
     if (isPending) {
       const filtered = q ? allPending.filter(r => r.name.toLowerCase().includes(q) || r.phone.includes(q)) : allPending;
