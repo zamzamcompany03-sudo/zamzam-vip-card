@@ -198,6 +198,8 @@
       <span class="title-flourish"></span>
     </div>
 
+    <button class="btn btn-outline" style="margin-bottom:14px; font-size:12px; padding:9px;" onclick="showAnnouncement()">📢 اطّلع على العروض وشرح البطاقة</button>
+
     <div class="promo-visual">
       <div class="gold-medallion"><div class="medallion-inner">
         <div class="medallion-pct" id="medallionPct">1%</div>
@@ -291,6 +293,8 @@
           <button class="btn btn-outline" style="flex:1;" onclick="showStatement()">📄 كشف الحساب</button>
         </div>
 
+        <button class="btn btn-outline" style="margin-bottom:10px;" onclick="showAnnouncement()">📢 اطّلع على العروض وشرح البطاقة</button>
+
         <button class="btn btn-outline" onclick="togglePasswordChange()" id="pwChangeToggleBtn">🔒 تغيير كلمة المرور</button>
 
         <div id="passwordChangeForm" style="display:none; margin-top:12px;">
@@ -334,6 +338,48 @@
         <h3 style="font-family:'Tajawal',sans-serif; font-weight:800; font-size:14px; color:var(--navy); text-align:center; margin-bottom:10px;">📄 كشف الحساب</h3>
         <div id="statementList"></div>
       </div>
+    </div>
+
+    <!-- ============ شاشة "الشرح والعروض" ============ -->
+    <div id="announcementPanel" style="display:none;">
+      <div class="top-close"><button onclick="hideAnnouncement()">‹ رجوع</button></div>
+
+      <div style="text-align:center; margin-bottom:16px;">
+        <div class="pv10-mark">🕌</div>
+        <div class="title-main" style="font-size:16px;">بطاقة الثقة الذهبية VIP</div>
+        <div class="title-sub"><span class="title-flourish"></span>شركة زمزم<span class="title-flourish"></span></div>
+      </div>
+
+      <div style="font-size:12.5px; line-height:1.9; color:var(--ink);">
+
+        <h3 style="font-family:'Tajawal',sans-serif; font-weight:900; color:var(--navy); font-size:14px; margin:14px 0 6px;">🔥 وين وصلنا... ووين رايحين</h3>
+        <p>من فتحت حساب معنا، أنت مو بس عميل عادي — أنت صرت جزء من <b>عائلة زمزم الذهبية</b>. وهذي الشاشة موجودة عشان توصلك كل جديدة أول بأول، بدون ما تحتاج تدور أو تسأل.</p>
+
+        <h3 style="font-family:'Tajawal',sans-serif; font-weight:900; color:var(--navy); font-size:14px; margin:16px 0 6px;">💰 نظام الخصومات — كيف تشتغل بالضبط؟</h3>
+        <p><b>الفكرة ببساطة:</b> كل مرة تشتري منا (ذهب، فضيات، ساعات، أو عطور)، نسبة ثابتة من قيمة فاتورتك <b>تنضاف تلقائياً كرصيد حقيقي</b> بحسابك — تقدر تستخدمه بأي عملية شراء جاية.</p>
+        <p><b>النسبة الحالية: <span id="annDiscountPercent1" style="color:var(--gold-deep); font-weight:900;">١</span>٪</b> من كل فاتورة.</p>
+        <p><b>مثال بالأرقام:</b> لو اشتريت فاتورة بقيمة <span id="annExampleInvoice" style="font-weight:800;">١٬٠٠٠٬٠٠٠</span> دينار، رصيدك يزيد فوراً <span id="annExampleDiscount" style="color:var(--green); font-weight:900;">١٠٬٠٠٠</span> دينار — بدون أي مجهود منك، بس اذكر رقم حسابك للموظف وقت الدفع.</p>
+        <p>رصيدك يتراكم مع كل زيارة، وتقدر تستخدمه (لغاية ٧٥٪ من رصيدك المتوفر بأي عملية) بأي وقت تحب — يعني كل ما تشتري أكثر، تكسب أكثر، وتوفر أكثر بالمرة الجاية.</p>
+
+        <h3 style="font-family:'Tajawal',sans-serif; font-weight:900; color:var(--navy); font-size:14px; margin:16px 0 6px;">🤝 نظام الإحالة — اجلب صديق واكسب الاثنين</h3>
+        <p><b>الفكرة:</b> عندك كود دعوة خاص فيك (رقم هاتفك نفسه) — أي صديق تجيبه يفتح حساب جديد ويذكر رقمك وقت التسجيل، وبعدها يسوي أول عملية شراء حقيقية، <b>تاخذون الاثنين مكافأة نقدية فورية</b>.</p>
+        <p><b>خطوة بخطوة:</b></p>
+        <p>١. تشارك رقم هاتفك مع صديقك (تقدر ترسله مباشرة بضغطة وحدة من هذا التطبيق).<br>
+        ٢. صديقك يفتح حساب جديد ويكتب رقمك بخانة "من دعاك؟" وقت التسجيل.<br>
+        ٣. الموظف يوافق على حسابه (نفس إجراء أي عميل جديد).<br>
+        ٤. أول ما يسوي صديقك أول عملية شراء حقيقية بقيمة معقولة، تنصرف المكافأة **تلقائياً** للطرفين بنفس اللحظة.</p>
+        <p><b>المكافأة الحالية: <span id="annReferralBonus1" style="color:var(--gold-deep); font-weight:900;">٥٬٠٠٠</span> دينار لكل طرف</b> — يعني أنت تاخذ <span id="annReferralBonus2" style="font-weight:800;">٥٬٠٠٠</span> دينار، وصديقك ياخذ <span id="annReferralBonus3" style="font-weight:800;">٥٬٠٠٠</span> دينار بنفس اللحظة، بمجموع <span id="annReferralTotal" style="color:var(--green); font-weight:900;">١٠٬٠٠٠</span> دينار يدخل لعائلتنا الذهبية بعملية وحدة بس.</p>
+        <p>ما فيه حد لعدد الأصدقاء اللي تقدر تجيبهم — كل صديق جديد = مكافأة جديدة. تابع عدد الأصدقاء اللي جبتهم وإجمالي أرباحك من صفحة حسابك الرئيسية بأي وقت.</p>
+
+        <h3 style="font-family:'Tajawal',sans-serif; font-weight:900; color:var(--navy); font-size:14px; margin:16px 0 6px;">⚠️ شرط أساسي — اقرأه منيح</h3>
+        <p><b>التسجيل والاستفادة من بطاقة الثقة الذهبية VIP يشترط تواجدك شخصياً داخل محلنا وقت الشراء الفعلي</b> (ذهب، فضيات، ساعات، أو عطور). هذا الشرط موجود عشان <b>يضمن حقك أنت بالدرجة الأولى</b> — الخصم والمكافآت حصرية لزبائننا الحقيقيين اللي يشرفونا بمحلنا، مو مفتوحة لأي شخص يسجّل عن بعد بدون شراء حقيقي. هيك نضمن إن رصيدك ومكافآتك تبقى قيمة حقيقية دايماً.</p>
+
+        <h3 style="font-family:'Tajawal',sans-serif; font-weight:900; color:var(--navy); font-size:14px; margin:16px 0 6px;">📍 زورونا</h3>
+        <p><b>الأنبار – الرمادي – شارع الصياغ – شركة زمزم لتجارة المصوغات الذهبية</b></p>
+        <a href="https://maps.google.com/?q=33.429680,43.299831" target="_blank" rel="noopener" style="display:block; text-align:center; background:var(--navy); color:#fff; padding:12px; border-radius:12px; text-decoration:none; font-weight:800; margin-top:10px;">📌 افتح الموقع على الخريطة</a>
+      </div>
+
+      <button class="btn btn-outline" style="margin-top:16px;" onclick="hideAnnouncement()">‹ رجوع</button>
     </div>
 
     <!-- زر الإعدادات بأسفل النافذة -->
@@ -554,12 +600,34 @@
         const el = document.getElementById(id);
         if (el) el.textContent = bonusAr;
       });
+
+      updateAnnouncementNumbers(); // نحدّث كل الأرقام بشاشة "الشرح والعروض" كمان بنفس اللحظة
     } catch (err) {
       // لو فشلت القراءة (مثلاً مشكلة اتصال مؤقتة)، تبقى القيم الافتراضية بالصفحة كما هي — بدون ما نكسر الواجهة
       console.warn('تعذّر تحميل الإعدادات، استُخدمت القيم الافتراضية:', err.message);
     }
   }
   loadPublicConfig();
+
+  // يحدّث كل الأرقام المذكورة بشاشة "الشرح والعروض" — يشتغل تلقائياً كل ما تتغيّر
+  // الإعدادات من لوحة الموظف، بدون ما يحتاج أي تعديل يدوي بالنص
+  function updateAnnouncementNumbers(){
+    const pct = appConfig.discountPercent;
+    const bonus = appConfig.referralBonus;
+    const exampleInvoice = 1000000; // مبلغ تمثيلي بس للمثال التوضيحي
+    const exampleDiscount = Math.round(exampleInvoice * pct / 100);
+
+    const setText = (id, text) => { const el = document.getElementById(id); if (el) el.textContent = text; };
+
+    setText('annDiscountPercent1', toArabicDigits(pct));
+    setText('annDiscountPercent2', toArabicDigits(pct));
+    setText('annExampleInvoice', numberToArabic(exampleInvoice));
+    setText('annExampleDiscount', numberToArabic(exampleDiscount));
+    setText('annReferralBonus1', numberToArabic(bonus));
+    setText('annReferralBonus2', numberToArabic(bonus));
+    setText('annReferralBonus3', numberToArabic(bonus));
+    setText('annReferralTotal', numberToArabic(bonus * 2));
+  }
 
   // ===================== التنقّل بين العميل والموظف (نافذة وحدة) =====================
   function showStaffLogin(){
@@ -589,7 +657,9 @@
   async function doRegister(){
     const name = document.getElementById('regName').value.trim();
     const phone = normalizeDigits(document.getElementById('regPhone').value.trim());
-    const password = document.getElementById('regPassword').value;
+    // نطبّع أرقام كلمة المرور أيضاً (عربي ← إنجليزي) — حتى لو كتبها العميل بالعربي هنا
+    // وبالإنجليزي وقت الدخول لاحقاً، تظل تُعتبر نفس كلمة المرور بالضبط
+    const password = normalizeDigits(document.getElementById('regPassword').value);
     const referredByPhone = normalizeDigits(document.getElementById('regReferral').value.trim());
 
     showCustomerMsg('جارٍ الإرسال...', 'pending');
@@ -608,7 +678,8 @@
 
   async function doLogin(){
     const phone = normalizeDigits(document.getElementById('loginPhone').value.trim());
-    const password = document.getElementById('loginPassword').value;
+    // نفس التطبيع لكلمة المرور — يضمن التطابق بغض النظر شلون كتبها كل مرة
+    const password = normalizeDigits(document.getElementById('loginPassword').value);
     const rememberMe = document.getElementById('rememberMe').checked;
 
     if (!phone || !password) {
@@ -713,6 +784,33 @@
     document.getElementById('accountMainView').style.display = 'block';
   }
 
+  // ===================== شاشة "الشرح والعروض" =====================
+  function showAnnouncement(){
+    ['marketingCopy','authCard','accountView'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.display = 'none';
+    });
+    const micro = document.querySelector('.pvm-microline');
+    const wa = document.querySelector('.mini-wa-row');
+    if (micro) micro.style.display = 'none';
+    if (wa) wa.style.display = 'none';
+    document.getElementById('customerMsg').className = 'msg';
+    document.getElementById('announcementPanel').style.display = 'block';
+    document.getElementById('announcementPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function hideAnnouncement(){
+    document.getElementById('announcementPanel').style.display = 'none';
+    if (currentAccount) {
+      document.getElementById('accountView').style.display = 'block';
+    } else {
+      document.getElementById('marketingCopy').style.display = 'block';
+      document.getElementById('authCard').style.display = 'block';
+      document.querySelector('.pvm-microline').style.display = 'block';
+      document.querySelector('.mini-wa-row').style.display = 'flex';
+    }
+  }
+
   function resetCustomerLoginView(){
     document.getElementById('accountView').style.display = 'none';
     document.getElementById('marketingCopy').style.display = 'block';
@@ -751,9 +849,10 @@
   }
 
   async function doChangePassword(){
-    const currentPassword = document.getElementById('pwCurrent').value;
-    const newPassword = document.getElementById('pwNew').value;
-    const confirmPassword = document.getElementById('pwConfirm').value;
+    // نفس تطبيع الأرقام هنا كمان — يضمن الاتساق مع كلمة المرور الأصلية
+    const currentPassword = normalizeDigits(document.getElementById('pwCurrent').value);
+    const newPassword = normalizeDigits(document.getElementById('pwNew').value);
+    const confirmPassword = normalizeDigits(document.getElementById('pwConfirm').value);
     const msgEl = document.getElementById('pwChangeMsg');
 
     if (!currentPassword || !newPassword || !confirmPassword) {
@@ -959,21 +1058,62 @@
     const el = document.getElementById('pendingList');
     if (list.length === 0) { el.innerHTML = '<div class="empty-note">ما فيه طلبات معلّقة حالياً.</div>'; return; }
     el.innerHTML = list.map(r => `
-      <div class="req-row">
-        <div><div class="name">${escapeHtml(r.name)}</div><div class="phone">${escapeHtml(r.phone)}</div></div>
-        <button onclick="approveRequest('${r.uid}')">✓ موافقة</button>
+      <div class="req-row" style="flex-direction:column; align-items:stretch; gap:8px;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div><div class="name">${escapeHtml(r.name)}</div><div class="phone">${escapeHtml(r.phone)}</div></div>
+        </div>
+        <div style="font-size:10.5px; font-weight:700; color:${r.referredByPhone ? 'var(--gold-deep)' : 'var(--muted)'};">
+          ${r.referredByPhone ? '🔗 مُحال من رقم: ' + escapeHtml(r.referredByPhone) : '— بدون إحالة —'}
+        </div>
+        <div style="display:flex; gap:8px;">
+          <button style="flex:1; background:var(--green);" onclick="approveRequest('${r.uid}')">✓ موافقة</button>
+          <button style="flex:1; background:var(--red);" onclick="rejectRegistration('${r.uid}')">✕ رفض</button>
+        </div>
       </div>
     `).join('');
+  }
+
+  async function rejectRegistration(uid){
+    // نجيب الاسم من البيانات المحمّلة أصلاً (مو من الزر نفسه) — يمنع أي احتمال حقن كود
+    const req = allPending.find(r => r.uid === uid);
+    const name = req ? req.name : 'هذا الطلب';
+
+    const reason = prompt('سبب رفض طلب ' + name + '؟\n(مثال: العميل مو موجود بالمحل وقت التسجيل)');
+    if (reason === null) return; // ضغط إلغاء
+    if (!reason.trim()) {
+      alert('⚠ لازم تكتب سبب الرفض حتى يكتمل الرفض.');
+      return;
+    }
+    try {
+      const idToken = await auth.currentUser.getIdToken();
+      const res = await fetch(WORKER_URL + '/reject-registration', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + idToken },
+        body: JSON.stringify({ uid, reason: reason.trim() }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        loadPending(); // تحديث مباشر بدون أي زر يدوي
+      } else {
+        alert('⚠ ' + data.error);
+      }
+    } catch (err) {
+      alert('⚠ خطأ: ' + err.message);
+    }
   }
 
   // ===================== إضافة فاتورة / استخدام رصيد (فورم موحّد) =====================
   let invoiceContext = null; // بيانات العميل الحالي اللي فاتحين له الفورم
 
-  function openInvoicePanel(phone, name, accountId, balanceNum){
-    invoiceContext = { phone, name, accountId, balanceNum };
+  function openInvoicePanel(phone){
+    // نجيب كل بيانات العميل من القائمة المحمّلة أصلاً (مو من الزر نفسه) — يمنع أي احتمال حقن كود
+    const customer = allCustomers.find(c => c.phone === phone);
+    if (!customer) { alert('⚠ تعذّر إيجاد بيانات هذا العميل — حدّث القائمة وحاول مرة ثانية.'); return; }
 
-    document.getElementById('invCustName').textContent = name;
-    document.getElementById('invCustMeta').textContent = accountId + ' • ' + phone + ' • الرصيد الحالي: ' + balanceNum.toLocaleString('en-US') + ' د.ع';
+    invoiceContext = { phone: customer.phone, name: customer.name, accountId: customer.accountId, balanceNum: customer.balanceNum };
+
+    document.getElementById('invCustName').textContent = customer.name;
+    document.getElementById('invCustMeta').textContent = customer.accountId + ' • ' + customer.phone + ' • الرصيد الحالي: ' + customer.balanceNum.toLocaleString('en-US') + ' د.ع';
 
     const now = new Date();
     const dateStr = now.toLocaleDateString('ar-IQ', { day: 'numeric', month: 'long', year: 'numeric' });
@@ -1067,14 +1207,23 @@
 
       if (data.success) {
         const b = data.breakdown;
-        msgEl.innerHTML = '✓ تمت العملية بنجاح:<br>' +
+        let msg = '✓ تمت العملية بنجاح:<br>' +
           'الرصيد السابق: ' + b.previousBalance.toLocaleString('en-US') + ' — ' +
           'الخصم (' + b.discountPercent + '٪): +' + b.discountAmount.toLocaleString('en-US') + ' — ' +
           'الاسترداد: -' + b.redeemAmount.toLocaleString('en-US') + ' — ' +
           '<b>الرصيد النهائي: ' + b.finalBalance.toLocaleString('en-US') + '</b>';
+
+        // لو انصرفت مكافأة إحالة بنفس هذي العملية، نوضحها بشكل منفصل وواضح
+        if (data.referral) {
+          msg += '<br><br>🎉 <b>مكافأة إحالة انصرفت تلقائياً:</b><br>' +
+            '• العميل الحالي: +' + data.referral.bonusAmount.toLocaleString('en-US') + ' دينار (هدية ترحيبية)<br>' +
+            '• ' + escapeHtml(data.referral.referrerName) + ' (' + escapeHtml(data.referral.referrerPhone) + '): +' + data.referral.bonusAmount.toLocaleString('en-US') + ' دينار (مكافأة إحالة)';
+        }
+
+        msgEl.innerHTML = msg;
         msgEl.className = 'msg success';
         loadCustomers(); // تحديث مباشر للقائمة بدون أي زر يدوي
-        setTimeout(() => closeInvoicePanel(), 3500);
+        setTimeout(() => closeInvoicePanel(), data.referral ? 5500 : 3500);
       } else {
         msgEl.textContent = '⚠ ' + data.error;
         msgEl.className = 'msg error';
@@ -1096,8 +1245,8 @@
         </div>
         <div style="display:flex; align-items:center; gap:8px;">
           <div class="balance">${c.balanceNum.toLocaleString('en-US')} د.ع</div>
-          <button style="background:var(--navy);" onclick="openInvoicePanel('${escapeHtml(c.phone)}', '${escapeHtml(c.name)}', '${escapeHtml(c.accountId)}', ${c.balanceNum})" title="إضافة فاتورة / استخدام رصيد">🧾</button>
-          <button style="background:var(--red); color:#fff;" onclick="startDeleteCustomer('${escapeHtml(c.phone)}', '${escapeHtml(c.name)}')" title="حذف الحساب نهائياً">🗑</button>
+          <button style="background:var(--navy);" onclick="openInvoicePanel('${escapeHtml(c.phone)}')" title="إضافة فاتورة / استخدام رصيد">🧾</button>
+          <button style="background:var(--red); color:#fff;" onclick="startDeleteCustomer('${escapeHtml(c.phone)}')" title="حذف الحساب نهائياً">🗑</button>
         </div>
       </div>
     `).join('');
@@ -1160,7 +1309,11 @@
   // ===================== حذف حساب عميل — يتطلب إعادة إدخال كلمة مرور الموظف نفسه =====================
   let pendingDeletePhone = null;
 
-  function startDeleteCustomer(phone, name){
+  function startDeleteCustomer(phone){
+    // نجيب الاسم من القائمة المحمّلة أصلاً (مو من الزر نفسه) — يمنع أي احتمال حقن كود
+    const customer = allCustomers.find(c => c.phone === phone);
+    const name = customer ? customer.name : 'هذا العميل';
+
     pendingDeletePhone = phone;
     document.getElementById('deleteCustomerName').textContent = name;
     document.getElementById('deleteStaffPassword').value = '';
