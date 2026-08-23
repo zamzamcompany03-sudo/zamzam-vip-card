@@ -282,6 +282,9 @@
           <div class="wallet-amount"><span id="accBalance">0</span> <span>دينار</span></div>
           <div class="wallet-account" id="accId">—</div>
         </div>
+
+        <button class="btn btn-outline" style="margin-bottom:10px; font-size:12px; padding:9px;" onclick="refreshMyAccount()" id="refreshAccountBtn">🔄 تحديث الرصيد</button>
+
         <div class="referral-box">
           <div class="referral-title">💰 اكسب <span id="referralAmountTitle">٥,٠٠٠</span> دينار عن كل صديق تجيبه</div>
           <p class="referral-sub">شارك رقم هاتفك، وأي صديق يفتح حساب بيه ويشتري، تاخذ <span id="referralAmountSub">٥,٠٠٠</span> دينار فوراً — وهو ياخذ <span id="referralAmountSub2">٥,٠٠٠</span> دينار كمان.</p>
@@ -720,6 +723,37 @@
     document.getElementById('accId').textContent = account.accountId + ' • ' + account.phone;
     document.getElementById('accReferralInfo').textContent =
       'جبت ' + (account.referralCount || 0) + ' من أصدقائك = ربحت ' + (account.referralEarnings || 0) + ' دينار لحد الآن';
+  }
+
+  // يحدّث رصيد العميل وبياناته يدوياً — مفيد لو الموظف أضاف فاتورة بلوحته
+  // بينما العميل فاتح حسابه أصلاً بجهازه (ما فيه تحديث لحظي تلقائي حالياً)
+  async function refreshMyAccount(){
+    const btn = document.getElementById('refreshAccountBtn');
+    const originalText = btn.textContent;
+    btn.textContent = '⏳ جارٍ التحديث...';
+    btn.disabled = true;
+
+    try {
+      const user = auth.currentUser;
+      if (!user) return;
+      const idToken = await user.getIdToken(true); // true يجبر تحديث الرمز، يضمن بيانات حديثة
+      const res = await fetch(WORKER_URL + '/get-profile', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + idToken },
+      });
+      const data = await res.json();
+      if (data.success && data.status === 'active') {
+        renderAccountView(data.account);
+        btn.textContent = '✓ تحدّث الرصيد';
+      } else {
+        btn.textContent = originalText;
+      }
+    } catch (err) {
+      btn.textContent = originalText;
+      alert('⚠ تعذّر التحديث: ' + err.message);
+    } finally {
+      setTimeout(() => { btn.textContent = originalText; btn.disabled = false; }, 1500);
+    }
   }
 
   // ===================== بطاقتي (QR) =====================
