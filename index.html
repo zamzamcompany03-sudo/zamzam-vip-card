@@ -375,7 +375,10 @@
         <div style="font-family:'Tajawal',sans-serif; font-weight:800; font-size:12.5px; color:#8a6a1f; margin-bottom:6px;">
           🔑 كلمة المرور المؤقتة لـ<span id="resetCustomerName"></span>
         </div>
-        <div style="font-family:'Tajawal',sans-serif; font-weight:900; font-size:20px; color:var(--red); letter-spacing:2px; margin-bottom:10px;" id="resetTempPassword"></div>
+        <div style="display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:10px;">
+          <div style="font-family:'Tajawal',sans-serif; font-weight:900; font-size:20px; color:var(--red); letter-spacing:2px;" id="resetTempPassword"></div>
+          <button onclick="copyTempPassword(this)" title="نسخ كلمة المرور" style="background:#fff; border:1px solid var(--red); color:var(--red); border-radius:8px; padding:5px 9px; cursor:pointer; font-size:14px; line-height:1;">📋</button>
+        </div>
         <div style="display:flex; gap:8px;">
           <button style="flex:1; background:#25D366; color:#fff; border:none; border-radius:9px; padding:9px; font-size:11.5px; font-weight:700; cursor:pointer;" onclick="sendResetViaWhatsapp('سيف')">📤 إرسال (سيف)</button>
           <button style="flex:1; background:#25D366; color:#fff; border:none; border-radius:9px; padding:9px; font-size:11.5px; font-weight:700; cursor:pointer;" onclick="sendResetViaWhatsapp('حسام')">📤 إرسال (حسام)</button>
@@ -1128,21 +1131,30 @@
   }
 
   function sendResetViaWhatsapp(staffName){
-    const customerName = document.getElementById('resetCustomerName').textContent;
     const tempPassword = document.getElementById('resetTempPassword').textContent;
-    // كلمة المرور توضع بسطر منفصل تماماً وحدها، وبخط عريض (*..*) — كونها
-    // معزولة بسطر لحالها يخلي "ضغطة مستمرة وحدة" (Long-press) عليها تعرض
-    // خيار النسخ لكلمة المرور نفسها بس، بدون الرسالة كلها
-    const text = 'مرحباً ' + customerName + '، هذي كلمة مرور مؤقتة جديدة لبطاقة الثقة الذهبية VIP:' +
-      '\n\n*' + tempPassword + '*\n\n' +
-      'اضغط عليها ضغطة مستمرة (اظغط واستمر بدون ما ترفع إصبعك) حتى يطلعلك خيار "نسخ".\n\n' +
-      'ادخل فيها الآن، ونفضّل تغيّرها بعدين من داخل التطبيق.\n\n— ' + staffName + '، شركة زمزم';
+    // بناءً على طلب المستخدم: الرسالة تحتوي كلمة المرور فقط، بدون أي نص إضافي
+    const text = tempPassword;
 
     // نحوّل رقم الهاتف العراقي المحلي (07...) لصيغة دولية (964...) لرابط واتساب
     let intlPhone = lastResetPhone;
     if (intlPhone.startsWith('0')) intlPhone = '964' + intlPhone.slice(1);
 
     window.open('https://wa.me/' + intlPhone + '?text=' + encodeURIComponent(text), '_blank');
+  }
+
+  // نسخ كلمة المرور المؤقتة مباشرة لذاكرة الجهاز — زر فعّال حقيقي (يشتغل
+  // داخل تطبيقنا نفسه، قبل الإرسال — مو داخل رسالة واتساب، لأن واتساب
+  // ما يدعم أي أزرار تفاعلية بالرسائل العادية إطلاقاً)
+  async function copyTempPassword(btn){
+    const tempPassword = document.getElementById('resetTempPassword').textContent;
+    try {
+      await navigator.clipboard.writeText(tempPassword);
+      const original = btn.textContent;
+      btn.textContent = '✓';
+      setTimeout(() => { btn.textContent = original; }, 1500);
+    } catch (err) {
+      alert('⚠ تعذّر النسخ التلقائي — انسخها يدوياً: ' + tempPassword);
+    }
   }
 
   // ===================== حذف حساب عميل — يتطلب إعادة إدخال كلمة مرور الموظف نفسه =====================
