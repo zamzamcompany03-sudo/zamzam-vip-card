@@ -375,7 +375,7 @@
         <div style="font-family:'Tajawal',sans-serif; font-weight:800; font-size:12.5px; color:#8a6a1f; margin-bottom:6px;">
           🔑 كلمة المرور المؤقتة لـ<span id="resetCustomerName"></span>
         </div>
-        <div style="font-family:'Tajawal',sans-serif; font-weight:900; font-size:20px; color:#3d2a06; letter-spacing:2px; margin-bottom:10px;" id="resetTempPassword"></div>
+        <div style="font-family:'Tajawal',sans-serif; font-weight:900; font-size:20px; color:var(--red); letter-spacing:2px; margin-bottom:10px;" id="resetTempPassword"></div>
         <div style="display:flex; gap:8px;">
           <button style="flex:1; background:#25D366; color:#fff; border:none; border-radius:9px; padding:9px; font-size:11.5px; font-weight:700; cursor:pointer;" onclick="sendResetViaWhatsapp('سيف')">📤 إرسال (سيف)</button>
           <button style="flex:1; background:#25D366; color:#fff; border:none; border-radius:9px; padding:9px; font-size:11.5px; font-weight:700; cursor:pointer;" onclick="sendResetViaWhatsapp('حسام')">📤 إرسال (حسام)</button>
@@ -1130,8 +1130,11 @@
   function sendResetViaWhatsapp(staffName){
     const customerName = document.getElementById('resetCustomerName').textContent;
     const tempPassword = document.getElementById('resetTempPassword').textContent;
+    // نغلّف كلمة المرور بثلاث علامات (```) — هذا تنسيق "كود" رسمي بواتساب،
+    // يعرضها بصندوق مميز بخط ثابت العرض، وأسهل بكثير للعميل ينسخها بلمسة وحدة
+    // (ملاحظة: واتساب ما يدعم تلوين النص إطلاقاً — هذا أقرب شي ممكن لإبرازها)
     const text = 'مرحباً ' + customerName + '، هذي كلمة مرور مؤقتة جديدة لبطاقة الثقة الذهبية VIP:\n\n' +
-      tempPassword + '\n\nادخل فيها الآن، ونفضّل تغيّرها بعدين من داخل التطبيق.\n\n— ' + staffName + '، شركة زمزم';
+      '```' + tempPassword + '```' + '\n\nادخل فيها الآن، ونفضّل تغيّرها بعدين من داخل التطبيق.\n\n— ' + staffName + '، شركة زمزم';
 
     // نحوّل رقم الهاتف العراقي المحلي (07...) لصيغة دولية (964...) لرابط واتساب
     let intlPhone = lastResetPhone;
