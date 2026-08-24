@@ -2839,6 +2839,13 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
     return 'بطاقتي-' + safeAccountId + '.png';
   }
 
+  // يكتشف آيفون/آيباد تحديداً — متصفح Safari هناك تاريخياً ما يحترم خاصية
+  // download بوسم <a>، وبدل ما ينزّل الصورة يحاول يفتحها بنفس الصفحة بصمت
+  function isIOS(){
+    return /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); // آيباد بوضع "سطح مكتب"
+  }
+
   async function downloadMyCard(){
     const btn = document.getElementById('saveCardBtn');
     const originalText = btn.textContent;
@@ -2847,14 +2854,35 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
 
     try {
       const canvas = await buildMyCardCanvas();
-      const link = document.createElement('a');
-      link.download = myCardFileName();
-      link.href = canvas.toDataURL('image/png');
-      link.click();
+      const blob = await new Promise((resolve, reject) => {
+        canvas.toBlob((b) => b ? resolve(b) : reject(new Error('فشل تحويل الصورة')), 'image/png');
+      });
+      const url = URL.createObjectURL(blob);
+
+      if (isIOS()) {
+        // آيفون/آيباد: نفتح الصورة بتبويب جديد — العميل يضغط ضغطة مطوّلة عليها
+        // ويختار "إضافة إلى الصور" أو "حفظ الصورة". خاصية download ما تشتغل هنا أصلاً.
+        window.open(url, '_blank');
+        btn.textContent = '✓ افتح الصورة واضغط مطوّلاً لحفظها';
+        setTimeout(() => URL.revokeObjectURL(url), 15000);
+      } else {
+        // باقي الأجهزة: تحميل مباشر عادي — نضيف الرابط فعلياً للصفحة قبل الضغط
+        // (بعض المتصفحات تتجاهل .click() على رابط غير موجود بالـ DOM)
+        const link = document.createElement('a');
+        link.download = myCardFileName();
+        link.href = url;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        setTimeout(() => URL.revokeObjectURL(url), 4000);
+        btn.textContent = '✓ تم الحفظ بنجاح';
+      }
+
+      setTimeout(() => { btn.textContent = originalText; }, 3000);
     } catch (err) {
       alert('⚠ تعذّر إنشاء صورة البطاقة: ' + err.message + ' — جرّب مرة ثانية.');
-    } finally {
       btn.textContent = originalText;
+    } finally {
       btn.disabled = false;
     }
   }
