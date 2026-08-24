@@ -1595,27 +1595,50 @@
   function scanQr(event){
     const file = event.target.files[0];
     if (!file) return;
-    const img = new Image();
-    img.onload = async function(){
-      const code = decodeQrRobust(img);
-      if (code && code.data) {
-        // ننتظر التبويب يتبدّل والقائمة تخلص تحميل فعلياً، وبعدها بس نعبّي
-        // خانة البحث ونطبّق الفلترة — قبل هذا التصحيح كانت تنصفّر فوراً بالغلط
-        await switchStaffTab('customers', true);
-        const scannedText = code.data.trim();
-        document.getElementById('staffSearch').value = scannedText;
-        filterStaffList();
 
-        // لو الكود انقرأ (حتى لو بشكل خاطئ/غير مطابق)، بس ما طابق أي عميل بالقائمة،
-        // نفضّل نمسح البحث ونرجّع القائمة كاملة ظاهرة — بدل ما تبقى فاضية ومربكة
-        const noMatch = document.getElementById('customersList').querySelector('.empty-note');
-        if (noMatch) {
-          document.getElementById('staffSearch').value = '';
-          renderCustomersList(allCustomers);
-          alert('⚠ انقرأ كود بس ما يطابق أي عميل موجود بالقائمة. تأكد من الكود وجرّب مرة ثانية — القائمة الكاملة ظاهرة الآن.');
+    // فحص مبكر وصريح: لو مكتبة jsQR ما تحمّلت أصلاً (حظر شبكة/CDN، اتصال ضعيف)
+    // كانت العملية تفشل بصمت تام بدون أي رسالة — الآن نوقفها هنا برسالة واضحة
+    if (typeof jsQR === 'undefined') {
+      event.target.value = '';
+      alert('⚠ مكتبة قراءة الباركود ما تحمّلت. تأكد من اتصال الإنترنت وأعد تحميل الصفحة بالكامل (اسحب للأسفل للتحديث أو اضغط 🔄 بالمتصفح)، وحاول مرة ثانية.');
+      return;
+    }
+
+    const img = new Image();
+
+    img.onerror = function(){
+      event.target.value = '';
+      alert('⚠ ما قدرنا نفتح الصورة الملتقطة. جرّب مرة ثانية، ولو استمرت المشكلة جرّب تصوير الكود بكاميرا الجوال العادية وارفع الصورة من المعرض بدل التصوير المباشر.');
+    };
+
+    img.onload = async function(){
+      try {
+        const code = decodeQrRobust(img);
+        // نفرّغ الـ input بكل الحالات حتى يقدر المستخدم يصوّر نفس الملف مرة ثانية لو احتاج
+        event.target.value = '';
+
+        if (code && code.data) {
+          // ننتظر التبويب يتبدّل والقائمة تخلص تحميل فعلياً، وبعدها بس نعبّي
+          // خانة البحث ونطبّق الفلترة — قبل هذا التصحيح كانت تنصفّر فوراً بالغلط
+          await switchStaffTab('customers', true);
+          const scannedText = code.data.trim();
+          document.getElementById('staffSearch').value = scannedText;
+          filterStaffList();
+
+          // لو الكود انقرأ (حتى لو بشكل خاطئ/غير مطابق)، بس ما طابق أي عميل بالقائمة،
+          // نفضّل نمسح البحث ونرجّع القائمة كاملة ظاهرة — بدل ما تبقى فاضية ومربكة
+          const noMatch = document.getElementById('customersList').querySelector('.empty-note');
+          if (noMatch) {
+            document.getElementById('staffSearch').value = '';
+            renderCustomersList(allCustomers);
+            alert('⚠ انقرأ كود بس ما يطابق أي عميل موجود بالقائمة. تأكد من الكود وجرّب مرة ثانية — القائمة الكاملة ظاهرة الآن.');
+          }
+        } else {
+          alert('⚠ ما قدرنا نقرأ الكود بوضوح — جرّب تصوير بطاقة مطبوعة لو ممكن، أو صوّر شاشة الجوال من مسافة أقرب وبإضاءة أوضح، وحاول مرة ثانية.');
         }
-      } else {
-        alert('⚠ ما قدرنا نقرأ الكود بوضوح — جرّب تصوير بطاقة مطبوعة لو ممكن، أو صوّر شاشة الجوال من مسافة أقرب وبإضاءة أوضح، وحاول مرة ثانية.');
+      } catch (err) {
+        event.target.value = '';
+        alert('⚠ صار خطأ غير متوقع أثناء قراءة الكود: ' + err.message + ' — جرّب مرة ثانية.');
       }
     };
     img.src = URL.createObjectURL(file);
