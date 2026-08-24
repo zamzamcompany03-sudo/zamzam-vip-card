@@ -850,19 +850,23 @@
   }
 
   // توليد آمن لكود QR — لو مكتبة QRCode.js ما تحمّلت (مشكلة شبكة)، نعرض رقم الحساب كبديل واضح
+  // توليد كود QR بأفضل إعدادات ممكنة للقراءة "من شاشة لشاشة" (موظف يصوّر شاشة
+  // جوال العميل، مو ورق مطبوع) — هذا النوع من القراءة أصعب بسبب الوهج والتداخل
+  // (Moire)، فنعوّض بـ: تباين أقصى (أسود نقي/أبيض نقي، بدون ألوان العلامة التجارية)،
+  // حجم أكبر، وأعلى مستوى تصحيح أخطاء متوفر بالمكتبة (يقاوم التشويش الجزئي).
   function safeGenerateQr(container, text){
     container.innerHTML = '';
     try {
       if (typeof QRCode === 'undefined') throw new Error('QRCode library not loaded');
       new QRCode(container, {
-        text: text, width: 150, height: 150,
-        colorDark: '#232323', colorLight: '#ffffff',
-        correctLevel: QRCode.CorrectLevel.M,
+        text: text, width: 220, height: 220,
+        colorDark: '#000000', colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.H,
       });
       if (container.children.length === 0) throw new Error('empty render');
     } catch (err) {
       container.innerHTML =
-        '<div style="width:150px; padding:16px 8px; text-align:center; border:1.5px dashed #b8860b; border-radius:10px;">' +
+        '<div style="width:220px; padding:16px 8px; text-align:center; border:1.5px dashed #b8860b; border-radius:10px;">' +
           '<div style="font-size:11px; color:#8a6a1f; margin-bottom:6px;">⚠ تعذّر توليد الكود</div>' +
           '<div style="font-family:\'Tajawal\',sans-serif; font-weight:900; font-size:18px; color:#3d2a06;">' + text + '</div>' +
           '<div style="font-size:10px; color:#8a6a1f; margin-top:6px;">استخدم هذا الرقم يدوياً</div>' +
@@ -1555,17 +1559,45 @@
   }
 
   // ===================== مسح QR للبحث السريع =====================
+  // فك تشفير أكثر ثباتاً: يجرّب الصورة بحجمها الأصلي أول، ولو فشل يجرّبها بحجم
+  // مصغّر (صور كاميرا كبيرة جداً تسبب فشل أحياناً)، مع تفعيل محاولة قراءة الألوان
+  // المعكوسة (يفيد بالذات لما يصوّر شاشة جوال ثاني فيها وهج أو تباين معكوس)
+  function decodeQrRobust(img){
+    function tryDecode(width, height){
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, width, height);
+      const imageData = ctx.getImageData(0, 0, width, height);
+      return jsQR(imageData.data, imageData.width, imageData.height, { inversionAttempts: 'attemptBoth' });
+    }
+
+    let result = tryDecode(img.width, img.height);
+    if (result && result.data) return result;
+
+    const maxDim = 900;
+    if (img.width > maxDim || img.height > maxDim) {
+      const scale = maxDim / Math.max(img.width, img.height);
+      result = tryDecode(Math.round(img.width * scale), Math.round(img.height * scale));
+      if (result && result.data) return result;
+    }
+
+    // محاولة أخيرة: تكبير الصورة لو كانت صغيرة (يفيد بصور بعيدة عن الكود)
+    if (img.width < 500) {
+      result = tryDecode(img.width * 2, img.height * 2);
+      if (result && result.data) return result;
+    }
+
+    return null;
+  }
+
   function scanQr(event){
     const file = event.target.files[0];
     if (!file) return;
     const img = new Image();
     img.onload = async function(){
-      const canvas = document.createElement('canvas');
-      canvas.width = img.width; canvas.height = img.height;
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(img, 0, 0);
-      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      const code = jsQR(imageData.data, imageData.width, imageData.height);
+      const code = decodeQrRobust(img);
       if (code && code.data) {
         // ننتظر التبويب يتبدّل والقائمة تخلص تحميل فعلياً، وبعدها بس نعبّي
         // خانة البحث ونطبّق الفلترة — قبل هذا التصحيح كانت تنصفّر فوراً بالغلط
@@ -1573,7 +1605,7 @@
         document.getElementById('staffSearch').value = code.data.trim();
         filterStaffList();
       } else {
-        alert('⚠ ما قدرنا نقرأ الكود بوضوح — جرّب مرة ثانية.');
+        alert('⚠ ما قدرنا نقرأ الكود بوضوح — جرّب تصوير بطاقة مطبوعة لو ممكن، أو صوّر شاشة الجوال من مسافة أقرب وبإضاءة أوضح، وحاول مرة ثانية.');
       }
     };
     img.src = URL.createObjectURL(file);
