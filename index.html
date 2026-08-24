@@ -1011,9 +1011,15 @@
   // ===================== نظام دخول موحّد — يميّز تلقائياً بين العميل والموظف =====================
   // كلا الطرفين يشتركون بنفس نظام Firebase Authentication، فنفحص نوع الحساب
   // من صيغة بريده (بريد العميل مبني من رقمه + @zamzam-vip.customer)
+  let pendingSessionExpiredNotice = false; // يمنع تضارب الرسالة مع خروج تلقائي متزامن
+
   auth.onAuthStateChanged(async function(user){
     if (!user) {
       resetCustomerLoginView();
+      if (pendingSessionExpiredNotice) {
+        showCustomerMsg('⚠ انتهت صلاحية جلستك السابقة — سجّل دخولك من جديد ببياناتك.', 'error');
+        pendingSessionExpiredNotice = false;
+      }
       document.getElementById('staffLoginForm').style.display = 'block';
       document.getElementById('staffPanel').style.display = 'none';
       return;
@@ -1030,7 +1036,15 @@
           headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + idToken },
         });
         const data = await res.json();
-        if (!data.success) { showCustomerMsg('⚠ ' + data.error, 'error'); return; }
+        if (!data.success) {
+          // الحساب مسجّل دخوله (رمز صالح) بس ما فيه بيانات مرتبطة فيه — جلسة قديمة
+          // "يتيمة" (زي لو الحساب انحذف من مكان ثاني، أو تعارض جلسة محفوظة قديمة).
+          // نسجّل خروج تلقائي ونظيف — الفرع أعلاه (user=null) بيتكفّل يعرض الرسالة
+          // بعد ما يخلص الخروج فعلياً، بدل ما نعرضها إحنا الحين ويصير تضارب توقيت.
+          pendingSessionExpiredNotice = true;
+          await auth.signOut();
+          return;
+        }
 
         if (data.status === 'active') {
           renderAccountView(data.account);
