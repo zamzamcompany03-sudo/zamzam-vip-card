@@ -1602,8 +1602,18 @@
         // ننتظر التبويب يتبدّل والقائمة تخلص تحميل فعلياً، وبعدها بس نعبّي
         // خانة البحث ونطبّق الفلترة — قبل هذا التصحيح كانت تنصفّر فوراً بالغلط
         await switchStaffTab('customers', true);
-        document.getElementById('staffSearch').value = code.data.trim();
+        const scannedText = code.data.trim();
+        document.getElementById('staffSearch').value = scannedText;
         filterStaffList();
+
+        // لو الكود انقرأ (حتى لو بشكل خاطئ/غير مطابق)، بس ما طابق أي عميل بالقائمة،
+        // نفضّل نمسح البحث ونرجّع القائمة كاملة ظاهرة — بدل ما تبقى فاضية ومربكة
+        const noMatch = document.getElementById('customersList').querySelector('.empty-note');
+        if (noMatch) {
+          document.getElementById('staffSearch').value = '';
+          renderCustomersList(allCustomers);
+          alert('⚠ انقرأ كود بس ما يطابق أي عميل موجود بالقائمة. تأكد من الكود وجرّب مرة ثانية — القائمة الكاملة ظاهرة الآن.');
+        }
       } else {
         alert('⚠ ما قدرنا نقرأ الكود بوضوح — جرّب تصوير بطاقة مطبوعة لو ممكن، أو صوّر شاشة الجوال من مسافة أقرب وبإضاءة أوضح، وحاول مرة ثانية.');
       }
