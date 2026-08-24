@@ -482,10 +482,6 @@
           <div class="hint" id="invRedeemHint">الحد الأقصى: ٧٥٪ من الرصيد المتاح بعد إضافة هذي الفاتورة.</div>
         </div>
 
-        <button class="btn btn-outline" style="margin-bottom:10px; font-size:12px; padding:9px;" onclick="document.getElementById('invoicePhotoInput').click()">📷 صورة الفاتورة — استخراج تلقائي</button>
-        <input type="file" id="invoicePhotoInput" accept="image/*" capture="environment" style="display:none;" onchange="scanInvoicePhoto(event)">
-        <div id="invoiceOcrStatus" style="display:none; text-align:center; font-size:11.5px; color:var(--muted); margin-bottom:10px;">⏳ جارٍ قراءة الفاتورة، هذا يأخذ بضع ثواني...</div>
-
         <div class="breakdown-box" id="invBreakdown" style="display:none;">
           <div class="breakdown-row"><span>الرصيد السابق</span><span id="bdPrevious">0</span></div>
           <div class="breakdown-row"><span>نسبة الخصم (<span id="bdPercent">1</span>٪) — مبلغ الخصم</span><span id="bdDiscount" style="color:var(--green);">+0</span></div>
@@ -539,7 +535,6 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/5.0.4/tesseract.min.js"></script>
 
 <script>
   const WORKER_URL = 'https://zamzam-vip-card.saadzamzamcompany.workers.dev';
@@ -1245,124 +1240,9 @@
     document.getElementById('invRedeem').value = '';
     document.getElementById('invBreakdown').style.display = 'none';
     document.getElementById('invoiceMsg').className = 'msg';
-    document.getElementById('invoiceOcrStatus').style.display = 'none';
-    document.getElementById('invoicePhotoInput').value = '';
 
     document.getElementById('invoicePanel').style.display = 'block';
     document.getElementById('invoicePanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-
-  // ===================== دوال مساعدة لعزل ومعالجة المناطق الخضراء بالصورة =====================
-  function loadImageFromFile(file){
-    return new Promise((resolve, reject) => {
-      const img = new Image();
-      img.onload = () => resolve(img);
-      img.onerror = reject;
-      img.src = URL.createObjectURL(file);
-    });
-  }
-
-  // مناطق ثابتة (كنسبة مئوية من أبعاد الصورة) — مبنية على قالب فاتورة زمزم الثابت:
-  //   ١) مربّع رقم الفاتورة: أعلى يسار الفاتورة
-  //   ٢) مبلغ الفاتورة: أول سطر "مجموع البيع" (الرقم يسار السطر، قبل الوزن)
-  // ملاحظة: هذي نسب تقريبية أول مرة — لو الصورة مو مؤطرة بنفس الزاوية والمسافة
-  // بالضبط، ممكن تحتاج تعديل بسيط بعد أول تجربة حقيقية.
-  const INVOICE_NUMBER_REGION = { xStart: 0.02, xEnd: 0.34, yStart: 0.07, yEnd: 0.19 };
-  const INVOICE_AMOUNT_REGION = { xStart: 0.02, xEnd: 0.40, yStart: 0.76, yEnd: 0.87 };
-
-  // يقص منطقة ثابتة من الصورة (بالنسبة المئوية)، يكبّرها، ويحوّلها لأبيض/أسود
-  // عالي التباين — يحسّن قراءة النص المطبوع بشكل واضح
-  function cropRegionAndEnhance(img, region){
-    const x = Math.round(region.xStart * img.width);
-    const y = Math.round(region.yStart * img.height);
-    const w = Math.round((region.xEnd - region.xStart) * img.width);
-    const h = Math.round((region.yEnd - region.yStart) * img.height);
-
-    const scale = 4; // تكبير كبير يحسّن القراءة على الأرقام الصغيرة المطبوعة
-    const canvas = document.createElement('canvas');
-    canvas.width = w * scale;
-    canvas.height = h * scale;
-    const ctx = canvas.getContext('2d');
-    ctx.imageSmoothingEnabled = true;
-    ctx.drawImage(img, x, y, w, h, 0, 0, w * scale, h * scale);
-
-    // تحويل لأبيض/أسود عالي التباين (عتبة سطوع) — يوضّح الأرقام المطبوعة الغامقة
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    const data = imageData.data;
-    for (let i = 0; i < data.length; i += 4) {
-      const brightness = (data[i] + data[i+1] + data[i+2]) / 3;
-      const v = brightness < 150 ? 0 : 255; // غامق ← أسود، فاتح ← أبيض
-      data[i] = data[i+1] = data[i+2] = v;
-    }
-    ctx.putImageData(imageData, 0, 0);
-    return canvas;
-  }
-
-  // نستخدم Worker مباشرة (مو الدالة المختصرة) حتى نقدر نحدد "أرقام بس" (whitelist) —
-  // هذا يرفع دقة القراءة بشكل واضح لما نعرف الهدف رقم بحت، مو نص عام
-  let ocrWorker = null;
-  async function getOcrWorker(){
-    if (!ocrWorker) {
-      ocrWorker = await Tesseract.createWorker('eng');
-      await ocrWorker.setParameters({ tessedit_char_whitelist: '0123456789' });
-    }
-    return ocrWorker;
-  }
-
-  async function ocrDigitsOnly(canvas){
-    const worker = await getOcrWorker();
-    const result = await worker.recognize(canvas);
-    return result.data.text || '';
-  }
-
-  function extractDigits(text){
-    const digits = normalizeDigits(text).replace(/[^\d]/g, '');
-    return digits || null;
-  }
-
-  // ===================== قراءة صورة الفاتورة — مناطق ثابتة بالموقع =====================
-  // الفكرة: بما إن كل فواتير المحل بنفس القالب المطبوع، نقص منطقتين ثابتتين
-  // بالضبط (مربّع رقم الفاتورة أعلى يسار، ومبلغ "مجموع البيع" بالأسفل) ونقرأ
-  // الأرقام المطبوعة منهم مباشرة — بدون اعتماد على أي علامة أو لون يدوي.
-  // ملاحظة صريحة: النتيجة تعتمد على تصوير الفاتورة بزاوية مستقيمة وقريبة نسبياً
-  // من نفس إطار الصورة الأصلية. الموظف لازم دايماً يتأكد من الرقمين قبل "تنفيذ العملية".
-  async function scanInvoicePhoto(event){
-    const file = event.target.files[0];
-    if (!file) return;
-
-    const statusEl = document.getElementById('invoiceOcrStatus');
-    statusEl.textContent = '⏳ جارٍ قراءة رقم الفاتورة والمبلغ...';
-    statusEl.style.display = 'block';
-
-    try {
-      const img = await loadImageFromFile(file);
-
-      const numberCanvas = cropRegionAndEnhance(img, INVOICE_NUMBER_REGION);
-      const amountCanvas = cropRegionAndEnhance(img, INVOICE_AMOUNT_REGION);
-
-      const numberText = await ocrDigitsOnly(numberCanvas);
-      const amountText = await ocrDigitsOnly(amountCanvas);
-
-      const foundNumber = extractDigits(numberText);
-      const foundAmount = extractDigits(amountText);
-
-      if (foundNumber) {
-        document.getElementById('invNumber').value = foundNumber;
-      }
-      if (foundAmount) {
-        const amtEl = document.getElementById('invAmount');
-        amtEl.value = Number(foundAmount).toLocaleString('en-US');
-        calcInvoicePreview();
-      }
-
-      if (foundNumber || foundAmount) {
-        statusEl.textContent = '✓ تم استخراج الرقمين — تأكد منهم قبل التنفيذ.';
-      } else {
-        statusEl.textContent = '⚠ ما قدرنا نقرأ الرقمين بوضوح — أدخلهم يدوياً، أو صوّر الفاتورة بزاوية أوضح.';
-      }
-    } catch (err) {
-      statusEl.textContent = '⚠ تعذّرت قراءة الصورة: ' + err.message;
-    }
   }
 
   function closeInvoicePanel(){
