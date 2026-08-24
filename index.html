@@ -243,7 +243,7 @@
         </div>
         <div class="field">
           <label style="color:var(--red);">رقم هاتف من دعاك؟ <span style="color:var(--red); font-weight:600;">(اختياري)</span></label>
-          <input type="text" id="regReferral" placeholder="07xxxxxxxxx" maxlength="11">
+          <input type="text" id="regReferral" placeholder="07xxxxxxxxx" maxlength="11" style="border-color:var(--red); color:var(--red); border-width:1.5px;">
           <div class="hint">تاخذ أنت وصديقك <span id="referralAmountHint1">٥,٠٠٠</span> دينار لكل وحد عند أول فاتورة حقيقية.</div>
         </div>
         <button class="btn btn-gold pvm-cta-pulse" onclick="doRegister()">🏁 سجّل الآن - بطاقة الثقة الذهبية VIP</button>
@@ -482,6 +482,10 @@
           <div class="hint" id="invRedeemHint">الحد الأقصى: ٧٥٪ من الرصيد المتاح بعد إضافة هذي الفاتورة.</div>
         </div>
 
+        <button class="btn btn-outline" style="margin-bottom:10px; font-size:12px; padding:9px;" onclick="document.getElementById('invoicePhotoInput').click()">📷 صورة الفاتورة — استخراج تلقائي</button>
+        <input type="file" id="invoicePhotoInput" accept="image/*" capture="environment" style="display:none;" onchange="scanInvoicePhoto(event)">
+        <div id="invoiceOcrStatus" style="display:none; text-align:center; font-size:11.5px; color:var(--muted); margin-bottom:10px;">⏳ جارٍ قراءة الفاتورة، هذا يأخذ بضع ثواني...</div>
+
         <div class="breakdown-box" id="invBreakdown" style="display:none;">
           <div class="breakdown-row"><span>الرصيد السابق</span><span id="bdPrevious">0</span></div>
           <div class="breakdown-row"><span>نسبة الخصم (<span id="bdPercent">1</span>٪) — مبلغ الخصم</span><span id="bdDiscount" style="color:var(--green);">+0</span></div>
@@ -535,6 +539,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/5.0.4/tesseract.min.js"></script>
 
 <script>
   const WORKER_URL = 'https://zamzam-vip-card.saadzamzamcompany.workers.dev';
@@ -816,9 +821,10 @@
       const user = auth.currentUser;
       if (!user) return;
       const idToken = await user.getIdToken(true); // true يجبر تحديث الرمز، يضمن بيانات حديثة
-      const res = await fetch(WORKER_URL + '/get-profile', {
+      const res = await fetch(WORKER_URL + '/get-profile?t=' + Date.now(), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + idToken },
+        cache: 'no-store', // نمنع أي احتمال تخزين مؤقت بالمتصفح يعرض بيانات قديمة
       });
       const data = await res.json();
       if (data.success && data.status === 'active') {
@@ -826,6 +832,7 @@
         btn.textContent = '✓ تحدّث الرصيد';
       } else {
         btn.textContent = originalText;
+        if (!data.success) alert('⚠ ' + (data.error || 'تعذّر التحديث لسبب غير معروف.'));
       }
     } catch (err) {
       btn.textContent = originalText;
@@ -1238,9 +1245,66 @@
     document.getElementById('invRedeem').value = '';
     document.getElementById('invBreakdown').style.display = 'none';
     document.getElementById('invoiceMsg').className = 'msg';
+    document.getElementById('invoiceOcrStatus').style.display = 'none';
+    document.getElementById('invoicePhotoInput').value = '';
 
     document.getElementById('invoicePanel').style.display = 'block';
     document.getElementById('invoicePanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  // ===================== قراءة صورة الفاتورة واستخراج رقمها ومبلغها تلقائياً =====================
+  // ملاحظة صريحة: هذا "استخراج تلقائي بأفضل جهد" (OCR) — مو دقيق ١٠٠٪ خصوصاً مع
+  // الخط اليدوي أو الصور المائلة. الموظف لازم دايماً يتأكد من الرقمين قبل "تنفيذ العملية".
+  async function scanInvoicePhoto(event){
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const statusEl = document.getElementById('invoiceOcrStatus');
+    statusEl.textContent = '⏳ جارٍ قراءة الفاتورة، هذا يأخذ بضع ثواني...';
+    statusEl.style.display = 'block';
+
+    try {
+      const result = await Tesseract.recognize(file, 'ara+eng');
+      const text = result.data.text || '';
+
+      // نحوّل أي أرقام عربية بالنص لإنجليزية، ونشيل الفواصل، حتى تسهل المطابقة
+      const cleanText = normalizeDigits(text).replace(/,/g, '');
+
+      // نحاول نلقى رقم الفاتورة (بعد كلمة "الرقم")
+      let foundNumber = null;
+      const numberMatch = cleanText.match(/الرقم[^\d]{0,5}(\d{2,8})/);
+      if (numberMatch) foundNumber = numberMatch[1];
+
+      // نحاول نلقى مبلغ الفاتورة (بعد كلمة "مجموع" أو "البيع")
+      let foundAmount = null;
+      const amountMatch = cleanText.match(/(?:مجموع|البيع)[^\d]{0,10}(\d{4,10})/);
+      if (amountMatch) {
+        foundAmount = amountMatch[1];
+      } else {
+        // احتياطي: ناخذ أكبر رقم موجود بالنص كامل (غالباً يكون المبلغ الإجمالي)
+        const allNumbers = cleanText.match(/\d{4,10}/g);
+        if (allNumbers && allNumbers.length) {
+          foundAmount = allNumbers.reduce((a, b) => (Number(b) > Number(a) ? b : a));
+        }
+      }
+
+      if (foundNumber) {
+        document.getElementById('invNumber').value = foundNumber;
+      }
+      if (foundAmount) {
+        const amtEl = document.getElementById('invAmount');
+        amtEl.value = Number(foundAmount).toLocaleString('en-US');
+        calcInvoicePreview();
+      }
+
+      if (foundNumber || foundAmount) {
+        statusEl.textContent = '✓ تم استخراج البيانات — تأكد منها قبل التنفيذ (القراءة التلقائية مو دقيقة ١٠٠٪).';
+      } else {
+        statusEl.textContent = '⚠ ما قدرنا نستخرج البيانات تلقائياً — أدخلها يدوياً من الصورة.';
+      }
+    } catch (err) {
+      statusEl.textContent = '⚠ تعذّرت قراءة الصورة: ' + err.message;
+    }
   }
 
   function closeInvoicePanel(){
