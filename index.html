@@ -7,6 +7,11 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="بطاقة الثقة">
 <meta name="mobile-web-app-capable" content="yes">
+<!-- تمنع المتصفح (خصوصاً على سطح المكتب) من تخزين نسخة قديمة من الصفحة بالكاش —
+     بدونها، أي تحديث نرفعه ممكن ما ينعكس فوراً حتى بعد تحديث الصفحة العادي -->
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@700;800;900&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
 
@@ -3010,9 +3015,63 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
   // كلا الطرفين يشتركون بنفس نظام Firebase Authentication، فنفحص نوع الحساب
   // من صيغة بريده (بريد العميل مبني من رقمه + @zamzam-vip.customer)
   let pendingSessionExpiredNotice = false; // يمنع تضارب الرسالة مع خروج تلقائي متزامن
+  let pendingStatusPollTimer = null; // مؤقّت التحقق التلقائي وقت حالة "قيد المراجعة"
+
+  function stopPendingStatusPoll(){
+    if (pendingStatusPollTimer) {
+      clearInterval(pendingStatusPollTimer);
+      pendingStatusPollTimer = null;
+    }
+  }
+
+  // يتحقق من حالة حساب العميل مرة وحدة، ويحدّث الشاشة حسب النتيجة.
+  // نفس الدالة تُستخدم أول ما يسجّل دخول، وبعدين تتكرر تلقائياً كل فترة
+  // طول ما الحساب "قيد المراجعة" — حتى تختفي رسالة الانتظار تلقائياً
+  // فور ما الموظف يوافق، بدون ما العميل يحتاج يحدّث الصفحة يدوياً.
+  async function checkCustomerStatus(showChecking){
+    const user = auth.currentUser;
+    if (!user) { stopPendingStatusPoll(); return; }
+
+    if (showChecking) showCustomerMsg('جارٍ التحقق...', 'pending');
+    try {
+      const idToken = await user.getIdToken();
+      const res = await fetch(WORKER_URL + '/get-profile?t=' + Date.now(), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + idToken },
+        cache: 'no-store',
+      });
+      const data = await res.json();
+      if (!data.success) {
+        // الحساب مسجّل دخوله (رمز صالح) بس ما فيه بيانات مرتبطة فيه — جلسة قديمة
+        // "يتيمة" (زي لو الحساب انحذف من مكان ثاني، أو تعارض جلسة محفوظة قديمة).
+        // نسجّل خروج تلقائي ونظيف — الفرع أعلاه (user=null) بيتكفّل يعرض الرسالة
+        // بعد ما يخلص الخروج فعلياً، بدل ما نعرضها إحنا الحين ويصير تضارب توقيت.
+        stopPendingStatusPoll();
+        pendingSessionExpiredNotice = true;
+        await auth.signOut();
+        return;
+      }
+
+      if (data.status === 'active') {
+        stopPendingStatusPoll(); // ما نحتاج نتحقق أكثر — الحساب صار فعّال
+        renderAccountView(data.account);
+      } else if (data.status === 'pending') {
+        showCustomerMsg('⏳ طلبك لسا قيد المراجعة — بانتظار موافقة الموظف. (نتحقق تلقائياً كل ٢٠ ثانية)', 'pending');
+        if (!pendingStatusPollTimer) {
+          pendingStatusPollTimer = setInterval(() => checkCustomerStatus(false), 20000);
+        }
+      } else if (data.status === 'rejected') {
+        stopPendingStatusPoll();
+        showCustomerMsg('❌ تم رفض طلبك. السبب: ' + (data.reason || 'غير محدد'), 'error');
+      }
+    } catch (err) {
+      showCustomerMsg('⚠ خطأ بالاتصال: ' + err.message, 'error');
+    }
+  }
 
   auth.onAuthStateChanged(async function(user){
     if (!user) {
+      stopPendingStatusPoll();
       resetCustomerLoginView();
       if (pendingSessionExpiredNotice) {
         showCustomerMsg('⚠ انتهت صلاحية جلستك السابقة — سجّل دخولك من جديد ببياناتك.', 'error');
@@ -3026,34 +3085,7 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
     const isCustomer = user.email && user.email.endsWith('@zamzam-vip.customer');
 
     if (isCustomer) {
-      showCustomerMsg('جارٍ التحقق...', 'pending');
-      try {
-        const idToken = await user.getIdToken();
-        const res = await fetch(WORKER_URL + '/get-profile', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + idToken },
-        });
-        const data = await res.json();
-        if (!data.success) {
-          // الحساب مسجّل دخوله (رمز صالح) بس ما فيه بيانات مرتبطة فيه — جلسة قديمة
-          // "يتيمة" (زي لو الحساب انحذف من مكان ثاني، أو تعارض جلسة محفوظة قديمة).
-          // نسجّل خروج تلقائي ونظيف — الفرع أعلاه (user=null) بيتكفّل يعرض الرسالة
-          // بعد ما يخلص الخروج فعلياً، بدل ما نعرضها إحنا الحين ويصير تضارب توقيت.
-          pendingSessionExpiredNotice = true;
-          await auth.signOut();
-          return;
-        }
-
-        if (data.status === 'active') {
-          renderAccountView(data.account);
-        } else if (data.status === 'pending') {
-          showCustomerMsg('⏳ طلبك لسا قيد المراجعة — بانتظار موافقة الموظف.', 'pending');
-        } else if (data.status === 'rejected') {
-          showCustomerMsg('❌ تم رفض طلبك. السبب: ' + (data.reason || 'غير محدد'), 'error');
-        }
-      } catch (err) {
-        showCustomerMsg('⚠ خطأ بالاتصال: ' + err.message, 'error');
-      }
+      await checkCustomerStatus(true);
     } else {
       document.getElementById('staffLoginForm').style.display = 'none';
       document.getElementById('staffPanel').style.display = 'block';
