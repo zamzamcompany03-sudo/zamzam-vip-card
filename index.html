@@ -114,11 +114,6 @@
   .wallet-amount span{ font-size:14px; color:rgba(255,255,255,0.65); font-weight:700; }
   .wallet-account{ font-size:11px; color:rgba(255,255,255,0.55); margin-top:4px; }
 
-  .referral-box{ background:linear-gradient(135deg,#fffaf0,#fdf3dc); border:1px solid #d4af3755; border-radius:14px; padding:14px 16px; text-align:center; margin-bottom:14px; }
-  .referral-title{ font-family:'Tajawal',sans-serif; font-weight:800; font-size:13px; color:#8a6a1f; margin-bottom:6px; }
-  .referral-sub{ font-size:11px; color:var(--muted); line-height:1.8; margin:0 0 10px; }
-  .referral-counter{ display:inline-block; background:rgba(30,158,87,0.12); color:var(--green); font-family:'Tajawal',sans-serif; font-weight:800; font-size:11px; padding:6px 14px; border-radius:100px; }
-
   .dup-warning{ display:none; background:rgba(229,85,90,0.1); border:1px solid rgba(229,85,90,0.4); border-radius:10px; padding:10px 14px; margin-top:10px; color:var(--red); font-size:11.5px; font-weight:700; line-height:1.8; }
   .dup-warning.show{ display:block; }
 
@@ -241,11 +236,6 @@
           <label>كلمة المرور (٦ أحرف فأكثر)</label>
           <input type="password" id="regPassword" placeholder="أنشئ كلمة مرور خاصة بك">
         </div>
-        <div class="field">
-          <label style="color:var(--red);">رقم هاتف من دعاك؟ <span style="color:var(--red); font-weight:600;">(اختياري)</span></label>
-          <input type="text" id="regReferral" placeholder="07xxxxxxxxx" maxlength="11" style="border-color:var(--red); color:var(--red); border-width:1.5px;">
-          <div class="hint">تاخذ أنت وصديقك <span id="referralAmountHint1">٥,٠٠٠</span> دينار لكل وحد عند أول فاتورة حقيقية.</div>
-        </div>
         <button class="btn btn-gold pvm-cta-pulse" onclick="doRegister()">🏁 سجّل الآن - بطاقة الثقة الذهبية VIP</button>
       </div>
 
@@ -287,12 +277,6 @@
         </div>
 
         <button class="btn btn-outline" style="margin-bottom:10px; font-size:12px; padding:9px;" onclick="refreshMyAccount()" id="refreshAccountBtn">🔄 تحديث الرصيد</button>
-
-        <div class="referral-box">
-          <div class="referral-title">💰 اكسب <span id="referralAmountTitle">٥,٠٠٠</span> دينار عن كل صديق تجيبه</div>
-          <p class="referral-sub">شارك رقم هاتفك، وأي صديق يفتح حساب بيه ويشتري، تاخذ <span id="referralAmountSub">٥,٠٠٠</span> دينار فوراً — وهو ياخذ <span id="referralAmountSub2">٥,٠٠٠</span> دينار كمان.</p>
-          <div class="referral-counter" id="accReferralInfo">جبت ٠ من أصدقائك = ربحت ٠ دينار لحد الآن</div>
-        </div>
 
         <div style="display:flex; gap:8px; margin-bottom:10px;">
           <button class="btn btn-outline" style="flex:1;" onclick="showMyCard()">🪪 بطاقتي</button>
@@ -337,6 +321,7 @@
           <div class="mc-hint">أعطِ الموظف هذا الكود عند كل عملية شراء</div>
         </div>
         <button class="btn btn-outline" style="margin-top:10px;" id="saveCardBtn" onclick="downloadMyCard()">💾 حفظ بطاقتي كصورة</button>
+        <button class="btn btn-gold" style="margin-top:8px;" id="shareCardBtn" onclick="shareMyCardWhatsApp()">📤 إرسال بطاقتي عبر واتساب</button>
       </div>
 
       <!-- كشف الحساب -->
@@ -365,21 +350,12 @@
         <h3 style="font-family:'Tajawal',sans-serif; font-weight:900; color:var(--navy); font-size:14px; margin:16px 0 6px;">💰 نظام الخصومات — كيف تشتغل بالضبط؟</h3>
         <p><b>الفكرة ببساطة:</b> كل مرة تشتري منا (ذهب، فضيات، ساعات، أو عطور)، نسبة ثابتة من قيمة فاتورتك <b>تنضاف تلقائياً كرصيد حقيقي</b> بحسابك — تقدر تستخدمه بأي عملية شراء جاية.</p>
         <p><b>النسبة الحالية: <span id="annDiscountPercent1" style="color:var(--gold-deep); font-weight:900;">١</span>٪</b> من كل فاتورة.</p>
-        <p><b>مثال بالأرقام:</b> لو اشتريت فاتورة بقيمة <span id="annExampleInvoice" style="font-weight:800;">١٬٠٠٠٬٠٠٠</span> دينار، رصيدك يزيد فوراً <span id="annExampleDiscount" style="color:var(--green); font-weight:900;">١٠٬٠٠٠</span> دينار — بدون أي مجهود منك، بس اذكر رقم حسابك للموظف وقت الدفع.</p>
+        <p><b>مثال بالأرقام:</b> لو اشتريت فاتورة بقيمة <span id="annExampleInvoice" style="font-weight:800;">١٬٠٠٠٬٠٠٠</span> دينار، رصيدك يزيد فوراً <span id="annExampleDiscount" style="color:var(--green); font-weight:900;">١٠٬٠٠٠</span> دينار — بدون أي مجهود منك، بس اذكر رقم حسابك للموظف وقت الدفع. تقدر ترسل صورة الفاتورة مع رقم حسابك أو صورة بطاقتك عبر الواتساب، ويضيف الموظف رصيدك بدون ما تحتاج تحضر شخصياً لهذي الخطوة.</p>
         <p>رصيدك يتراكم مع كل زيارة، وتقدر تستخدمه (لغاية ٧٥٪ من رصيدك المتوفر بأي عملية) بأي وقت تحب — يعني كل ما تشتري أكثر، تكسب أكثر، وتوفر أكثر بالمرة الجاية.</p>
-
-        <h3 style="font-family:'Tajawal',sans-serif; font-weight:900; color:var(--navy); font-size:14px; margin:16px 0 6px;">🤝 نظام الإحالة — اجلب صديق واكسب الاثنين</h3>
-        <p><b>الفكرة:</b> عندك كود دعوة خاص فيك (رقم هاتفك نفسه) — أي صديق تجيبه يفتح حساب جديد ويذكر رقمك وقت التسجيل، وبعدها يسوي أول عملية شراء حقيقية، <b>تاخذون الاثنين مكافأة نقدية فورية</b>.</p>
-        <p><b>خطوة بخطوة:</b></p>
-        <p>١. تشارك رقم هاتفك مع صديقك (تقدر ترسله مباشرة بضغطة وحدة من هذا التطبيق).<br>
-        ٢. صديقك يفتح حساب جديد ويكتب رقمك بخانة "من دعاك؟" وقت التسجيل.<br>
-        ٣. الموظف يوافق على حسابه (نفس إجراء أي عميل جديد).<br>
-        ٤. أول ما يسوي صديقك أول عملية شراء حقيقية بقيمة معقولة، تنصرف المكافأة **تلقائياً** للطرفين بنفس اللحظة.</p>
-        <p><b>المكافأة الحالية: <span id="annReferralBonus1" style="color:var(--gold-deep); font-weight:900;">٥٬٠٠٠</span> دينار لكل طرف</b> — يعني أنت تاخذ <span id="annReferralBonus2" style="font-weight:800;">٥٬٠٠٠</span> دينار، وصديقك ياخذ <span id="annReferralBonus3" style="font-weight:800;">٥٬٠٠٠</span> دينار بنفس اللحظة، بمجموع <span id="annReferralTotal" style="color:var(--green); font-weight:900;">١٠٬٠٠٠</span> دينار يدخل لعائلتنا الذهبية بعملية وحدة بس.</p>
-        <p>ما فيه حد لعدد الأصدقاء اللي تقدر تجيبهم — كل صديق جديد = مكافأة جديدة. تابع عدد الأصدقاء اللي جبتهم وإجمالي أرباحك من صفحة حسابك الرئيسية بأي وقت.</p>
+        <p><b>⚠️ ملاحظة مهمة عن استخدام (سحب) الرصيد:</b> السحب من رصيدك مختلف — لا يتم إلا بحضورك أنت شخصياً — صاحب الحساب حصراً — داخل محلنا، وتفتح حسابك أمام الموظف مباشرة وقت السحب. لا يجوز سحب الرصيد نيابة عنك، ولا عن بعد، ولا بواسطة شخص آخر حتى لو كان يملك رقم حسابك أو بطاقتك. هذا الشرط يحمي رصيدك من أي استخدام غير مصرّح به.</p>
 
         <h3 style="font-family:'Tajawal',sans-serif; font-weight:900; color:var(--navy); font-size:14px; margin:16px 0 6px;">⚠️ شرط أساسي — اقرأه منيح</h3>
-        <p><b>التسجيل والاستفادة من بطاقة الثقة الذهبية VIP يشترط تواجدك شخصياً داخل محلنا وقت الشراء الفعلي</b> (ذهب، فضيات، ساعات، أو عطور). هذا الشرط موجود عشان <b>يضمن حقك أنت بالدرجة الأولى</b> — الخصم والمكافآت حصرية لزبائننا الحقيقيين اللي يشرفونا بمحلنا، مو مفتوحة لأي شخص يسجّل عن بعد بدون شراء حقيقي. هيك نضمن إن رصيدك ومكافآتك تبقى قيمة حقيقية دايماً.</p>
+        <p><b>التسجيل والاستفادة من بطاقة الثقة الذهبية VIP متاحة لكل زبائننا الحقيقيين</b> — تقدر ترسل فاتورتك ورقم حسابك أو بطاقتك عبر الواتساب لإضافة الخصم، بدون ما تحتاج تحضر شخصياً لهذي الخطوة. لكن <b>سحب الرصيد يشترط حضورك أنت شخصياً داخل محلنا وفتح حسابك أمام الموظف مباشرة</b> — هذا الشرط موجود عشان <b>يضمن حقك أنت بالدرجة الأولى</b> ويحمي رصيدك من أي سحب غير مصرّح به، حتى لو وصلت بياناتك لشخص آخر.</p>
 
         <h3 style="font-family:'Tajawal',sans-serif; font-weight:900; color:var(--navy); font-size:14px; margin:16px 0 6px;">📍 زورونا</h3>
         <p><b>الأنبار – الرمادي – شارع الصياغ – شركة زمزم لتجارة المصوغات الذهبية</b></p>
@@ -518,11 +494,6 @@
         <div class="field">
           <label>نسبة الخصم (٪) — تُطبّق على كل فاتورة</label>
           <input type="text" inputmode="decimal" id="configDiscountPercent" oninput="this.value = normalizeDigits(this.value)">
-        </div>
-        <div class="field">
-          <label>مبلغ مكافأة الإحالة (دينار) — لكل طرف</label>
-          <input type="text" inputmode="numeric" id="configReferralBonus" oninput="this.value = normalizeDigits(this.value)">
-          <div class="hint">هذا المبلغ يُضاف لكل من الجالب والمُحال عند أول فاتورة حقيقية.</div>
         </div>
         <button class="btn btn-gold" onclick="saveConfig()">💾 حفظ الإعدادات</button>
         <div class="msg" id="configMsg"></div>
@@ -2453,10 +2424,10 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
     return String(str).replace(/[٠-٩]/g, d => map[d]);
   }
 
-  let appConfig = { discountPercent: 1, referralBonus: 5000 }; // تُحدَّث فوراً من الخادم بمجرد ما تحمّل الصفحة
+  let appConfig = { discountPercent: 1 }; // تُحدَّث فوراً من الخادم بمجرد ما تحمّل الصفحة
 
-  // ===================== تحميل الإعدادات الحالية (نسبة الخصم + مبلغ الإحالة) =====================
-  // تُقرأ من مكان واحد بالخادم، وتنعكس بكل مكان تلقائياً — الميدالية، نص التسويق، صندوق الإحالة
+  // ===================== تحميل الإعدادات الحالية (نسبة الخصم) =====================
+  // تُقرأ من مكان واحد بالخادم، وتنعكس بكل مكان تلقائياً — الميدالية، نص التسويق
   async function loadPublicConfig(){
     try {
       const res = await fetch(WORKER_URL + '/get-config', { method: 'POST' });
@@ -2464,18 +2435,11 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
       if (!data.success) throw new Error(data.error);
 
       appConfig.discountPercent = data.discountPercent;
-      appConfig.referralBonus = data.referralBonus;
 
       document.getElementById('medallionPct').textContent = data.discountPercent + '%';
 
       const subWords = (toArabicDigits(data.discountPercent) + '٪ من قيمة فاتورتك يبقى محفوظاً بكارتك الخاص — رصيد حقيقي، مو نقاط وهمية.').split(' ');
       renderRevealWords('revealSub', subWords, 1.4, 0.15);
-
-      const bonusAr = numberToArabic(data.referralBonus);
-      ['referralAmountHint1','referralAmountTitle','referralAmountSub','referralAmountSub2'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.textContent = bonusAr;
-      });
 
       updateAnnouncementNumbers(); // نحدّث كل الأرقام بشاشة "الشرح والعروض" كمان بنفس اللحظة
       generateAppIcon(); // نولّد أيقونة التطبيق بنفس النسبة الحية — لأي حد يضيف التطبيق لشاشته من الآن
@@ -2490,7 +2454,6 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
   // الإعدادات من لوحة الموظف، بدون ما يحتاج أي تعديل يدوي بالنص
   function updateAnnouncementNumbers(){
     const pct = appConfig.discountPercent;
-    const bonus = appConfig.referralBonus;
     const exampleInvoice = 1000000; // مبلغ تمثيلي بس للمثال التوضيحي
     const exampleDiscount = Math.round(exampleInvoice * pct / 100);
 
@@ -2500,10 +2463,6 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
     setText('annDiscountPercent2', toArabicDigits(pct));
     setText('annExampleInvoice', numberToArabic(exampleInvoice));
     setText('annExampleDiscount', numberToArabic(exampleDiscount));
-    setText('annReferralBonus1', numberToArabic(bonus));
-    setText('annReferralBonus2', numberToArabic(bonus));
-    setText('annReferralBonus3', numberToArabic(bonus));
-    setText('annReferralTotal', numberToArabic(bonus * 2));
   }
 
   // ===================== أيقونة التطبيق — تتولّد بالنسبة الحية (نموذج ١٣ المعتمد) =====================
@@ -2612,14 +2571,13 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
     // نطبّع أرقام كلمة المرور أيضاً (عربي ← إنجليزي) — حتى لو كتبها العميل بالعربي هنا
     // وبالإنجليزي وقت الدخول لاحقاً، تظل تُعتبر نفس كلمة المرور بالضبط
     const password = normalizeDigits(document.getElementById('regPassword').value);
-    const referredByPhone = normalizeDigits(document.getElementById('regReferral').value.trim());
 
     showCustomerMsg('جارٍ الإرسال...', 'pending');
     try {
       const res = await fetch(WORKER_URL + '/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, phone, password, referredByPhone }),
+        body: JSON.stringify({ name, phone, password }),
       });
       const data = await res.json();
       showCustomerMsg(data.success ? '✓ ' + data.message : '⚠ ' + data.error, data.success ? 'success' : 'error');
@@ -2670,8 +2628,6 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
 
     document.getElementById('accBalance').textContent = account.balanceNum.toLocaleString('en-US');
     document.getElementById('accId').textContent = account.accountId + ' • ' + account.phone;
-    document.getElementById('accReferralInfo').textContent =
-      'جبت ' + (account.referralCount || 0) + ' من أصدقائك = ربحت ' + (account.referralEarnings || 0) + ' دينار لحد الآن';
   }
 
   // يحدّث رصيد العميل وبياناته يدوياً — مفيد لو الموظف أضاف فاتورة بلوحته
@@ -2744,9 +2700,9 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
     }
   }
 
-  // ===================== حفظ بطاقتي كصورة كاملة =====================
-  // يرسم بطاقة كاملة (شعار + اسم + رقم حساب + هاتف + كود QR) على canvas واحد
-  // ويحمّلها كصورة PNG. يعمل بالكامل محلياً بدون أي طلب شبكة.
+  // ===================== بناء صورة بطاقتي (يُستخدم للحفظ وللمشاركة) =====================
+  // يرسم بطاقة كاملة (شعار + اسم + رقم حساب + هاتف + كود QR) على canvas واحد.
+  // يعمل بالكامل محلياً بدون أي طلب شبكة، ويرجّع الـ canvas الجاهز.
   function roundedRectPath(ctx, x, y, w, h, r){
     ctx.beginPath();
     ctx.moveTo(x + r, y);
@@ -2766,6 +2722,123 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
     return { type: 'text' }; // احتياطي: مكتبة QRCode ما تحمّلت، الكود ظاهر كرقم نصي بس
   }
 
+  async function buildMyCardCanvas(){
+    // ننتظر تحميل الخط (لو جاهز) حتى يطلع النص واضح على الصورة، بدون ما نعلّق
+    // التنفيذ لو الخط تأخر أو فشل التحميل
+    if (document.fonts && document.fonts.ready) {
+      await Promise.race([document.fonts.ready, new Promise(r => setTimeout(r, 1200))]);
+    }
+
+    const W = 720, H = 1040;
+    const canvas = document.createElement('canvas');
+    canvas.width = W; canvas.height = H;
+    const ctx = canvas.getContext('2d');
+
+    // خلفية بطاقة داكنة متدرجة (نفس ألوان بطاقة "بطاقتي" بالتطبيق)
+    const bg = ctx.createLinearGradient(0, 0, 0, H);
+    bg.addColorStop(0, '#1b3352');
+    bg.addColorStop(1, '#0d1b2e');
+    ctx.fillStyle = bg;
+    roundedRectPath(ctx, 0, 0, W, H, 36);
+    ctx.fill();
+
+    // إطار ذهبي رفيع
+    ctx.strokeStyle = 'rgba(212,175,55,0.5)';
+    ctx.lineWidth = 3;
+    roundedRectPath(ctx, 10, 10, W - 20, H - 20, 30);
+    ctx.stroke();
+
+    ctx.textAlign = 'center';
+
+    // الشعار
+    ctx.font = '64px sans-serif';
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText('🕌', W / 2, 110);
+
+    // اسم الشركة
+    ctx.font = "800 34px 'Tajawal', sans-serif";
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText('شركة زمزم لتجارة المصوغات الذهبية', W / 2, 165);
+
+    // اسم البطاقة
+    ctx.font = "700 24px 'Tajawal', sans-serif";
+    ctx.fillStyle = '#d4af37';
+    ctx.fillText('بطاقة الثقة الذهبية VIP', W / 2, 202);
+
+    // شارة "الحساب مفعّل"
+    const pillText = '✓ الحساب مفعّل ونشط';
+    ctx.font = "800 18px 'Tajawal', sans-serif";
+    const pillW = ctx.measureText(pillText).width + 50;
+    const pillH = 42;
+    const pillX = (W - pillW) / 2;
+    const pillY = 224;
+    ctx.fillStyle = 'rgba(74,222,128,0.18)';
+    roundedRectPath(ctx, pillX, pillY, pillW, pillH, pillH / 2);
+    ctx.fill();
+    ctx.fillStyle = '#4ade80';
+    ctx.fillText(pillText, W / 2, pillY + 28);
+
+    // مربع أبيض لكود الـ QR
+    const qrSize = 420;
+    const qrBoxSize = qrSize + 40;
+    const qrBoxX = (W - qrBoxSize) / 2;
+    const qrBoxY = 296;
+    ctx.fillStyle = '#ffffff';
+    roundedRectPath(ctx, qrBoxX, qrBoxY, qrBoxSize, qrBoxSize, 22);
+    ctx.fill();
+
+    const qrSource = getQrImageSource(document.getElementById('memberQrBox'));
+    const qrX = qrBoxX + 20, qrY = qrBoxY + 20;
+
+    if (qrSource.type === 'image') {
+      await new Promise((resolve) => {
+        const qrImg = new Image();
+        qrImg.onload = () => {
+          ctx.drawImage(qrImg, qrX, qrY, qrSize, qrSize);
+          resolve();
+        };
+        qrImg.onerror = () => resolve(); // نكمل حتى لو فشلت، النص بالأسفل يبقى واضح
+        qrImg.src = qrSource.src;
+      });
+    } else {
+      // احتياطي: لو ما فيه صورة QR أصلاً، نكتب رقم الحساب كبديل واضح داخل المربع
+      ctx.fillStyle = '#3d2a06';
+      ctx.font = "900 40px 'Tajawal', sans-serif";
+      ctx.fillText(currentAccount.accountId, W / 2, qrBoxY + qrBoxSize / 2 + 14);
+    }
+
+    // بيانات العميل تحت المربع
+    let y = qrBoxY + qrBoxSize + 60;
+    ctx.fillStyle = '#ffffff';
+    ctx.font = "800 30px 'Tajawal', sans-serif";
+    ctx.fillText(currentAccount.name || '—', W / 2, y);
+
+    y += 42;
+    ctx.fillStyle = '#a9bbd0';
+    ctx.font = "700 22px 'Tajawal', sans-serif";
+    ctx.fillText(currentAccount.accountId || '—', W / 2, y);
+
+    y += 36;
+    ctx.fillStyle = '#8496ad';
+    ctx.font = "18px 'Tajawal', sans-serif";
+    // رقم الهاتف يبقى بأرقام إنجليزية LTR حتى لو الواجهة عربية
+    ctx.direction = 'ltr';
+    ctx.fillText(currentAccount.phone || '—', W / 2, y);
+    ctx.direction = 'rtl';
+
+    y += 50;
+    ctx.fillStyle = '#8496ad';
+    ctx.font = "16px 'Tajawal', sans-serif";
+    ctx.fillText('أعطِ الموظف هذا الكود عند كل عملية شراء', W / 2, y);
+
+    return canvas;
+  }
+
+  function myCardFileName(){
+    const safeAccountId = String(currentAccount.accountId || 'card').replace(/[^\w-]/g, '');
+    return 'بطاقتي-' + safeAccountId + '.png';
+  }
+
   async function downloadMyCard(){
     const btn = document.getElementById('saveCardBtn');
     const originalText = btn.textContent;
@@ -2773,122 +2846,59 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
     btn.disabled = true;
 
     try {
-      // ننتظر تحميل الخط (لو جاهز) حتى يطلع النص واضح على الصورة، بدون ما نعلّق
-      // التنفيذ لو الخط تأخر أو فشل التحميل
-      if (document.fonts && document.fonts.ready) {
-        await Promise.race([document.fonts.ready, new Promise(r => setTimeout(r, 1200))]);
-      }
-
-      const W = 720, H = 1040;
-      const canvas = document.createElement('canvas');
-      canvas.width = W; canvas.height = H;
-      const ctx = canvas.getContext('2d');
-
-      // خلفية بطاقة داكنة متدرجة (نفس ألوان بطاقة "بطاقتي" بالتطبيق)
-      const bg = ctx.createLinearGradient(0, 0, 0, H);
-      bg.addColorStop(0, '#1b3352');
-      bg.addColorStop(1, '#0d1b2e');
-      ctx.fillStyle = bg;
-      roundedRectPath(ctx, 0, 0, W, H, 36);
-      ctx.fill();
-
-      // إطار ذهبي رفيع
-      ctx.strokeStyle = 'rgba(212,175,55,0.5)';
-      ctx.lineWidth = 3;
-      roundedRectPath(ctx, 10, 10, W - 20, H - 20, 30);
-      ctx.stroke();
-
-      ctx.textAlign = 'center';
-
-      // الشعار
-      ctx.font = '64px sans-serif';
-      ctx.fillStyle = '#ffffff';
-      ctx.fillText('🕌', W / 2, 110);
-
-      // اسم الشركة
-      ctx.font = "800 34px 'Tajawal', sans-serif";
-      ctx.fillStyle = '#ffffff';
-      ctx.fillText('شركة زمزم لتجارة المصوغات الذهبية', W / 2, 165);
-
-      // اسم البطاقة
-      ctx.font = "700 24px 'Tajawal', sans-serif";
-      ctx.fillStyle = '#d4af37';
-      ctx.fillText('بطاقة الثقة الذهبية VIP', W / 2, 202);
-
-      // شارة "الحساب مفعّل"
-      const pillText = '✓ الحساب مفعّل ونشط';
-      ctx.font = "800 18px 'Tajawal', sans-serif";
-      const pillW = ctx.measureText(pillText).width + 50;
-      const pillH = 42;
-      const pillX = (W - pillW) / 2;
-      const pillY = 224;
-      ctx.fillStyle = 'rgba(74,222,128,0.18)';
-      roundedRectPath(ctx, pillX, pillY, pillW, pillH, pillH / 2);
-      ctx.fill();
-      ctx.fillStyle = '#4ade80';
-      ctx.fillText(pillText, W / 2, pillY + 28);
-
-      // مربع أبيض لكود الـ QR
-      const qrSize = 420;
-      const qrBoxSize = qrSize + 40;
-      const qrBoxX = (W - qrBoxSize) / 2;
-      const qrBoxY = 296;
-      ctx.fillStyle = '#ffffff';
-      roundedRectPath(ctx, qrBoxX, qrBoxY, qrBoxSize, qrBoxSize, 22);
-      ctx.fill();
-
-      const qrSource = getQrImageSource(document.getElementById('memberQrBox'));
-      const qrX = qrBoxX + 20, qrY = qrBoxY + 20;
-
-      if (qrSource.type === 'image') {
-        await new Promise((resolve) => {
-          const qrImg = new Image();
-          qrImg.onload = () => {
-            ctx.drawImage(qrImg, qrX, qrY, qrSize, qrSize);
-            resolve();
-          };
-          qrImg.onerror = () => resolve(); // نكمل حتى لو فشلت، النص بالأسفل يبقى واضح
-          qrImg.src = qrSource.src;
-        });
-      } else {
-        // احتياطي: لو ما فيه صورة QR أصلاً، نكتب رقم الحساب كبديل واضح داخل المربع
-        ctx.fillStyle = '#3d2a06';
-        ctx.font = "900 40px 'Tajawal', sans-serif";
-        ctx.fillText(currentAccount.accountId, W / 2, qrBoxY + qrBoxSize / 2 + 14);
-      }
-
-      // بيانات العميل تحت المربع
-      let y = qrBoxY + qrBoxSize + 60;
-      ctx.fillStyle = '#ffffff';
-      ctx.font = "800 30px 'Tajawal', sans-serif";
-      ctx.fillText(currentAccount.name || '—', W / 2, y);
-
-      y += 42;
-      ctx.fillStyle = '#a9bbd0';
-      ctx.font = "700 22px 'Tajawal', sans-serif";
-      ctx.fillText(currentAccount.accountId || '—', W / 2, y);
-
-      y += 36;
-      ctx.fillStyle = '#8496ad';
-      ctx.font = "18px 'Tajawal', sans-serif";
-      // رقم الهاتف يبقى بأرقام إنجليزية LTR حتى لو الواجهة عربية
-      ctx.direction = 'ltr';
-      ctx.fillText(currentAccount.phone || '—', W / 2, y);
-      ctx.direction = 'rtl';
-
-      y += 50;
-      ctx.fillStyle = '#8496ad';
-      ctx.font = "16px 'Tajawal', sans-serif";
-      ctx.fillText('أعطِ الموظف هذا الكود عند كل عملية شراء', W / 2, y);
-
-      // تحميل الصورة
+      const canvas = await buildMyCardCanvas();
       const link = document.createElement('a');
-      const safeAccountId = String(currentAccount.accountId || 'card').replace(/[^\w-]/g, '');
-      link.download = 'بطاقتي-' + safeAccountId + '.png';
+      link.download = myCardFileName();
       link.href = canvas.toDataURL('image/png');
       link.click();
     } catch (err) {
       alert('⚠ تعذّر إنشاء صورة البطاقة: ' + err.message + ' — جرّب مرة ثانية.');
+    } finally {
+      btn.textContent = originalText;
+      btn.disabled = false;
+    }
+  }
+
+  // ===================== إرسال بطاقتي عبر الواتساب =====================
+  // يبني نفس صورة البطاقة، وبعدين يفتح نافذة المشاركة الأصلية بالجهاز (Web Share API)
+  // اللي فيها واتساب ضمن الخيارات — نفس تجربة "مشاركة" أي صورة عادية بالجوال.
+  // لو الجهاز/المتصفح ما يدعم مشاركة الصور (أغلبها حاسوب مو جوال)، ننزّل الصورة
+  // ونفتح واتساب ويب برسالة نصية توضح للعميل يرفق الصورة يدوياً.
+  async function shareMyCardWhatsApp(){
+    const btn = document.getElementById('shareCardBtn');
+    const originalText = btn.textContent;
+    btn.textContent = '... جارِ التجهيز';
+    btn.disabled = true;
+
+    try {
+      const canvas = await buildMyCardCanvas();
+      const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/png'));
+      if (!blob) throw new Error('فشل تجهيز الصورة');
+
+      const file = new File([blob], myCardFileName(), { type: 'image/png' });
+      const shareData = {
+        files: [file],
+        title: 'بطاقتي — بطاقة الثقة الذهبية VIP',
+        text: 'هذي بطاقتي بشركة زمزم لتجارة المصوغات الذهبية 🕌',
+      };
+
+      // بعض المتصفحات تدعم navigator.share بس بدون ملفات — نتأكد من الدعم الكامل للصور تحديداً
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share(shareData);
+      } else {
+        // احتياطي: نزّل الصورة، ونفتح واتساب برسالة نصية — العميل يرفق الصورة يدوياً من معرض جهازه
+        const link = document.createElement('a');
+        link.download = myCardFileName();
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+        alert('📥 تم تنزيل صورة بطاقتك. افتح واتساب وأرفقها يدوياً من معرض الصور — متصفحك الحالي ما يدعم المشاركة المباشرة.');
+        window.open('https://wa.me/?text=' + encodeURIComponent('هذي بطاقتي بشركة زمزم لتجارة المصوغات الذهبية 🕌'), '_blank');
+      }
+    } catch (err) {
+      // لو المستخدم بس ألغى نافذة المشاركة (AbortError)، ما نعرض أي خطأ
+      if (err.name !== 'AbortError') {
+        alert('⚠ تعذّر تجهيز البطاقة للمشاركة: ' + err.message + ' — جرّب مرة ثانية.');
+      }
     } finally {
       btn.textContent = originalText;
       btn.disabled = false;
@@ -3140,7 +3150,6 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
       const data = await res.json();
       if (data.success) {
         document.getElementById('configDiscountPercent').value = data.discountPercent;
-        document.getElementById('configReferralBonus').value = data.referralBonus;
       }
     } catch (err) {
       document.getElementById('configMsg').textContent = '⚠ تعذّر تحميل الإعدادات الحالية: ' + err.message;
@@ -3150,7 +3159,6 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
 
   async function saveConfig(){
     const discountPercent = normalizeDigits(document.getElementById('configDiscountPercent').value);
-    const referralBonus = normalizeDigits(document.getElementById('configReferralBonus').value);
     const msgEl = document.getElementById('configMsg');
     msgEl.textContent = 'جارٍ الحفظ...';
     msgEl.className = 'msg pending';
@@ -3160,7 +3168,7 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
       const res = await fetch(WORKER_URL + '/update-config', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + idToken },
-        body: JSON.stringify({ discountPercent, referralBonus }),
+        body: JSON.stringify({ discountPercent }),
       });
       const data = await res.json();
       if (data.success) {
@@ -3228,9 +3236,6 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
       <div class="req-row" style="flex-direction:column; align-items:stretch; gap:8px;">
         <div style="display:flex; justify-content:space-between; align-items:center;">
           <div><div class="name">${escapeHtml(r.name)}</div><div class="phone">${escapeHtml(r.phone)}</div></div>
-        </div>
-        <div style="font-size:10.5px; font-weight:700; color:${r.referredByPhone ? 'var(--gold-deep)' : 'var(--muted)'};">
-          ${r.referredByPhone ? '🔗 مُحال من رقم: ' + escapeHtml(r.referredByPhone) : '— بدون إحالة —'}
         </div>
         <div style="display:flex; gap:8px;">
           <button style="flex:1; background:var(--green);" onclick="approveRequest('${r.uid}')">✓ موافقة</button>
@@ -3380,17 +3385,10 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
           'الاسترداد: -' + b.redeemAmount.toLocaleString('en-US') + ' — ' +
           '<b>الرصيد النهائي: ' + b.finalBalance.toLocaleString('en-US') + '</b>';
 
-        // لو انصرفت مكافأة إحالة بنفس هذي العملية، نوضحها بشكل منفصل وواضح
-        if (data.referral) {
-          msg += '<br><br>🎉 <b>مكافأة إحالة انصرفت تلقائياً:</b><br>' +
-            '• العميل الحالي: +' + data.referral.bonusAmount.toLocaleString('en-US') + ' دينار (هدية ترحيبية)<br>' +
-            '• ' + escapeHtml(data.referral.referrerName) + ' (' + escapeHtml(data.referral.referrerPhone) + '): +' + data.referral.bonusAmount.toLocaleString('en-US') + ' دينار (مكافأة إحالة)';
-        }
-
         msgEl.innerHTML = msg;
         msgEl.className = 'msg success';
         loadCustomers(); // تحديث مباشر للقائمة بدون أي زر يدوي
-        setTimeout(() => closeInvoicePanel(), data.referral ? 5500 : 3500);
+        setTimeout(() => closeInvoicePanel(), 3500);
       } else {
         msgEl.textContent = '⚠ ' + data.error;
         msgEl.className = 'msg error';
