@@ -2851,27 +2851,27 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
 
     try {
       const canvas = await buildMyCardCanvas();
-      const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/png'));
-      if (!blob) throw new Error('فشل تجهيز الصورة');
+      const blob = await new Promise((resolve, reject) => {
+        canvas.toBlob((b) => b ? resolve(b) : reject(new Error('فشل تجهيز الصورة')), 'image/png');
+      });
 
       const file = new File([blob], myCardFileName(), { type: 'image/png' });
-      const shareData = {
-        files: [file],
-        title: 'بطاقتي — بطاقة الثقة الذهبية VIP',
-        text: 'هذي بطاقتي بشركة زمزم لتجارة المصوغات الذهبية 🕌',
-      };
 
       // بعض المتصفحات تدعم navigator.share بس بدون ملفات — نتأكد من الدعم الكامل للصور تحديداً
       if (navigator.canShare && navigator.canShare({ files: [file] })) {
-        await navigator.share(shareData);
+        await navigator.share({
+          files: [file],
+          title: 'بطاقتي — بطاقة الثقة الذهبية VIP',
+          text: 'هذي بطاقتي بشركة زمزم لتجارة المصوغات الذهبية 🕌',
+        });
       } else {
-        // احتياطي: نزّل الصورة، ونفتح واتساب برسالة نصية — العميل يرفق الصورة يدوياً من معرض جهازه
-        const link = document.createElement('a');
-        link.download = myCardFileName();
-        link.href = canvas.toDataURL('image/png');
-        link.click();
-        alert('📥 تم تنزيل صورة بطاقتك. افتح واتساب وأرفقها يدوياً من معرض الصور — متصفحك الحالي ما يدعم المشاركة المباشرة.');
-        window.open('https://wa.me/?text=' + encodeURIComponent('هذي بطاقتي بشركة زمزم لتجارة المصوغات الذهبية 🕌'), '_blank');
+        // احتياطي: المتصفح ما يدعم مشاركة الملفات مباشرة. نفتح صورة البطاقة
+        // الكاملة (المصمَّمة، مو الباركود الخام) بتبويب جديد — تقدر تحفظها أو
+        // ترسلها من هناك بالضغط المطوّل، نفس طريقة الحفظ العادية على الجوال.
+        const url = URL.createObjectURL(blob);
+        window.open(url, '_blank');
+        alert('📤 فتحنا صورة بطاقتك كاملة بتبويب جديد — اضغط عليها ضغطة مطوّلة واختر "مشاركة" لإرسالها عبر واتساب، أو "حفظ الصورة" لتحفظها بمعرض جهازك.');
+        setTimeout(() => URL.revokeObjectURL(url), 15000);
       }
     } catch (err) {
       // لو المستخدم بس ألغى نافذة المشاركة (AbortError)، ما نعرض أي خطأ
