@@ -1078,7 +1078,7 @@
   }
   function staffLogout(){ auth.signOut(); }
 
-  function switchStaffTab(tab){
+  async function switchStaffTab(tab, preserveSearch){
     document.getElementById('staffTabPending').classList.toggle('on', tab === 'pending');
     document.getElementById('staffTabCustomers').classList.toggle('on', tab === 'customers');
     document.getElementById('staffTabConfig').classList.toggle('on', tab === 'config');
@@ -1092,15 +1092,19 @@
     document.getElementById('searchBoxWrap').style.display = showListTools ? 'flex' : 'none';
     document.getElementById('qrBtnWrap').style.display = showListTools ? 'block' : 'none';
 
-    document.getElementById('staffSearch').value = '';
+    // preserveSearch=true تُستخدم بعد مسح QR — حتى ما نصفّر النتيجة اللي بعدها بنعبّيها
+    if (!preserveSearch) {
+      document.getElementById('staffSearch').value = '';
+    }
 
     // كل تبويب يحمّل بياناته مباشرة عند الفتح — بدون أي زر تحديث يدوي
+    // (async حتى نقدر ننتظرها تخلص من دوال ثانية، متل مسح QR)
     if (tab === 'pending') {
-      loadPending();
+      await loadPending();
     } else if (tab === 'customers') {
-      loadCustomers();
+      await loadCustomers();
     } else if (tab === 'config') {
-      loadConfigForm();
+      await loadConfigForm();
     }
   }
 
@@ -1160,7 +1164,11 @@
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + idToken },
       });
       const data = await res.json();
-      allPending = data.success ? data.requests : [];
+      if (!data.success) {
+        document.getElementById('pendingList').innerHTML = '<div class="empty-note">⚠ ' + escapeHtml(data.error || 'صار خطأ غير معروف') + '</div>';
+        return;
+      }
+      allPending = data.requests;
       document.getElementById('pendingBadge').textContent = allPending.length;
       renderPendingList(allPending);
     } catch (err) {
@@ -1176,7 +1184,12 @@
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + idToken },
       });
       const data = await res.json();
-      allCustomers = data.success ? data.customers : [];
+      if (!data.success) {
+        document.getElementById('customersList').innerHTML = '<div class="empty-note">⚠ ' + escapeHtml(data.error || 'صار خطأ غير معروف') + '</div>';
+        allCustomers = [];
+        return;
+      }
+      allCustomers = data.customers;
       renderCustomersList(allCustomers);
     } catch (err) {
       document.getElementById('customersList').innerHTML = '<div class="empty-note">⚠ خطأ: ' + err.message + '</div>';
@@ -1546,7 +1559,7 @@
     const file = event.target.files[0];
     if (!file) return;
     const img = new Image();
-    img.onload = function(){
+    img.onload = async function(){
       const canvas = document.createElement('canvas');
       canvas.width = img.width; canvas.height = img.height;
       const ctx = canvas.getContext('2d');
@@ -1554,8 +1567,11 @@
       const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
       const code = jsQR(imageData.data, imageData.width, imageData.height);
       if (code && code.data) {
+        // ننتظر التبويب يتبدّل والقائمة تخلص تحميل فعلياً، وبعدها بس نعبّي
+        // خانة البحث ونطبّق الفلترة — قبل هذا التصحيح كانت تنصفّر فوراً بالغلط
+        await switchStaffTab('customers', true);
         document.getElementById('staffSearch').value = code.data.trim();
-        switchStaffTab('customers');
+        filterStaffList();
       } else {
         alert('⚠ ما قدرنا نقرأ الكود بوضوح — جرّب مرة ثانية.');
       }
