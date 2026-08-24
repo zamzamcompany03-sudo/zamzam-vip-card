@@ -2839,10 +2839,11 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
   }
 
   // ===================== إرسال بطاقتي عبر الواتساب =====================
-  // يبني نفس صورة البطاقة، وبعدين يفتح نافذة المشاركة الأصلية بالجهاز (Web Share API)
-  // اللي فيها واتساب ضمن الخيارات — نفس تجربة "مشاركة" أي صورة عادية بالجوال.
-  // لو الجهاز/المتصفح ما يدعم مشاركة الصور (أغلبها حاسوب مو جوال)، ننزّل الصورة
-  // ونفتح واتساب ويب برسالة نصية توضح للعميل يرفق الصورة يدوياً.
+  // يبني نفس صورة البطاقة الكاملة (باركود + اسم + رقم حساب + هاتف)، وبعدين
+  // يفتحها بتبويب جديد. من هناك، ضغطة مطوّلة على الصورة تعطي خيارات "مشاركة"
+  // (واتساب من ضمنها) أو "حفظ الصورة". اعتمدنا هذي الطريقة تحديداً لأنها
+  // أثبتت نجاحها بشكل مضمون على أجهزة آيفون، على عكس navigator.share بالملفات
+  // اللي طلعت نتائج غير متسقة (أحياناً تشارك الباركود بس بدل الصورة الكاملة).
   async function shareMyCardWhatsApp(){
     const btn = document.getElementById('shareCardBtn');
     const originalText = btn.textContent;
@@ -2855,29 +2856,12 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
         canvas.toBlob((b) => b ? resolve(b) : reject(new Error('فشل تجهيز الصورة')), 'image/png');
       });
 
-      const file = new File([blob], myCardFileName(), { type: 'image/png' });
-
-      // بعض المتصفحات تدعم navigator.share بس بدون ملفات — نتأكد من الدعم الكامل للصور تحديداً
-      if (navigator.canShare && navigator.canShare({ files: [file] })) {
-        await navigator.share({
-          files: [file],
-          title: 'بطاقتي — بطاقة الثقة الذهبية VIP',
-          text: 'هذي بطاقتي بشركة زمزم لتجارة المصوغات الذهبية 🕌',
-        });
-      } else {
-        // احتياطي: المتصفح ما يدعم مشاركة الملفات مباشرة. نفتح صورة البطاقة
-        // الكاملة (المصمَّمة، مو الباركود الخام) بتبويب جديد — تقدر تحفظها أو
-        // ترسلها من هناك بالضغط المطوّل، نفس طريقة الحفظ العادية على الجوال.
-        const url = URL.createObjectURL(blob);
-        window.open(url, '_blank');
-        alert('📤 فتحنا صورة بطاقتك كاملة بتبويب جديد — اضغط عليها ضغطة مطوّلة واختر "مشاركة" لإرسالها عبر واتساب، أو "حفظ الصورة" لتحفظها بمعرض جهازك.');
-        setTimeout(() => URL.revokeObjectURL(url), 15000);
-      }
+      const url = URL.createObjectURL(blob);
+      window.open(url, '_blank');
+      alert('📤 فتحنا صورة بطاقتك كاملة بتبويب جديد — اضغط عليها ضغطة مطوّلة واختر "مشاركة" لإرسالها عبر واتساب، أو "حفظ الصورة" لتحفظها بمعرض جهازك.');
+      setTimeout(() => URL.revokeObjectURL(url), 20000);
     } catch (err) {
-      // لو المستخدم بس ألغى نافذة المشاركة (AbortError)، ما نعرض أي خطأ
-      if (err.name !== 'AbortError') {
-        alert('⚠ تعذّر تجهيز البطاقة للمشاركة: ' + err.message + ' — جرّب مرة ثانية.');
-      }
+      alert('⚠ تعذّر تجهيز البطاقة للمشاركة: ' + err.message + ' — جرّب مرة ثانية.');
     } finally {
       btn.textContent = originalText;
       btn.disabled = false;
