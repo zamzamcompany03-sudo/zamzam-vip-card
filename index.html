@@ -320,8 +320,7 @@
           <div class="mc-phone" id="mcPhone">—</div>
           <div class="mc-hint">أعطِ الموظف هذا الكود عند كل عملية شراء</div>
         </div>
-        <button class="btn btn-outline" style="margin-top:10px;" id="saveCardBtn" onclick="downloadMyCard()">💾 حفظ بطاقتي كصورة</button>
-        <button class="btn btn-gold" style="margin-top:8px;" id="shareCardBtn" onclick="shareMyCardWhatsApp()">📤 إرسال بطاقتي عبر واتساب</button>
+        <button class="btn btn-gold" style="margin-top:10px;" id="shareCardBtn" onclick="shareMyCardWhatsApp()">📤 إرسال بطاقتي عبر واتساب</button>
       </div>
 
       <!-- كشف الحساب -->
@@ -2837,54 +2836,6 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
   function myCardFileName(){
     const safeAccountId = String(currentAccount.accountId || 'card').replace(/[^\w-]/g, '');
     return 'بطاقتي-' + safeAccountId + '.png';
-  }
-
-  // يكتشف آيفون/آيباد تحديداً — متصفح Safari هناك تاريخياً ما يحترم خاصية
-  // download بوسم <a>، وبدل ما ينزّل الصورة يحاول يفتحها بنفس الصفحة بصمت
-  function isIOS(){
-    return /iPad|iPhone|iPod/.test(navigator.userAgent) ||
-      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); // آيباد بوضع "سطح مكتب"
-  }
-
-  async function downloadMyCard(){
-    const btn = document.getElementById('saveCardBtn');
-    const originalText = btn.textContent;
-    btn.textContent = '... جارِ إنشاء الصورة';
-    btn.disabled = true;
-
-    try {
-      const canvas = await buildMyCardCanvas();
-      const blob = await new Promise((resolve, reject) => {
-        canvas.toBlob((b) => b ? resolve(b) : reject(new Error('فشل تحويل الصورة')), 'image/png');
-      });
-      const url = URL.createObjectURL(blob);
-
-      if (isIOS()) {
-        // آيفون/آيباد: نفتح الصورة بتبويب جديد — العميل يضغط ضغطة مطوّلة عليها
-        // ويختار "إضافة إلى الصور" أو "حفظ الصورة". خاصية download ما تشتغل هنا أصلاً.
-        window.open(url, '_blank');
-        btn.textContent = '✓ افتح الصورة واضغط مطوّلاً لحفظها';
-        setTimeout(() => URL.revokeObjectURL(url), 15000);
-      } else {
-        // باقي الأجهزة: تحميل مباشر عادي — نضيف الرابط فعلياً للصفحة قبل الضغط
-        // (بعض المتصفحات تتجاهل .click() على رابط غير موجود بالـ DOM)
-        const link = document.createElement('a');
-        link.download = myCardFileName();
-        link.href = url;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        setTimeout(() => URL.revokeObjectURL(url), 4000);
-        btn.textContent = '✓ تم الحفظ بنجاح';
-      }
-
-      setTimeout(() => { btn.textContent = originalText; }, 3000);
-    } catch (err) {
-      alert('⚠ تعذّر إنشاء صورة البطاقة: ' + err.message + ' — جرّب مرة ثانية.');
-      btn.textContent = originalText;
-    } finally {
-      btn.disabled = false;
-    }
   }
 
   // ===================== إرسال بطاقتي عبر الواتساب =====================
