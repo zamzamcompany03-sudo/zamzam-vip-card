@@ -336,6 +336,7 @@
           <div class="mc-phone" id="mcPhone">—</div>
           <div class="mc-hint">أعطِ الموظف هذا الكود عند كل عملية شراء</div>
         </div>
+        <button class="btn btn-outline" style="margin-top:10px;" id="saveCardBtn" onclick="downloadMyCard()">💾 حفظ بطاقتي كصورة</button>
       </div>
 
       <!-- كشف الحساب -->
@@ -2740,6 +2741,157 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
           '<div style="font-family:\'Tajawal\',sans-serif; font-weight:900; font-size:18px; color:#3d2a06;">' + text + '</div>' +
           '<div style="font-size:10px; color:#8a6a1f; margin-top:6px;">استخدم هذا الرقم يدوياً</div>' +
         '</div>';
+    }
+  }
+
+  // ===================== حفظ بطاقتي كصورة كاملة =====================
+  // يرسم بطاقة كاملة (شعار + اسم + رقم حساب + هاتف + كود QR) على canvas واحد
+  // ويحمّلها كصورة PNG. يعمل بالكامل محلياً بدون أي طلب شبكة.
+  function roundedRectPath(ctx, x, y, w, h, r){
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+  }
+
+  // يحاول ياخذ صورة كود الـ QR المولّد حالياً كـ data URL، من img أو canvas أو fallback نصي
+  function getQrImageSource(container){
+    const img = container.querySelector('img');
+    if (img && img.src) return { type: 'image', src: img.src };
+    const canvas = container.querySelector('canvas');
+    if (canvas) return { type: 'image', src: canvas.toDataURL('image/png') };
+    return { type: 'text' }; // احتياطي: مكتبة QRCode ما تحمّلت، الكود ظاهر كرقم نصي بس
+  }
+
+  async function downloadMyCard(){
+    const btn = document.getElementById('saveCardBtn');
+    const originalText = btn.textContent;
+    btn.textContent = '... جارِ إنشاء الصورة';
+    btn.disabled = true;
+
+    try {
+      // ننتظر تحميل الخط (لو جاهز) حتى يطلع النص واضح على الصورة، بدون ما نعلّق
+      // التنفيذ لو الخط تأخر أو فشل التحميل
+      if (document.fonts && document.fonts.ready) {
+        await Promise.race([document.fonts.ready, new Promise(r => setTimeout(r, 1200))]);
+      }
+
+      const W = 720, H = 1040;
+      const canvas = document.createElement('canvas');
+      canvas.width = W; canvas.height = H;
+      const ctx = canvas.getContext('2d');
+
+      // خلفية بطاقة داكنة متدرجة (نفس ألوان بطاقة "بطاقتي" بالتطبيق)
+      const bg = ctx.createLinearGradient(0, 0, 0, H);
+      bg.addColorStop(0, '#1b3352');
+      bg.addColorStop(1, '#0d1b2e');
+      ctx.fillStyle = bg;
+      roundedRectPath(ctx, 0, 0, W, H, 36);
+      ctx.fill();
+
+      // إطار ذهبي رفيع
+      ctx.strokeStyle = 'rgba(212,175,55,0.5)';
+      ctx.lineWidth = 3;
+      roundedRectPath(ctx, 10, 10, W - 20, H - 20, 30);
+      ctx.stroke();
+
+      ctx.textAlign = 'center';
+
+      // الشعار
+      ctx.font = '64px sans-serif';
+      ctx.fillStyle = '#ffffff';
+      ctx.fillText('🕌', W / 2, 110);
+
+      // اسم الشركة
+      ctx.font = "800 34px 'Tajawal', sans-serif";
+      ctx.fillStyle = '#ffffff';
+      ctx.fillText('شركة زمزم لتجارة المصوغات الذهبية', W / 2, 165);
+
+      // اسم البطاقة
+      ctx.font = "700 24px 'Tajawal', sans-serif";
+      ctx.fillStyle = '#d4af37';
+      ctx.fillText('بطاقة الثقة الذهبية VIP', W / 2, 202);
+
+      // شارة "الحساب مفعّل"
+      const pillText = '✓ الحساب مفعّل ونشط';
+      ctx.font = "800 18px 'Tajawal', sans-serif";
+      const pillW = ctx.measureText(pillText).width + 50;
+      const pillH = 42;
+      const pillX = (W - pillW) / 2;
+      const pillY = 224;
+      ctx.fillStyle = 'rgba(74,222,128,0.18)';
+      roundedRectPath(ctx, pillX, pillY, pillW, pillH, pillH / 2);
+      ctx.fill();
+      ctx.fillStyle = '#4ade80';
+      ctx.fillText(pillText, W / 2, pillY + 28);
+
+      // مربع أبيض لكود الـ QR
+      const qrSize = 420;
+      const qrBoxSize = qrSize + 40;
+      const qrBoxX = (W - qrBoxSize) / 2;
+      const qrBoxY = 296;
+      ctx.fillStyle = '#ffffff';
+      roundedRectPath(ctx, qrBoxX, qrBoxY, qrBoxSize, qrBoxSize, 22);
+      ctx.fill();
+
+      const qrSource = getQrImageSource(document.getElementById('memberQrBox'));
+      const qrX = qrBoxX + 20, qrY = qrBoxY + 20;
+
+      if (qrSource.type === 'image') {
+        await new Promise((resolve) => {
+          const qrImg = new Image();
+          qrImg.onload = () => {
+            ctx.drawImage(qrImg, qrX, qrY, qrSize, qrSize);
+            resolve();
+          };
+          qrImg.onerror = () => resolve(); // نكمل حتى لو فشلت، النص بالأسفل يبقى واضح
+          qrImg.src = qrSource.src;
+        });
+      } else {
+        // احتياطي: لو ما فيه صورة QR أصلاً، نكتب رقم الحساب كبديل واضح داخل المربع
+        ctx.fillStyle = '#3d2a06';
+        ctx.font = "900 40px 'Tajawal', sans-serif";
+        ctx.fillText(currentAccount.accountId, W / 2, qrBoxY + qrBoxSize / 2 + 14);
+      }
+
+      // بيانات العميل تحت المربع
+      let y = qrBoxY + qrBoxSize + 60;
+      ctx.fillStyle = '#ffffff';
+      ctx.font = "800 30px 'Tajawal', sans-serif";
+      ctx.fillText(currentAccount.name || '—', W / 2, y);
+
+      y += 42;
+      ctx.fillStyle = '#a9bbd0';
+      ctx.font = "700 22px 'Tajawal', sans-serif";
+      ctx.fillText(currentAccount.accountId || '—', W / 2, y);
+
+      y += 36;
+      ctx.fillStyle = '#8496ad';
+      ctx.font = "18px 'Tajawal', sans-serif";
+      // رقم الهاتف يبقى بأرقام إنجليزية LTR حتى لو الواجهة عربية
+      ctx.direction = 'ltr';
+      ctx.fillText(currentAccount.phone || '—', W / 2, y);
+      ctx.direction = 'rtl';
+
+      y += 50;
+      ctx.fillStyle = '#8496ad';
+      ctx.font = "16px 'Tajawal', sans-serif";
+      ctx.fillText('أعطِ الموظف هذا الكود عند كل عملية شراء', W / 2, y);
+
+      // تحميل الصورة
+      const link = document.createElement('a');
+      const safeAccountId = String(currentAccount.accountId || 'card').replace(/[^\w-]/g, '');
+      link.download = 'بطاقتي-' + safeAccountId + '.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    } catch (err) {
+      alert('⚠ تعذّر إنشاء صورة البطاقة: ' + err.message + ' — جرّب مرة ثانية.');
+    } finally {
+      btn.textContent = originalText;
+      btn.disabled = false;
     }
   }
 
