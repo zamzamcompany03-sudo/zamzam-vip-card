@@ -3679,6 +3679,18 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
   function escapeHtml(s){
     return String(s).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
   }
+
+  // يسجّل Service Worker حتى أي تحديث نرفعه على التطبيق ينعكس تلقائياً
+  // حتى على الأجهزة اللي أضافت التطبيق لشاشتها الرئيسية (Add to Home
+  // Screen) — هذي الأجهزة بدون هذا الملف تضل عالقة على أول نسخة فتحتها.
+  // sw.js لازم يكون بنفس مجلد هذا الملف بالضبط على GitHub Pages.
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js').catch((err) => {
+        console.warn('تعذّر تسجيل Service Worker — التحديث التلقائي للنسخة المضافة للشاشة الرئيسية لن يعمل:', err.message);
+      });
+    });
+  }
 </script>
 
 </body>
