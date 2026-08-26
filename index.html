@@ -2673,9 +2673,18 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
       if (data.success && data.status === 'active') {
         renderAccountView(data.account);
         btn.textContent = '✓ تحدّث الرصيد';
+      } else if (!data.success) {
+        // جلسة "يتيمة" — رمز الدخول صالح تقنياً بس ما فيه حساب أو طلب
+        // مرتبط فيه فعلياً بقاعدة البيانات (مثلاً لو الحساب انحذف من
+        // لوحة الموظف بينما العميل فاتح حسابه أصلاً بجهازه، أو بقايا
+        // جلسة قديمة من قبل إعادة تسجيل بنفس الرقم). نسجّل خروج نظيف
+        // بدل ما نخلي العميل عالق على شاشة معطوبة برسالة خطأ خام —
+        // نفس المعالجة المستخدمة أصلاً وقت أول تسجيل دخول.
+        pendingSessionExpiredNotice = true;
+        await auth.signOut();
+        return;
       } else {
         btn.textContent = originalText;
-        if (!data.success) alert('⚠ ' + (data.error || 'تعذّر التحديث لسبب غير معروف.'));
       }
     } catch (err) {
       btn.textContent = originalText;
