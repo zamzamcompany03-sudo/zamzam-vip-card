@@ -159,23 +159,23 @@
   .top-close{ text-align:left; margin-bottom:8px; }
   .top-close button{ background:transparent; border:none; color:var(--muted); font-size:12px; cursor:pointer; }
 
-  /* ---- بطاقة "بطاقتي" ---- */
+  /* ---- بطاقة "بطاقتي" — تصميم "امتياز VIP" ---- */
   .member-card{
-    background:#152840; border-radius:18px; padding:20px 18px; text-align:center; margin-top:4px;
+    background:#151210; border-radius:18px; padding:26px 18px 22px; text-align:center; margin-top:4px;
   }
-  .mc-mark{ font-size:20px; margin-bottom:4px; }
-  .mc-brand{ font-family:'Tajawal',sans-serif; font-weight:800; font-size:12.5px; color:#fff; margin-bottom:14px; }
-  .mc-brand span{ display:block; font-size:10px; color:#d4af37; font-weight:700; margin-top:2px; }
-  .mc-qr{ background:#fff; border-radius:12px; padding:10px; display:inline-flex; margin-bottom:12px; }
-  .mc-name{ font-family:'Tajawal',sans-serif; font-weight:800; font-size:14px; color:#fff; }
-  .mc-account{ font-size:11px; color:#a9bbd0; margin-top:3px; }
-  .mc-phone{ font-size:10px; color:#8496ad; margin-top:2px; direction:ltr; display:inline-block; }
-  .mc-status{
-    display:inline-flex; align-items:center; gap:6px; background:rgba(30,158,87,0.18); color:#4ade80;
-    font-family:'Tajawal',sans-serif; font-weight:800; font-size:10.5px; padding:5px 12px; border-radius:100px;
-    margin-bottom:12px;
+  .mc-title{ font-family:'Tajawal',sans-serif; font-weight:800; font-size:21px; color:#e8b84a; margin-bottom:6px; }
+  .mc-sub{ font-family:'Tajawal',sans-serif; font-weight:600; font-size:12px; color:#e8b84a; line-height:1.7; margin-bottom:18px; }
+  .mc-hex{
+    background:#c67a2e; clip-path:polygon(14% 0, 86% 0, 100% 50%, 86% 100%, 14% 100%, 0 50%);
+    display:inline-flex; align-items:center; justify-content:center; padding:16px 40px; margin-bottom:16px;
   }
-  .mc-hint{ font-size:10px; color:#8496ad; margin-top:12px; line-height:1.7; }
+  .mc-qr{ background:#fff; border-radius:10px; padding:10px; display:inline-flex; }
+  .mc-logo-row{ display:flex; align-items:center; justify-content:center; gap:7px; margin-bottom:8px; }
+  .mc-logo-row .mc-crown{ font-size:22px; }
+  .mc-logo-row .mc-viptext{ font-family:'Tajawal',sans-serif; font-weight:800; font-size:15px; color:#e8b84a; }
+  .mc-name{ font-family:'Tajawal',sans-serif; font-weight:800; font-size:15px; color:#e8b84a; }
+  .mc-account{ font-size:11px; color:#c9b896; margin-top:4px; }
+  .mc-phone{ font-size:10px; color:#c9b896; margin-top:2px; direction:ltr; display:inline-block; }
 
   /* ---- كشف الحساب ---- */
   .stmt-row{ display:flex; justify-content:space-between; align-items:center; padding:10px 4px; border-bottom:1px solid var(--line); font-size:12px; }
@@ -325,16 +325,16 @@
       <div id="myCardView" style="display:none;">
         <div class="top-close"><button onclick="backToAccountMain()">‹ رجوع للحساب</button></div>
         <div class="member-card">
-          <div class="mc-mark">🕌</div>
-          <div class="mc-brand">شركة زمزم<br><span>بطاقة الثقة الذهبية VIP</span></div>
-          <div class="mc-status">✓ الحساب مفعّل ونشط</div>
-          <div class="mc-qr" id="memberQrBox"></div>
+          <div class="mc-title">امتياز VIP</div>
+          <div class="mc-sub">وفر اكثر بكل زياره لانك مميز<br>عندك خصم من شركة زمزم</div>
+          <div class="mc-hex"><div class="mc-qr" id="memberQrBox"></div></div>
+          <div class="mc-logo-row"><span class="mc-crown">👑</span><span class="mc-viptext">VIP</span></div>
           <div class="mc-name" id="mcName">—</div>
           <div class="mc-account" id="mcAccount">—</div>
           <div class="mc-phone" id="mcPhone">—</div>
-          <div class="mc-hint">أعطِ الموظف هذا الكود عند كل عملية شراء</div>
         </div>
         <button class="btn btn-gold" style="margin-top:10px;" id="shareCardBtn" onclick="shareMyCardWhatsApp()">📤 إرسال بطاقتي عبر واتساب</button>
+
       </div>
 
       <!-- كشف الحساب -->
