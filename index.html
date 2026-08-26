@@ -3168,7 +3168,7 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
     msgEl.className = 'msg pending';
 
     try {
-      const idToken = await auth.currentUser.getIdToken();
+      const idToken = await auth.currentUser.getIdToken(true); // true يجبر تحديث الرمز، يتفادى فشل عمليات الموظف برمز قديم منتهي
       const res = await fetch(WORKER_URL + '/update-config', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + idToken },
@@ -3195,7 +3195,7 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
 
   async function loadPending(){
     try {
-      const idToken = await auth.currentUser.getIdToken();
+      const idToken = await auth.currentUser.getIdToken(true); // true يجبر تحديث الرمز، يتفادى فشل عمليات الموظف برمز قديم منتهي
       const res = await fetch(WORKER_URL + '/list-pending', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + idToken },
@@ -3215,7 +3215,7 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
 
   async function loadCustomers(){
     try {
-      const idToken = await auth.currentUser.getIdToken();
+      const idToken = await auth.currentUser.getIdToken(true); // true يجبر تحديث الرمز، يتفادى فشل عمليات الموظف برمز قديم منتهي
       const res = await fetch(WORKER_URL + '/list-customers', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + idToken },
@@ -3261,7 +3261,7 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
       return;
     }
     try {
-      const idToken = await auth.currentUser.getIdToken();
+      const idToken = await auth.currentUser.getIdToken(true); // true يجبر تحديث الرمز، يتفادى فشل عمليات الموظف برمز قديم منتهي
       const res = await fetch(WORKER_URL + '/reject-registration', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + idToken },
@@ -3368,7 +3368,7 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
     msgEl.className = 'msg pending';
 
     try {
-      const idToken = await auth.currentUser.getIdToken();
+      const idToken = await auth.currentUser.getIdToken(true); // true يجبر تحديث الرمز، يتفادى فشل عمليات الموظف برمز قديم منتهي
       const res = await fetch(WORKER_URL + '/add-invoice', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + idToken },
@@ -3427,7 +3427,7 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
     if (!confirm('متأكد تبي تولّد كلمة مرور مؤقتة جديدة لهذا العميل؟ كلمة مروره الحالية تتوقف عن الشغل فوراً.')) return;
 
     try {
-      const idToken = await auth.currentUser.getIdToken();
+      const idToken = await auth.currentUser.getIdToken(true); // true يجبر تحديث الرمز، يتفادى فشل عمليات الموظف برمز قديم منتهي
       const res = await fetch(WORKER_URL + '/reset-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + idToken },
@@ -3563,7 +3563,7 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
 
   async function approveRequest(uid){
     try {
-      const idToken = await auth.currentUser.getIdToken();
+      const idToken = await auth.currentUser.getIdToken(true); // true يجبر تحديث الرمز، يتفادى فشل عمليات الموظف برمز قديم منتهي
       const res = await fetch(WORKER_URL + '/approve', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + idToken },
