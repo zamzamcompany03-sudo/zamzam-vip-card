@@ -2760,66 +2760,76 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
       await Promise.race([document.fonts.ready, new Promise(r => setTimeout(r, 1200))]);
     }
 
-    const W = 720, H = 1040;
+    // تصميم "امتياز VIP" — نفس البوستر المعتمد بالضبط، بس مع إضافة بيانات
+    // العميل (الاسم ورقم الحساب والهاتف) جنب شعار التاج (نموذج ٣ المُختار)
+    const W = 1000, H = 580;
     const canvas = document.createElement('canvas');
     canvas.width = W; canvas.height = H;
     const ctx = canvas.getContext('2d');
 
-    // خلفية بطاقة داكنة متدرجة (نفس ألوان بطاقة "بطاقتي" بالتطبيق)
-    const bg = ctx.createLinearGradient(0, 0, 0, H);
-    bg.addColorStop(0, '#1b3352');
-    bg.addColorStop(1, '#0d1b2e');
-    ctx.fillStyle = bg;
-    roundedRectPath(ctx, 0, 0, W, H, 36);
+    // خلفية سوداء
+    ctx.fillStyle = '#151210';
+    roundedRectPath(ctx, 0, 0, W, H, 28);
     ctx.fill();
 
-    // إطار ذهبي رفيع
-    ctx.strokeStyle = 'rgba(212,175,55,0.5)';
-    ctx.lineWidth = 3;
-    roundedRectPath(ctx, 10, 10, W - 20, H - 20, 30);
-    ctx.stroke();
+    ctx.direction = 'rtl';
+    ctx.textAlign = 'right';
 
-    ctx.textAlign = 'center';
+    // العنوان الرئيسي
+    ctx.font = "800 46px 'Tajawal', sans-serif";
+    ctx.fillStyle = '#e8b84a';
+    ctx.fillText('امتياز VIP', 480, 100);
 
-    // الشعار
-    ctx.font = '64px sans-serif';
-    ctx.fillStyle = '#ffffff';
-    ctx.fillText('🕌', W / 2, 110);
+    // النص التسويقي
+    ctx.font = "600 23px 'Tajawal', sans-serif";
+    ctx.fillStyle = '#e8b84a';
+    ctx.fillText('وفر اكثر بكل زياره لانك مميز', 480, 148);
+    ctx.fillText('عندك خصم من شركة زمزم', 480, 182);
 
-    // اسم الشركة
-    ctx.font = "800 34px 'Tajawal', sans-serif";
-    ctx.fillStyle = '#ffffff';
-    ctx.fillText('شركة زمزم لتجارة المصوغات الذهبية', W / 2, 165);
+    // شعار التاج + VIP
+    ctx.font = '34px sans-serif';
+    ctx.fillText('👑', 480, 425);
+    ctx.font = "800 26px 'Tajawal', sans-serif";
+    ctx.fillStyle = '#e8b84a';
+    ctx.fillText('VIP', 436, 424);
 
-    // اسم البطاقة
-    ctx.font = "700 24px 'Tajawal', sans-serif";
-    ctx.fillStyle = '#d4af37';
-    ctx.fillText('بطاقة الثقة الذهبية VIP', W / 2, 202);
+    // بيانات العميل — جنب الشعار مباشرة (نموذج ٣)
+    ctx.font = "800 28px 'Tajawal', sans-serif";
+    ctx.fillStyle = '#e8b84a';
+    ctx.fillText(currentAccount.name || '—', 480, 470);
 
-    // شارة "الحساب مفعّل"
-    const pillText = '✓ الحساب مفعّل ونشط';
-    ctx.font = "800 18px 'Tajawal', sans-serif";
-    const pillW = ctx.measureText(pillText).width + 50;
-    const pillH = 42;
-    const pillX = (W - pillW) / 2;
-    const pillY = 224;
-    ctx.fillStyle = 'rgba(74,222,128,0.18)';
-    roundedRectPath(ctx, pillX, pillY, pillW, pillH, pillH / 2);
+    ctx.font = "600 19px 'Tajawal', sans-serif";
+    ctx.fillStyle = '#c9b896';
+    ctx.fillText(currentAccount.accountId || '—', 480, 500);
+    ctx.direction = 'ltr'; // رقم الهاتف يبقى بأرقام إنجليزية LTR حتى لو الواجهة عربية
+    ctx.textAlign = 'right';
+    ctx.fillText(currentAccount.phone || '—', 480, 528);
+    ctx.direction = 'rtl';
+    ctx.textAlign = 'right';
+
+    // اللوحة السداسية البرتقالية + مربع الباركود الأبيض
+    const panelX = 555, panelY = 45, panelW = 405, panelH = 490;
+    ctx.beginPath();
+    ctx.moveTo(panelX + panelW * 0.16, panelY);
+    ctx.lineTo(panelX + panelW * 0.84, panelY);
+    ctx.lineTo(panelX + panelW, panelY + panelH * 0.5);
+    ctx.lineTo(panelX + panelW * 0.84, panelY + panelH);
+    ctx.lineTo(panelX + panelW * 0.16, panelY + panelH);
+    ctx.lineTo(panelX, panelY + panelH * 0.5);
+    ctx.closePath();
+    ctx.fillStyle = '#c67a2e';
     ctx.fill();
-    ctx.fillStyle = '#4ade80';
-    ctx.fillText(pillText, W / 2, pillY + 28);
 
-    // مربع أبيض لكود الـ QR
-    const qrSize = 420;
-    const qrBoxSize = qrSize + 40;
-    const qrBoxX = (W - qrBoxSize) / 2;
-    const qrBoxY = 296;
+    const qrSize = 260;
+    const qrBoxSize = qrSize + 32;
+    const qrBoxX = panelX + (panelW - qrBoxSize) / 2;
+    const qrBoxY = panelY + (panelH - qrBoxSize) / 2;
     ctx.fillStyle = '#ffffff';
-    roundedRectPath(ctx, qrBoxX, qrBoxY, qrBoxSize, qrBoxSize, 22);
+    roundedRectPath(ctx, qrBoxX, qrBoxY, qrBoxSize, qrBoxSize, 16);
     ctx.fill();
 
     const qrSource = getQrImageSource(document.getElementById('memberQrBox'));
-    const qrX = qrBoxX + 20, qrY = qrBoxY + 20;
+    const qrX = qrBoxX + 16, qrY = qrBoxY + 16;
 
     if (qrSource.type === 'image') {
       await new Promise((resolve) => {
@@ -2828,39 +2838,17 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
           ctx.drawImage(qrImg, qrX, qrY, qrSize, qrSize);
           resolve();
         };
-        qrImg.onerror = () => resolve(); // نكمل حتى لو فشلت، النص بالأسفل يبقى واضح
+        qrImg.onerror = () => resolve(); // نكمل حتى لو فشلت، باقي البطاقة يبقى واضح
         qrImg.src = qrSource.src;
       });
     } else {
       // احتياطي: لو ما فيه صورة QR أصلاً، نكتب رقم الحساب كبديل واضح داخل المربع
       ctx.fillStyle = '#3d2a06';
-      ctx.font = "900 40px 'Tajawal', sans-serif";
-      ctx.fillText(currentAccount.accountId, W / 2, qrBoxY + qrBoxSize / 2 + 14);
+      ctx.font = "900 32px 'Tajawal', sans-serif";
+      ctx.textAlign = 'center';
+      ctx.fillText(currentAccount.accountId, qrBoxX + qrBoxSize / 2, qrBoxY + qrBoxSize / 2 + 12);
+      ctx.textAlign = 'right';
     }
-
-    // بيانات العميل تحت المربع
-    let y = qrBoxY + qrBoxSize + 60;
-    ctx.fillStyle = '#ffffff';
-    ctx.font = "800 30px 'Tajawal', sans-serif";
-    ctx.fillText(currentAccount.name || '—', W / 2, y);
-
-    y += 42;
-    ctx.fillStyle = '#a9bbd0';
-    ctx.font = "700 22px 'Tajawal', sans-serif";
-    ctx.fillText(currentAccount.accountId || '—', W / 2, y);
-
-    y += 36;
-    ctx.fillStyle = '#8496ad';
-    ctx.font = "18px 'Tajawal', sans-serif";
-    // رقم الهاتف يبقى بأرقام إنجليزية LTR حتى لو الواجهة عربية
-    ctx.direction = 'ltr';
-    ctx.fillText(currentAccount.phone || '—', W / 2, y);
-    ctx.direction = 'rtl';
-
-    y += 50;
-    ctx.fillStyle = '#8496ad';
-    ctx.font = "16px 'Tajawal', sans-serif";
-    ctx.fillText('أعطِ الموظف هذا الكود عند كل عملية شراء', W / 2, y);
 
     return canvas;
   }
