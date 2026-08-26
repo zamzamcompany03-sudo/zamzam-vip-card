@@ -497,7 +497,7 @@
       <div id="configWrap" style="display:none;">
         <div class="field">
           <label>نسبة الخصم (٪) — تُطبّق على كل فاتورة</label>
-          <input type="text" inputmode="decimal" id="configDiscountPercent" oninput="this.value = normalizeDigits(this.value)">
+          <input type="text" inputmode="decimal" id="configDiscountPercent" oninput="this.value = normalizeDecimal(this.value)">
         </div>
         <button class="btn btn-gold" onclick="saveConfig()">💾 حفظ الإعدادات</button>
         <div class="msg" id="configMsg"></div>
@@ -2428,6 +2428,15 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
     return String(str).replace(/[٠-٩]/g, d => map[d]);
   }
 
+  // خاص بالحقول اللي تمثّل رقم عشري وحيد (زي نسبة الخصم) — يحوّل أي فاصلة
+  // عشرية (سواء الفاصلة العادية "," أو الفاصلة العربية "٫" اللي تطلعها
+  // لوحة مفاتيح آيفون العربية تلقائياً وقت كتابة كسر عشري) لنقطة عشرية
+  // موحّدة يفهمها الجافاسكربت. ما نستخدمه بحقول المبالغ المالية الكبيرة
+  // لأن الفاصلة هناك فاصل آلاف (زي ١٬٠٠٠٬٠٠٠)، مو فاصلة عشرية.
+  function normalizeDecimal(str){
+    return normalizeDigits(str).replace(/[,٫]/g, '.');
+  }
+
   let appConfig = { discountPercent: 1 }; // تُحدَّث فوراً من الخادم بمجرد ما تحمّل الصفحة
 
   // ===================== تحميل الإعدادات الحالية (نسبة الخصم) =====================
@@ -3153,7 +3162,7 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
   }
 
   async function saveConfig(){
-    const discountPercent = normalizeDigits(document.getElementById('configDiscountPercent').value);
+    const discountPercent = normalizeDecimal(document.getElementById('configDiscountPercent').value);
     const msgEl = document.getElementById('configMsg');
     msgEl.textContent = 'جارٍ الحفظ...';
     msgEl.className = 'msg pending';
