@@ -159,27 +159,6 @@
   .top-close{ text-align:left; margin-bottom:8px; }
   .top-close button{ background:transparent; border:none; color:var(--muted); font-size:12px; cursor:pointer; }
 
-  /* ---- بطاقة "بطاقتي" — تصميم "امتياز VIP" (بالعرض، نفس اتجاه البوستر) ---- */
-  .member-card{
-    background:#151210; border-radius:16px; padding:16px; margin-top:4px;
-    display:flex; align-items:center; gap:12px; direction:ltr; text-align:right;
-  }
-  .mc-info{ flex:1; min-width:0; }
-  .mc-title{ font-family:'Tajawal',sans-serif; font-weight:800; font-size:16px; color:#e8b84a; margin-bottom:4px; }
-  .mc-sub{ font-family:'Tajawal',sans-serif; font-weight:600; font-size:9.5px; color:#e8b84a; line-height:1.6; margin-bottom:10px; }
-  .mc-hex{
-    background:#c67a2e; clip-path:polygon(14% 0, 86% 0, 100% 50%, 86% 100%, 14% 100%, 0 50%);
-    display:flex; align-items:center; justify-content:center; padding:10px 22px; flex-shrink:0;
-  }
-  .mc-qr{ background:#fff; border-radius:8px; padding:7px; display:inline-flex; }
-  .mc-qr img, .mc-qr canvas{ width:96px; height:96px; display:block; }
-  .mc-logo-row{ display:flex; align-items:center; justify-content:flex-end; gap:6px; margin-bottom:6px; }
-  .mc-logo-row .mc-crown{ font-size:17px; }
-  .mc-logo-row .mc-viptext{ font-family:'Tajawal',sans-serif; font-weight:800; font-size:12px; color:#e8b84a; }
-  .mc-name{ font-family:'Tajawal',sans-serif; font-weight:800; font-size:12.5px; color:#e8b84a; }
-  .mc-account{ font-size:10px; color:#c9b896; margin-top:3px; }
-  .mc-phone{ font-size:9.5px; color:#c9b896; margin-top:2px; }
-
   /* ---- كشف الحساب ---- */
   .stmt-row{ display:flex; justify-content:space-between; align-items:center; padding:10px 4px; border-bottom:1px solid var(--line); font-size:12px; }
   .stmt-row:last-child{ border-bottom:none; }
@@ -327,17 +306,17 @@
       <!-- بطاقتي -->
       <div id="myCardView" style="display:none;">
         <div class="top-close"><button onclick="backToAccountMain()">‹ رجوع للحساب</button></div>
-        <div class="member-card">
-          <div class="mc-info">
-            <div class="mc-title">امتياز VIP</div>
-            <div class="mc-sub">وفر اكثر بكل زياره لانك مميز<br>عندك خصم من شركة زمزم</div>
-            <div class="mc-logo-row"><span class="mc-crown">👑</span><span class="mc-viptext">VIP</span></div>
-            <div class="mc-name" id="mcName">—</div>
-            <div class="mc-account" id="mcAccount">—</div>
-            <div class="mc-phone" id="mcPhone">—</div>
-          </div>
-          <div class="mc-hex"><div class="mc-qr" id="memberQrBox"></div></div>
+
+        <!-- البطاقة المعروضة هنا صورة حقيقية واحدة (مو نصوص منفصلة) — عشان
+             الضغط المطوّل عليها يحفظ/يشارك البطاقة كاملة، مو الباركود لحاله فقط -->
+        <div id="myCardImageWrap" style="background:#151210; border-radius:16px; padding:16px; text-align:center; min-height:140px; display:flex; align-items:center; justify-content:center;">
+          <div id="myCardLoading" style="color:#c9b896; font-size:12px;">... جارِ تجهيز البطاقة</div>
+          <img id="myCardImage" style="display:none; width:100%; border-radius:10px;" alt="بطاقة العميل">
         </div>
+
+        <!-- عنصر مخفي — نحتاجه بس كمصدر لصورة الباركود وقت بناء صورة البطاقة أعلاه -->
+        <div id="memberQrBox" style="display:none;"></div>
+
         <button class="btn btn-gold" style="margin-top:10px;" id="shareCardBtn" onclick="shareMyCardWhatsApp()">📤 إرسال بطاقتي عبر واتساب</button>
 
 
@@ -2701,15 +2680,27 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
   }
 
   // ===================== بطاقتي (QR) =====================
-  function showMyCard(){
+  async function showMyCard(){
     document.getElementById('accountMainView').style.display = 'none';
     document.getElementById('statementView').style.display = 'none';
     document.getElementById('myCardView').style.display = 'block';
 
-    document.getElementById('mcName').textContent = currentAccount.name;
-    document.getElementById('mcAccount').textContent = currentAccount.accountId;
-    document.getElementById('mcPhone').textContent = currentAccount.phone;
+    // نعيد الشاشة لحالة "جارِ التجهيز" في حال المستخدم رجع لهذي الشاشة
+    // أكثر من مرة بنفس الجلسة — بدل ما تبقى الصورة القديمة ظاهرة لحظياً
+    document.getElementById('myCardLoading').style.display = 'block';
+    document.getElementById('myCardImage').style.display = 'none';
+
     safeGenerateQr(document.getElementById('memberQrBox'), currentAccount.accountId);
+
+    try {
+      const canvas = await buildMyCardCanvas();
+      const img = document.getElementById('myCardImage');
+      img.src = canvas.toDataURL('image/png');
+      img.style.display = 'block';
+      document.getElementById('myCardLoading').style.display = 'none';
+    } catch (err) {
+      document.getElementById('myCardLoading').textContent = '⚠ تعذّر تجهيز البطاقة: ' + err.message;
+    }
   }
 
   // توليد آمن لكود QR — لو مكتبة QRCode.js ما تحمّلت (مشكلة شبكة)، نعرض رقم الحساب كبديل واضح
